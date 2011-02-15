@@ -1,0 +1,26 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper]{ geometry}
+\geometry{top=0.0in, bottom=1.0in, left=1.0in, right=1.0in}
+\fontsize{12}{12}
+\begin{document}
+\title{Individual Report 2}
+\author{Calum Jackson (s0812597) - 
+SDP Group 12}
+\maketitle
+\begin{flushleft}
+
+This report is the second in the series, and will document the changes made up to the second milestone. After the first milestone, I continued to work on the robot with the aim of making it more robust, making sure it could travel in a straight line and  
+The first issue I came across was that at higher speeds the robot would veer slightly to one side. We thought this might be due to the caster wheel in use at the back of the robot.  \linebreak
+
+A large amount of time was spent testing changes to the system that was currently in use, such as redistributing weight across the robot, using multiple caster wheels, and not using the gears. By not using the gears (using the motors directly to turn the wheels) the robot did travel in a straight line, however, the speed of the robot was about 3 times slower than it could be if gears were in use. We felt that speed would be a big advantage in the final games, so we continued to research into ways to get the robot travelling straight whilst using the gears.\\
+Redistributing weight in the robot improved its straight line ability. This was due to more weight being directly over the wheels, meaning a lot more surface friction was not lost through wheel spin.\linebreak 
+
+Having looked into caster development in the 'Building Robots with LEGO Mindstorms' (M.Ferrari et al, 2002), I tried using a non-slip caster which was recommended. This caster wheel worked well and prevented the robot from veering whilst travelling at speed. I also found that using 1 caster wheel instead of two at the back increased the robot's ability to travel in a straight line.\\
+
+After this, Jonas managed to acquire a ball bearing to use. We felt this would be more useful than the caster as the ball bearing is free moving, so it does not need time to adjust to the angle it is moving, and provides more weight at the rear of the robot. The ball bearing was much more difficult to implement on the robot due to it not being designed for use with lego, and at first it was difficult to put it in a position where it wasn't putting too much strain on the structure of the robot, or where it would affect the angle at which the robot was travelling. Eventually the ball bearing was implemented without these problems, and the robot was more balanced and travelled in a straight line.\\
+
+The kicker was altered by placing it lower in the robot, giving the robot a lower centre of gravity. Although the power of the kicker was slightly decreased, the benefits of having a lower centre of gravity and having the motor in a more secure area (in the centre of the robot rather than on top of it) outweighed the issue of kicker power. \linebreak
+
+Before the next milestone I believe we can improve the robot by adding more weight to the back of the robot to prevent tipping, testing the max speed we can achieve without losing control of the robot, and further increasing the robustness of the robot.  \linebreak
+\end{flushleft}
+\end{document}

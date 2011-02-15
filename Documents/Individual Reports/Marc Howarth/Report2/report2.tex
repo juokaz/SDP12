@@ -1,0 +1,44 @@
+\documentclass[conference,12pt]{IEEEtran}
+
+\usepackage[tight,footnotesize]{subfigure}
+
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+	
+\title{SDP Report 2}
+
+\author{\IEEEauthorblockN{Marc Howarth}
+\IEEEauthorblockA{Group 12 - Robot Unicorn Defenders}}
+	
+\maketitle
+
+\IEEEpeerreviewmaketitle
+
+\section{Introduction}
+For the second milestone, I remained in the Movement and Behaviour team. We have been implementing a potential field algorithm in which the robot acts on what can be thought of as a vector space. Finding the optimal vector considering numerous repulsive forces, including the boundaries of the pitch and the opponent, and attractive forces, which for this milestone was the ball.
+	
+\section{Sending Commands}
+Initially, all commands were sent to the robot as a single integer value. Realising this method would not be enough to send all the information that we required, Jouzas and I experimented with sending strings to the robot. However, these methods produced errors that we could not fix.
+
+Bearing this in mind, Behzad and I decided to revert to sending integers over Bluetooth, but sending multiple integers per command. In doing this, a simple command such as \textit{STOP} or \textit{KICK} required only one integer, but commands such as \textit{MOVE} and \textit{ROTATE} expected to received more than one integer. As long we remain consistent, the robot would not get confused between commands and parameters that are received after the command.
+
+\section{TachoPilot}
+TachoPilot is a class supplied by leJOS that allows the user to control the robot without the need to calculate turning circles or wheel speeds. When the class is constructed it is given the wheel diameter and the track width (distance between the two wheels) in millimeters. Taking all the measurements in millimeters is important as it ascertains the speed of the robot in millimeters per second which gives a high degree of accuracy to work with.
+
+Unfortunately, the TachoPilot cannot control each wheel independently. This was problematic with the potential field algorithm because the algorithm gave a vector that could be applied to each wheel separately, so in the implementation for the second milestone we have not used the TachoPilot class.
+
+Ideally, I would like to implement a TachoPilot that can interact with the potential field algorithm as this would be more human-friendly, making it easier to debug, and will give us more control over the movement of the robot.
+
+\section{Potential Field}
+Future strategies can be based on the position of different attractive and repulsive forces. Strategies can be focussed on determining the ideal position of a robot given a specific scenario, whilst the potential field algorithm can calculate the movement of the robot accordingly.
+
+Leaving all the movement planning to one algorithm has led to some problems:
+\begin{enumerate}
+\item There are multiple parameters that have to be considered for each obstacle and destination point. After running various tests through a simulator, Behzad and I believe we have achieved values of \textit{power} and \textit{influence distance} that work well given multiple situations. 
+\item As the robot approached it's destination, it would slow down considerably. To work around this, we increased the threshold such that the robot would stop moving after getting to within 50mm of it's objective point.
+\item When close to obstacles, the vectors produced were often very large ($>$2000). The construction team had suggested using a top speed of 650 for optimal accuracy, so we normalised the large vectors using a \textit{max\_speed} parameter.
+\item The turning angle produced by the algorithm was sometimes too large to be executed in real time. Thus, another parameters was created such that the difference between two vectors was never more than 400 in magnitude.
+\end{enumerate}
+	
+\end{document}

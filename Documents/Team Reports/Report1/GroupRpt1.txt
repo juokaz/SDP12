@@ -1,0 +1,63 @@
+zSystem Design Project – Group Report 1
+Group 12 - ‘Robot Unicorn Defenders’
+
+Introduction
+	
+	
+
+Team Organisation
+
+justify:
+-wiki
+-svn 
+-facebook
+-subteams
+-mailing list
+-meetings & integration points
+
+Construction
+-base
+-gearing
+-kicker
+-management issues
+
+Behaviour & Movement
+
+-robotics studio
+The firmware that comes pre-installed on the Lego Mindstorms
+NXT is somewhat limited and so Calum and myself
+researched which programming languages could be used instead.
+We eventually decided that leJOS1 would be a good
+choice. Previous years had used leJOS for their projects, there
+were multiple leJOS tutorials found online with relative ease
+and, taking into consideration the skill set of our group, Java
+was a popular choice.
+With leJOS simply installing a Java virtual machine, it
+allows the robot to be programmed using Java. Installing leJOS
+was hassle free, and it didn�t take us long to compile, transfer
+and execute our own programs.
+-bluetooth-files-commands (client/server)
+-kicker
+-i/o with vision
+
+Vision
+
+-opencv
+-detecting robot location
+-orientation
+-ball detection
+-pitch & goal
+-CONTOURS :D :D <3
+-image thresholding
+-contour detection :D :D 
+-initial orientation calculation
+-learning platform
+-black spots
+-performance
+-results
+
+Conclusion
+
+-milestone results
+-future work
+
