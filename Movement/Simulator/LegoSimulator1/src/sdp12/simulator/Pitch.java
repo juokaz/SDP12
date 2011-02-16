@@ -3,19 +3,14 @@ package sdp12.simulator;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.PathIterator;
 import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.Timer;
@@ -25,7 +20,9 @@ public class Pitch extends JComponent implements ActionListener {
 	// List of robots
 	RobotT robot1;
 	RobotT robot2;
-	RobotT ball;
+	Ball ball;
+	
+	ArrayList<Wall> walls;
 	
 	// Pitch background
 	BufferedImage pitchBackground;
@@ -37,7 +34,7 @@ public class Pitch extends JComponent implements ActionListener {
 		
 	}
 	
-	// Constructor for Pitch
+	// Constructor for Pitch DEPRECATED
 	public Pitch(RobotT robot1, RobotT robot2) {
 		
 		// Try to load pitch image or throw exception
@@ -56,13 +53,33 @@ public class Pitch extends JComponent implements ActionListener {
 		this.robot1 = robot1;
 		this.robot2 = robot2;
 		
+		this.robot1.setOpponent(this.robot2);
+		
 		// Start timer
 		time = new Timer(5, this);
 		time.start();
 		
 	}
 	
-public Pitch(RobotT robot1, RobotT robot2, RobotT ball) {
+	public void initializeWalls() {
+		
+		Wall top = new Wall(new Rectangle(30, 0, 705, 107), Wall.TOP_WALL);
+		Wall bottom = new Wall(new Rectangle(30, 477, 705, 100), Wall.BOTTOM_WALL);
+		Wall leftTop = new Wall(new Rectangle(0, 107, 30, 97), Wall.UPPER_LEFT_WALL);
+		Wall rightTop = new Wall(new Rectangle(735, 107, 30, 92), Wall.UPPER_RIGHT_WALL);
+		Wall leftBottom = new Wall(new Rectangle(0, 380, 30, 97), Wall.LOWER_LEFT_WALL);
+		Wall rightBottom = new Wall(new Rectangle(735, 380, 30, 97), Wall.LOWER_RIGHT_WALL);
+		
+		walls.add(top);
+		walls.add(bottom);
+		walls.add(leftTop);
+		walls.add(rightTop);
+		walls.add(leftBottom);
+		walls.add(rightBottom);
+		
+	}
+	
+	public Pitch(RobotT robot1, RobotT robot2, Ball ball) {
 		
 		// Try to load pitch image or throw exception
 		try {
@@ -81,8 +98,19 @@ public Pitch(RobotT robot1, RobotT robot2, RobotT ball) {
 		this.robot2 = robot2;
 		this.ball = ball;
 		
+		walls = new ArrayList<Wall>();
+		initializeWalls();
+		
+		robot1.pitch = this;
+		robot1.setWalls(walls);
+		robot1.setOpponent(robot2);
+		robot2.setWalls(walls);
+		ball.setWalls(walls);
+		robot1.setBall(ball);
+		robot2.setBall(ball);
+		
 		// Start timer
-		time = new Timer(5, this);
+		time = new Timer(15, this);
 		time.start();
 		
 	}
@@ -98,25 +126,7 @@ public Pitch(RobotT robot1, RobotT robot2, RobotT ball) {
                 RenderingHints.VALUE_RENDER_QUALITY);
 		
 		// Draw pitch and robots
-		g2d.drawImage(getPitchImage(), 0, 0, null);
-		
-		if(robot1 != null) {
-			
-			drawObject(g2d, robot1);
-		
-		}
-		
-		if(robot2 != null) {
-			
-			drawObject(g2d, robot2);
-		
-		}
-		
-		if(ball != null) {
-			
-			drawObject(g2d, ball);
-		
-		}
+		simulatorRender(g2d);
 		
 //		int x1 = (int) (robot1.getXPos() - Math.cos(robot1.getTheta()+Math.toRadians(90))*20);
 //		int y1 = (int) (robot1.getYPos() + Math.sin(robot1.getTheta()+Math.toRadians(90))*20);
@@ -141,46 +151,27 @@ public Pitch(RobotT robot1, RobotT robot2, RobotT ball) {
 		
 	}
 	
+	// Callback for timer
 	public void actionPerformed(ActionEvent actionEvent) {
 		
 		repaint();
-		//writeCoordinates("images", "coordinates");
 		
 	}
 	
-	public void drawObject(Graphics2D g, RobotT obj) {
+	public void simulatorRender(Graphics2D g2d) {
 		
-		AffineTransform xform = new AffineTransform();
-		xform.rotate(obj.getTheta(), obj.getXPos() + obj.getWidth()/2,
-							obj.getYPos() + obj.getHeight()/2);
-		xform.translate(obj.getXPos(), obj.getYPos());
-	
-		g.drawImage(obj.getImage(), xform, null);
+		g2d.drawImage(getPitchImage(), 0, 0, null);
 		
-	}
-	
-	public void writeCoordinates(String destDir, String fileName) {
+		robot1.draw(g2d);
+		robot2.draw(g2d);
+		ball.draw(g2d);
 		
-		 try {
-			 
-		    FileWriter fstream = new FileWriter(destDir + "/" + fileName + ".txt", true);
-		    BufferedWriter out = new BufferedWriter(fstream);
-
-		    String line = ""; 
-		    line = line.concat(robot1.getXPos() + " " + robot1.getYPos()
-		    		+ " " + robot1.getTheta() + " ");
-		    line = line.concat(robot2.getXPos() + " " + robot2.getYPos()
-		    		+ " " + robot2.getTheta() + " ");
-		    
-		    out.write(line + System.getProperty("line.separator"));
-		    
-		    out.close();
-		    
-		 } catch (Exception e) {
-			 
-		      System.err.println("Error: " + e.getMessage());
-		      
-		 }
+//		for(Wall wall : walls) {
+//			
+//			g2d.setColor(Color.RED);
+//			wall.draw(g2d);
+//			
+//		}
 		
 	}
 	
