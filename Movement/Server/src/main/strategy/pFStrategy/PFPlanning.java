@@ -5,7 +5,7 @@ import java.util.List;
 
 
 public class PFPlanning {
-	PointObject robot;
+	Pos robot;
 	PointObject opponent;
 	PointObject ball;
 	double default_power=5;
@@ -18,6 +18,8 @@ public class PFPlanning {
 	double opponentInf;
 	//power for goal location.
 	double ballPower;
+	//power orientation, extended potential field.
+	double opponentAlphaPower;
 //Constructor for PFPlanning:
 //conf: Configuration parameters of the robot.
 //opponentPower: Repulsive power for opponent
@@ -30,6 +32,21 @@ public PFPlanning(RobotConf conf,double opponentPower,double opponentInf,double 
 	this.opponentPower=opponentPower;
 	this.opponentInf=opponentInf;
 	this.ballPower=targetPower;
+}
+//Constructor for PFPlanning:
+//conf: Configuration parameters of the robot.
+//opponentPower: Repulsive power for opponent
+//opponentInf: Influence distance for opponent.
+//ballPower: Power for goal position
+//alpha: Orientation power
+public PFPlanning(RobotConf conf,double opponentPower,double opponentInf,double targetPower,double alpha)
+{
+	this.config=conf;
+	objects=new ArrayList<Object>();
+	this.opponentPower=opponentPower;
+	this.opponentInf=opponentInf;
+	this.ballPower=targetPower;
+	this.opponentAlphaPower=alpha;
 }
 //under development! this function will add small obstacles around the goal position to 
 //force robot to approach target position from specific orientation. 
@@ -71,14 +88,14 @@ private List<Object> getSorroundinObj(Point center,double len)
 //      if set it will return the basic velocity vector created by PFPlanner. 
 public VelocityVec update(Pos robot,Pos opponent,Point ball,boolean srr,boolean orig)
 {
-	PointObject robotObj=new PointObject(robot.getLocation(),0,0);
-	PointObject opponentObj=new PointObject(opponent.getLocation(),opponentPower,opponentInf);
+	
+	PointObject opponentObj=new PointObject(opponent.getLocation(),opponentPower,opponentInf,opponentAlphaPower);
 	PointObject ballObj=new PointObject(ball,ballPower, Double.MAX_VALUE);
-	this.robot=robotObj;
+	this.robot=robot;
 	this.opponent=opponentObj;
 	this.ball=ballObj;
 	List<Object> complList=updateLocal(srr);
-	Vector res =GoTo(complList, this.ball, this.robot);
+	Vector res =GoTo(complList, this.ball, robot);
 	System.out.println("Result Vector: "+res.toString());
 	if(orig)
 		return (VelocityVec) res;
@@ -110,6 +127,29 @@ public Vector GoTo(List<Object> obstacles, PointObject dest_obj,Point start_poin
 	//calculate distance so if we reached the target position we stop.
 	double dist=Math.sqrt((start_point.getX()-dest_obj.getX())*(start_point.getX()-dest_obj.getX())
 			+(start_point.getY()-dest_obj.getY())*(start_point.getY()-dest_obj.getY()));
+	if(dist<Stopdistance)
+	{
+		return new Vector(0, 0);
+	}
+	
+	Vector rep=new Vector(0,0);
+	//iterate through all obstacles and compute sum of all repulsive vectors 
+	for(int i=0;i<obstacles.size();i++)
+	{
+		rep=rep.add(obstacles.get(i).getVector(start_point, true));
+	}
+	//Compute attractive vector. 
+	Vector att=dest_obj.getVector(start_point, false);
+	
+	return att.add(rep);
+
+}
+//Extended Potential Field.This function takes into account the orientation of Robot.
+public Vector GoTo(List<Object> obstacles, PointObject dest_obj,Pos start_point)
+{
+	//calculate distance so if we reached the target position we stop.
+	double dist=Math.sqrt((start_point.getLocation().getX()-dest_obj.getX())*(start_point.getLocation().getX()-dest_obj.getX())
+			+(start_point.getLocation().getY()-dest_obj.getY())*(start_point.getLocation().getY()-dest_obj.getY()));
 	if(dist<Stopdistance)
 	{
 		return new Vector(0, 0);

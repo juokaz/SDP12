@@ -12,7 +12,7 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 	public PFStrategy(double b,double r)
 	{
 		RobotConf conf=new RobotConf(b, r);
-		planner=new PFPlanning(conf,5*10000000.0,10000,0.05);
+		planner=new PFPlanning(conf,5*100000.0,Double.MAX_VALUE,0.05,10);
 		current=new VelocityVec(0, 0);
 		
 	}

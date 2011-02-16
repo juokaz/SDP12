@@ -8,4 +8,23 @@ public class Util {
 		return new VelocityVec(vector.getLeft()/(Math.PI)*180, vector.getRight()/(Math.PI)*180);
 		
 	}
+	public static double normalize(double angle)
+	{
+		while((angle<0)|(angle>(2*Math.PI)))
+		{
+			if(angle<0)
+				angle+=2*Math.PI;
+			if(angle>=360)
+				angle-=2*Math.PI;
+		}
+		return angle;
+	}
+	public static double map2Pi(double angle)
+	{
+		double norm=normalize(angle);
+		if(norm>Math.PI)
+			norm-=Math.PI;
+		return norm;
+		
+	}
 }

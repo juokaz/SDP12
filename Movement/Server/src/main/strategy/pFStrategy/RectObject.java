@@ -50,6 +50,14 @@ public class RectObject implements Object {
 	{
 		return "Point1: "+p1.toString()+",Point2: "+p2.toString();
 	}
+	//This is getVector function for rectangle shaped object of extended potential field. This is going to be implemented in the future.
+	//for the time being it simply returns normal PF vecotr.
+	@Override
+	public Vector getVector(Pos point, boolean repulsive) {
+		
+		return getVector(point.getLocation(),repulsive);
+		
+	}
 				
 
 }

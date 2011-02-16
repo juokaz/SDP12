@@ -3,5 +3,6 @@ package main.strategy.pFStrategy;
 public interface Object {
 	//return the repulsive/attractive vector given an object in a position.
 	public Vector getVector(Point point,boolean repulsive);
+	public Vector getVector(Pos point,boolean repulsive);
 	
 }
