@@ -81,4 +81,10 @@ public class Simulator implements Executor {
 	public void exit(Robot robot) {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public void stop(Robot robot) {
+		// TODO Auto-generated method stub
+		
+	}
 }

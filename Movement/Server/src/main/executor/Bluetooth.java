@@ -11,6 +11,7 @@ import lejos.pc.comm.NXTCommException;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTInfo;
 import main.Executor;
+import main.data.Robot;
 
 public class Bluetooth implements Executor {
 	/**
@@ -44,6 +45,11 @@ public class Bluetooth implements Executor {
 	private static final String ROTATE = "3";
 	
 	/**
+	 * Stop command
+	 */
+	private static final String STOP = "4";
+	
+	/**
 	 * Separator for commands
 	 */
 	private static final String SPACE = " ";
@@ -70,27 +76,33 @@ public class Bluetooth implements Executor {
 	} 
 
 	@Override
-	public void move(main.data.Robot robot, int X, int Y) {
+	public void move(Robot robot, int X, int Y) {
 		// TODO Auto-generated method stub
 		// server.sendCommand(orders); ???
 	}
 
 	@Override
-	public void rotateWheels(main.data.Robot robot, int A, int B) {
+	public void rotateWheels(Robot robot, int A, int B) {
 		if(!closed)
 		server.sendCommand(MOVE + SPACE + Integer.toString(A)+ SPACE + Integer.toString(B));
 	}
 
 	@Override
-	public void kick(main.data.Robot robot) {
+	public void kick(Robot robot) {
 		if(!closed)
 		server.sendCommand(KICK);
 	}
 
 	@Override
-	public void rotate(main.data.Robot robot, int T) {
+	public void rotate(Robot robot, int T) {
 		if(!closed)
 		server.sendCommand(ROTATE + SPACE + Integer.toString(T));
+	}
+	
+	@Override
+	public void stop(Robot robot){
+		if(!closed)
+			server.sendCommand(STOP);
 	}
 	
 	@Override
@@ -101,7 +113,7 @@ public class Bluetooth implements Executor {
 	}
 	
 	@Override
-	public void exit(main.data.Robot robot) {
+	public void exit(Robot robot) {
 		if(!closed)
 		server.sendCommand(EXIT);
 		closed=true;

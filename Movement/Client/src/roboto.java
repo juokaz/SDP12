@@ -24,6 +24,8 @@ public class roboto {
 	
 	private static final int ROTATE = 3;
 	
+	private static final int STOP = 4;
+	
 	/**
 	 * Main program
 	 * @param args
@@ -98,6 +100,11 @@ public class roboto {
 						} catch (InterruptedException e) {
 							drawMessage("Error executing kick");
 						}
+						break;
+					case STOP:
+						Motor.A.stop();
+						Motor.B.stop();
+						Motor.C.stop();
 						break;
 					default:
 						// No command input

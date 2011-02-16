@@ -43,6 +43,13 @@ public interface Executor {
 	public void rotate(Robot robot, int T);
 	
 	/**
+	 * Stop robot
+	 * 
+	 * @param robot
+	 */
+	public void stop(Robot robot);
+	
+	/**
 	 * Send exit command to executor
 	 */
 	public void exit();
