@@ -43,7 +43,7 @@ public class Runner {
 	 * Available processors
 	 * TODO make this automatic
 	 */
-	public final String[] processors = { "File", "Local process" };
+	public final String[] processors = { "File", "Local process", "m2" };
 	
 	/**
 	 * Available strategies
@@ -117,8 +117,10 @@ public class Runner {
 		// TODO refactor this
 		if (type.equals("Local process")) {
 			processor = new main.processor.LocalVision("../../Vision/trunk/ObjectDetectionML/ObjectDetectionML/src/build/your_project c predict_major outputToConsole show");
+		} else if (type.equals("m2")) {
+			processor = new main.executor.Simulator(100,300,180,400,-250,600,200);
 		} else {
-			processor = new main.processor.File("data/Outputlocs.txt");
+			processor = new main.processor.File("data/out.txt");
 		}
 	}
 
@@ -163,7 +165,8 @@ public class Runner {
 			// TODO move settings to config file
 			executor = new main.executor.Bluetooth("Roboto", "00:16:53:0b:b5:a3");
 		} else {
-			executor = new main.executor.Simulator();
+			//executor = new main.executor.Simulator();
+			executor = (Executor) this.processor;
 		}
 
 		// if strategy exists, connect strategy with executor
