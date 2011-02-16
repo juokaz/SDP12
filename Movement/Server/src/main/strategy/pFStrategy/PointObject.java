@@ -1,5 +1,6 @@
 package main.strategy.pFStrategy;
 
+//basic Point class includes x,y
 public class PointObject extends Vector implements Object {
 
 	private final double power;
@@ -22,6 +23,7 @@ public class PointObject extends Vector implements Object {
 			double distance=Math.sqrt((this.getX()-point.getX())*(this.getX()-point.getX())+(this.getY()-point.getY())*(this.getY()-point.getY()));
 			if(distance <infl_distance)
 			{
+				
 				double p= power*(1/distance-1/infl_distance)*1/(distance*distance)*1/distance;
 				Vector out_point=new Vector(point);
 				return out_point.subtract(this).mult(p);

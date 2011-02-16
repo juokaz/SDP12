@@ -1,5 +1,7 @@
 package main.strategy.pFStrategy;
 
+//A rectangle based object which calculates repulsive vector given that a surface is 
+//considered.
 public class RectObject implements Object {
 
 	private final double power;

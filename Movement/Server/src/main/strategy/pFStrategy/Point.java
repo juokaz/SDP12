@@ -1,5 +1,5 @@
 package main.strategy.pFStrategy;
-
+//basic Point class includes x,y 
 public class Point {
 	private final double x;
 	private final double y;

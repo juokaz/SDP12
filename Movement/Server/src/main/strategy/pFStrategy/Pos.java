@@ -1,5 +1,6 @@
 package main.strategy.pFStrategy;
 
+//A robot Pos, includes location and angle.
 public class Pos {
 	private final Point location;
 	private final double angle;

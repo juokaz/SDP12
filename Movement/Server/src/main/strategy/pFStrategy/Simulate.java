@@ -1,5 +1,6 @@
 package main.strategy.pFStrategy;
 
+//Naive forward kinematic implementation for simulating robot movement.
 public class Simulate {
 	private double b;
 	private Pos position;

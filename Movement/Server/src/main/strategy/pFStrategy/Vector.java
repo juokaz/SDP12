@@ -1,5 +1,5 @@
 package main.strategy.pFStrategy;
-
+//basic support for basic vector operations.
 public class Vector extends Point {
 
 	public Vector(double x, double y) {

@@ -8,7 +8,7 @@ public class Test_Program {
 		double b=15.2;
 		double r=8.27;
 		RobotConf conf=new RobotConf(b, r);
-		pfplanning plann=new pfplanning(conf);
+		PFPlanning plann=new PFPlanning(conf,1,1,1);
 		double wall_Thickness=0;
 		Point top_left=new Point(0,0);
 		Point bottom_right=new Point(50,50);
@@ -48,7 +48,7 @@ public class Test_Program {
 		return vector;
 	}
 
-	public static void output_path(Pos init,double time_step,Point ball,Pos opponent,pfplanning planner,boolean srr,RobotConf config)
+	public static void output_path(Pos init,double time_step,Point ball,Pos opponent,PFPlanning planner,boolean srr,RobotConf config)
 	{
 		File path=new File("pathOutput.txt");
 		FileWriter writer;
@@ -61,7 +61,7 @@ public class Test_Program {
 			double distance=Math.sqrt((current.getLocation().getX()-ball.getX())*(current.getLocation().getX()-ball.getX())+(current.getLocation().getY()-ball.getY())*(current.getLocation().getY()-ball.getY()));
 			while(distance>0.5)
 			{
-			VelocityVec res=planner.update(current,ball,srr,false);
+			VelocityVec res=planner.update(current,new Pos(new Point(0, 0),0),ball,srr,false);
 			System.out.println("Sending :" + (int) Math.toDegrees(res.getLeft())+" "+ (int) Math.toDegrees(res.getRight()));
 			current=sim.move(res.getLeft(), res.getRight(), time_step);
 			System.out.println("Current position: "+current.getLocation().getX()+" "+current.getLocation().getY());
@@ -76,7 +76,7 @@ public class Test_Program {
 		}
 		
 	}
-	public static void ouput_allVectors(Point top_left,Point bottom_right,Point ball,Pos opponent,pfplanning planner,double resolution,boolean srr)
+	public static void ouput_allVectors(Point top_left,Point bottom_right,Point ball,Pos opponent,PFPlanning planner,double resolution,boolean srr)
 	{
 		File vel=new File("vel-Output.txt");
 		FileWriter writer;
@@ -100,7 +100,7 @@ public class Test_Program {
 				if(opponent!=null)
 					vec=planner.update(robot,opponent,b,srr,true);
 				else
-					vec=planner.update(robot,b,srr,true);
+					vec=planner.update(robot,new Pos(new Point(0, 0),0),b,srr,true);
 				writer.write(String.valueOf(x)+","+String.valueOf(y)+","+String.valueOf(vec.getX())+","+String.valueOf(vec.getY())+"\n");
 			}
 		}
