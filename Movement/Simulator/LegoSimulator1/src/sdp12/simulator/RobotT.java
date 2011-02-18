@@ -214,7 +214,16 @@ public class RobotT implements ActionListener {
 		kicker.kick();
 		
 	}
-	
+	public double getCenterX()
+	{
+		//return center of the robot on x axis
+		return (2*this.xPos+this.getWidth())/2;
+	}
+	public double getCenterY()
+	{
+		//return center of the robot on y axis
+		return (2*this.yPos+this.getHeight())/2;
+	}
 	public synchronized boolean isCollided(Shape robotShape) {
 	
 		Area robotArea = new Area(robotShape);
