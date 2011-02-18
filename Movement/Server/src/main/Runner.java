@@ -43,7 +43,7 @@ public class Runner {
 	 * Available processors
 	 * TODO make this automatic
 	 */
-	public final String[] processors = { "File", "Local process", "m2" };
+	public final String[] processors = { "File", "Local process", "Simulator" };
 	
 	/**
 	 * Available strategies
@@ -117,10 +117,10 @@ public class Runner {
 		// TODO refactor this
 		if (type.equals("Local process")) {
 			processor = new main.processor.LocalVision("../../Vision/trunk/ObjectDetectionML/ObjectDetectionML/src/build/your_project c predict_major outputToConsole show");
-		} else if (type.equals("m2")) {
+		} else if (type.equals("Simulator")) {
 			processor = new main.executor.Simulator(100,300,180,400,-250,600,200);
 		} else {
-			processor = new main.processor.File("data/out.txt");
+			processor = new main.processor.File("data/Outputlocs.txt");
 		}
 	}
 
@@ -165,7 +165,9 @@ public class Runner {
 			// TODO move settings to config file
 			executor = new main.executor.Bluetooth("Roboto", "00:16:53:0b:b5:a3");
 		} else {
-			//executor = new main.executor.Simulator();
+			if (!(this.processor instanceof Executor)) {
+				throw new Exception ("Simulator needs Simulator processor");
+			}
 			executor = (Executor) this.processor;
 		}
 
@@ -186,11 +188,14 @@ public class Runner {
 		window.setButton("Stopping...", false);
 		
 		// cancel worker thread
-		worker.cancel(true);
+		if (worker != null)
+			worker.cancel(true);
 
 		// stop processing data and kill the executor
-		processor.stop();
-		executor.exit();
+		if (processor != null)
+			processor.stop();
+		if (executor != null)
+			executor.exit();
 
 		// set running to false to notify later code that Runner has been
 		// successfully stopped 
@@ -249,7 +254,7 @@ public class Runner {
 			this.executor = executor;
 
 			if (Runner.DEBUG) {
-				System.out.printf("Creating worker for Processor: %s, Strategy: %s, Executor: %s", 
+				System.out.printf("Creating worker for Processor: %s, Strategy: %s, Executor: %s\n", 
 					processor, strategy, executor);
 			}
 		}

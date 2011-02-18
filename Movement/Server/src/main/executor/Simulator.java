@@ -72,23 +72,28 @@ public class Simulator extends AbstractProcessor implements Executor {
 		Location data = new Location(robotA, robotB, ball);
 		while(true)
 		{
-		// simulate wait
-		data.getRobotA().setX(robot1.getCenterX());
-		data.getRobotA().setY(robot1.getCenterY());
-		data.getRobotA().setT((float) (robot1.getTheta()));
-		data.getRobotB().setX(robot2.getCenterX());
-		data.getRobotB().setY(robot2.getCenterY());
-		data.getRobotB().setT((float) (robot2.getTheta()));
-		data.getBall().setX(ball.getX());
-		data.getBall().setY(ball.getY());
-		strategy.updateLocation(data);
-		try {
-			Thread.currentThread().sleep(40);//sleep for 1000 ms
-		}
-		catch (Exception ie){
-			//If this thread was intrrupted by nother thread 
-		}
-		
+	    	// stop this from running
+	    	if (stopped) {
+	    		System.out.println("Stopping processor");
+	    		return;
+	    	}
+	    	
+			// simulate wait
+			data.getRobotA().setX(robot1.getCenterX());
+			data.getRobotA().setY(robot1.getCenterY());
+			data.getRobotA().setT((float) (robot1.getTheta()));
+			data.getRobotB().setX(robot2.getCenterX());
+			data.getRobotB().setY(robot2.getCenterY());
+			data.getRobotB().setT((float) (robot2.getTheta()));
+			data.getBall().setX(ball.getX());
+			data.getBall().setY(ball.getY());
+			strategy.updateLocation(data);
+			try {
+				Thread.currentThread().sleep(40);//sleep for 1000 ms
+			}
+			catch (Exception ie){
+				//If this thread was intrrupted by nother thread 
+			}
 		}
 		
 	}

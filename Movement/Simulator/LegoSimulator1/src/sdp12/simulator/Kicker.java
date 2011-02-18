@@ -48,8 +48,6 @@ public class Kicker implements ActionListener {
 	public void setBall(Ball ball) {
 		
 		this.ball = ball;
-		System.out.println("set");
-		
 	}
 	
 	public void updateLocation(double xPos, double yPos, double theta) {
