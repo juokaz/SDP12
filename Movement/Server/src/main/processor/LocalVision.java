@@ -9,6 +9,8 @@ public class LocalVision extends VisionStreamProcessor implements Processor {
 	
 	private String command = null;
 	
+	protected Process process;
+	
 	public LocalVision(String command) {
 		this.command = command;
 	}
@@ -20,15 +22,21 @@ public class LocalVision extends VisionStreamProcessor implements Processor {
 		
 		try {
 			// execute Vision program
-			Process child = Runtime.getRuntime().exec(command);
+			process = Runtime.getRuntime().exec(command);
 
 		    // Get the input stream and read from it
-		    InputStream in = child.getErrorStream();
+		    InputStream in = process.getErrorStream();
 		    
 			// start processing data, method in VisionStreamProcessor
 			process(in);
 		} catch (IOException e) {
 			System.out.println("Processor error: " + e.getMessage());
 		}
+	}
+	
+	public void stop() {
+		super.stop();
+		
+		process.destroy();
 	}
 }
