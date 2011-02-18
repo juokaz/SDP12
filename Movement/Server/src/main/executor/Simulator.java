@@ -103,7 +103,7 @@ public class Simulator extends AbstractProcessor implements Executor {
 	@Override
 	public void rotateWheels(Robot robot, final int leftWheelSpeed, final int rightWheelSpeed) {
 
-		robot1.move(X, Y);
+		robot1.move(leftWheelSpeed, rightWheelSpeed);
 		
 	}
 
