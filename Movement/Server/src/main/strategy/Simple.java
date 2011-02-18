@@ -22,14 +22,10 @@ public class Simple extends AbstractStrategy implements Strategy {
 		enemy = data.getRobotB();
 		
 		gotoBall(robot, ball);
-		/*if(!have_ball) {
-			this.gotoBall(robot, ball);
-		}*/
-		
 	}
 
 	/**
-	 * ascbasicask
+	 * Go to a ball
 	 * 
 	 * @param robot
 	 * @param ball
@@ -41,17 +37,26 @@ public class Simple extends AbstractStrategy implements Strategy {
 		int velocity = (int) distance%200;
 		executor.rotateWheels(robot, velocity, velocity);
 	}
+	
+	/**
+	 * Turn to face X,Y
+	 * 
+	 * @param robot
+	 * @param x
+	 * @param y
+	 */
+	private void turnTo(Robot robot, double x, double y) {
+		//calculate signed angle
+		double angle = Math.atan2(robot.getX()*y - robot.getY()*x, robot.getX()*x + robot.getY()*y);
+		
+		if (angle > 1 || angle < -1)
+			executor.rotate(robot, (int) angle);
+	}
 
 	@Override
 	public VelocityVec getVelocity() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	private void turnTo(Robot robot, double x, double y) {
-		//calculate signed angle
-		double angle = Math.atan2(robot.getX()*y - robot.getY()*x, robot.getX()*x + robot.getY()*y);
-		executor.rotate(robot, (int) angle);
 	}
 
 }
