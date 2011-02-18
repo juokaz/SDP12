@@ -168,7 +168,7 @@ public class Bluetooth implements Executor {
 			try {
 				opened = nxtComm.open(nxtInfo[0]); 
 			} catch (NXTCommException e) {
-				throw new Exception("Exception from open");
+				throw new Exception("Exception from open: " + e.getMessage());
 			}
 
 			// connection couldn't be established
