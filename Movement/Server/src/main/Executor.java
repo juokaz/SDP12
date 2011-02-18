@@ -25,7 +25,7 @@ public interface Executor {
 	 * @param X
 	 * @param Y
 	 */
-	public void rotateWheels(Robot robot, int X, int Y);
+	public void rotateWheels(Robot robot, int leftWheelSpeed, int rightWheelSpeed);
 	
 	/**
 	 * Execute a kick

@@ -82,9 +82,9 @@ public class Bluetooth implements Executor {
 	}
 
 	@Override
-	public void rotateWheels(Robot robot, int A, int B) {
+	public void rotateWheels(Robot robot, int leftWheelSpeed, int rightWeheelSpeed) {
 		if(!closed)
-		server.sendCommand(MOVE + SPACE + Integer.toString(A)+ SPACE + Integer.toString(B));
+		server.sendCommand(MOVE + SPACE + Integer.toString(leftWheelSpeed)+ SPACE + Integer.toString(rightWeheelSpeed));
 	}
 
 	@Override
