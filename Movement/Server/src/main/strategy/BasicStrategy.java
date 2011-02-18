@@ -19,6 +19,7 @@ import main.data.VelocityVec;
  */
 public class BasicStrategy extends AbstractStrategy implements Strategy {
 
+	// Gap is the distance behind ball for the point we want to move to.
 	private int gap;
 	
 	@Override
@@ -26,7 +27,7 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 		// TODO Auto-generated method stub
 		
 		/**
-		 * Get position of ball, robot and angle of robot to ball
+		 * Get position of ball, robot, and move to ball
 		 */
 		
 		Robot robotA = data.getRobotA();
@@ -47,12 +48,13 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 	 */
 	public void moveToBall(Robot robot, Ball ball, Point dirPoint) {
 		
-		// Calculates the angle between the 
+		// Gets the angle between the goal and the ball
 		double ballGoalAngle = calculateBallToGoalAngle(ball);
 		
+		// Sets the points in Point dirPoint to the position we want to move to
 		calculatePosBehindBall(ballGoalAngle, ball, dirPoint);
 		
-	
+		
 		
 	}
 	/**
