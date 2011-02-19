@@ -57,16 +57,16 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 		double robotPointAngle = calculateRobotPointAngle(robot, dirPoint);
 		
 		// Rotate robot to angle needed
-		executor.rotate(robot, (int) robotPointAngle);
+		executor.rotate((int) robotPointAngle);
 		
 		double distance = calculateRobotPointDistance(robot, dirPoint);
 		int velocity = (int) distance%200;
-		executor.rotateWheels(robot, velocity, velocity);
+		executor.rotateWheels(velocity, velocity);
 		
 		
 		// Once robot has reached ball, turn to face ball
-		executor.rotate(robot, (int) (calculateBallToGoalAngle(ball)-robot.getT()));
-		executor.rotate(robot, (int) calculateRobotPointAngle(robot, ball));
+		executor.rotate((int) (calculateBallToGoalAngle(ball)-robot.getT()));
+		executor.rotate((int) calculateRobotPointAngle(robot, ball));
 		
 	}
 	

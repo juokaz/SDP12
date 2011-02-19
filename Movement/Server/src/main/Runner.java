@@ -49,8 +49,7 @@ public class Runner {
 	 * Available strategies
 	 * TODO make this automatic
 	 */
-	public final String[] strategies = {"GoToBall", "Dull", "PFS", "Take penalty", "Basic", "Simple"};
-	
+	public final String[] strategies = {"GoToBall", "PFS", "Take penalty", "Basic", "Simple"};
 	/**
 	 * Available executors
 	 * TODO make this automatic
@@ -144,8 +143,6 @@ public class Runner {
 			strategy = new main.strategy.BasicStrategy();
 		} else if (type.equals("GoToBall")){
 			strategy = new main.strategy.GoToBall();
-		} else {
-			strategy = new main.strategy.Dull();
 		}
 
 		// if processor exists, connect with strategy

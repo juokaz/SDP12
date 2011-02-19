@@ -36,7 +36,7 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 		int right = (int) Math.toDegrees(vector.getRight());
 		if(vector.getLeft()==0&&vector.getRight()==0)
 		{
-			executor.stop(data.getRobotA());
+			executor.stop();
 			return;
 		}
 		// Caps for produced velocities, This has to be removed once the
@@ -66,7 +66,7 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 		if (Runner.DEBUG){
 			System.out.println("Final Command:"+left+","+right);
 		}
-		executor.rotateWheels(data.getRobotA(), left, right);
+		executor.rotateWheels(left, right);
 
 	}
 

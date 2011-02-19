@@ -11,7 +11,6 @@ import lejos.pc.comm.NXTCommException;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTInfo;
 import main.Executor;
-import main.data.Robot;
 
 public class Bluetooth implements Executor {
 	/**
@@ -22,7 +21,7 @@ public class Bluetooth implements Executor {
 	/**
 	 * Has connection been closed?
 	 */
-	boolean closed=true;
+	boolean closed = true;
 	
 	/**
 	 * Exit command
@@ -76,44 +75,31 @@ public class Bluetooth implements Executor {
 	} 
 
 	@Override
-	public void move(Robot robot, int X, int Y) {
-		// TODO Auto-generated method stub
-		// server.sendCommand(orders); ???
-	}
-
-	@Override
-	public void rotateWheels(Robot robot, int leftWheelSpeed, int rightWeheelSpeed) {
+	public void rotateWheels(int leftWheelSpeed, int rightWeheelSpeed) {
 		if(!closed)
 		server.sendCommand(MOVE + SPACE + Integer.toString(leftWheelSpeed)+ SPACE + Integer.toString(rightWeheelSpeed));
 	}
 
 	@Override
-	public void kick(Robot robot) {
+	public void kick() {
 		if(!closed)
 		server.sendCommand(KICK);
 	}
 
 	@Override
-	public void rotate(Robot robot, int T) {
+	public void rotate(int T) {
 		if(!closed)
 		server.sendCommand(ROTATE + SPACE + Integer.toString(T));
 	}
 	
 	@Override
-	public void stop(Robot robot){
+	public void stop(){
 		if(!closed)
 			server.sendCommand(STOP);
 	}
 	
 	@Override
 	public void exit() {
-		if(!closed)
-		server.sendCommand(EXIT);
-		closed=true;
-	}
-	
-	@Override
-	public void exit(Robot robot) {
 		if(!closed)
 		server.sendCommand(EXIT);
 		closed=true;

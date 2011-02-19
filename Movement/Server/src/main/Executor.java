@@ -10,54 +10,32 @@ import main.data.Robot;
 public interface Executor {
 
 	/**
-	 * Move robot to X and Y location
-	 * 
-	 * @param robot
-	 * @param X
-	 * @param Y
-	 */
-	public void move(Robot robot, int X, int Y);
-	
-	/**
 	 * Set wheels spends to X and Y for a robot
 	 * 
-	 * @param robot
 	 * @param X
 	 * @param Y
 	 */
-	public void rotateWheels(Robot robot, int leftWheelSpeed, int rightWheelSpeed);
+	public void rotateWheels(int leftWheelSpeed, int rightWheelSpeed);
 	
 	/**
 	 * Execute a kick
-	 * 
-	 * @param robot
 	 */
-	public void kick(Robot robot);
+	public void kick();
 	
 	/**
 	 * Rotate robot
 	 * 
-	 * @param robot
 	 * @param T
 	 */
-	public void rotate(Robot robot, int T);
+	public void rotate(int T);
 	
 	/**
 	 * Stop robot
-	 * 
-	 * @param robot
 	 */
-	public void stop(Robot robot);
+	public void stop();
 	
 	/**
 	 * Send exit command to executor
 	 */
-	public void exit();
-	
-	/**
-	 * Send exit command to robot connected to executor
-	 * @param robot
-	 */
-	public void exit(Robot robot);
-	
+	public void exit();	
 }

@@ -28,9 +28,9 @@ public class TakePenalty extends AbstractStrategy implements Strategy {
 			//do some crazy maths to work out the required angle
 			double reqTheta = Math.atan((265-robot.getY())/(500-robot.getX()));
 			
-			executor.rotate(robotA,(int)(reqTheta-theta));
+			executor.rotate((int)(reqTheta-theta));
 			
-			executor.kick(robotA);
+			executor.kick();
 		}
 		
 		else if ( theta <= 180 - angThresh && theta >= 180 + angThresh ) {			
@@ -40,9 +40,9 @@ public class TakePenalty extends AbstractStrategy implements Strategy {
 			//do some crazy maths to work out the required angle
 			double reqTheta = Math.atan((265-robot.getY())/(robot.getX()));
 			
-			executor.rotate(robotA,(int)(reqTheta-theta));
+			executor.rotate((int)(reqTheta-theta));
 			
-			executor.kick(robotA);
+			executor.kick();
 		}
 		
 		else {
