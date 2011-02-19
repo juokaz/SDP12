@@ -12,10 +12,10 @@ public class Util {
 	}
 
 	public static double normalize(double angle) {
-		while ((angle < 0) | (angle > (2 * Math.PI))) {
+		while ((angle < 0) | (angle >= (2 * Math.PI))) {
 			if (angle < 0)
 				angle += 2 * Math.PI;
-			if (angle >= 360)
+			if (angle >= 2 * Math.PI)
 				angle -= 2 * Math.PI;
 		}
 		return angle;

@@ -285,7 +285,7 @@ void launch(config conf)
 				if(cnt_TY)
 					ss<<sel_TY.center.x<<","<<sel_TY.center.y<<","<<sel_TY.angle;
 				else
-					ss<<"-1,-1";
+					ss<<"-1,-1,-1";
 				ss<<std::endl;
 				
 				if(conf.outputToText)

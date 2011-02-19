@@ -3,13 +3,15 @@ package main.strategy.pFStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.Runner;
+
 public class PFPlanning {
 	Pos robot;
 	PointObject opponent;
 	PointObject ball;
 	double default_power = 5;
 	RobotConf config;
-	double Stopdistance = 0;
+	double Stopdistance = 70;
 	List<Object> objects;
 	// power for opponent.
 	double opponentPower;
@@ -183,8 +185,11 @@ public class PFPlanning {
 			rep = rep.add(obstacles.get(i).getVector(start_point, true));
 		}
 		// Compute attractive vector.
+		if (Runner.DEBUG){
+			System.out.println("PFPlanning::PointObject::attractive Force, Clac. attractive forc");
+		}
 		Vector att = dest_obj.getVector(start_point, false);
-
+		
 		return att.add(rep);
 
 	}
@@ -205,7 +210,10 @@ public class PFPlanning {
 	// robot.
 	private VelocityVec getVelocity(Vector inputVel, Pos current) {
 
+		
 		double size = inputVel.size();
+		if(size==0)
+			return new VelocityVec(0, 0);
 		double alpha = inputVel.normalAngle();
 		double dist_alpha = alpha - current.getAngle();
 		double Vlin = Math.cos(dist_alpha) * size;
