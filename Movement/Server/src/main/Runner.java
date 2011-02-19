@@ -142,8 +142,6 @@ public class Runner {
 			strategy = new main.strategy.TakePenalty();	
 		} else if (type.equals("Basic")) {
 			strategy = new main.strategy.BasicStrategy();
-		} else if (type.equals("Simple")){
-			strategy = new main.strategy.Simple();
 		} else if (type.equals("GoToBall")){
 			strategy = new main.strategy.GoToBall();
 		} else {
