@@ -49,7 +49,7 @@ public class Runner {
 	 * Available strategies
 	 * TODO make this automatic
 	 */
-	public final String[] strategies = { "Dull", "PFS", "Take penalty", "Simple"};
+	public final String[] strategies = { "Dull", "PFS", "Take penalty", "Simple", "Basic"};
 	
 	/**
 	 * Available executors
@@ -142,6 +142,8 @@ public class Runner {
 			strategy = new main.strategy.TakePenalty();	
 		} else if (type.equals("Simple")) {
 			strategy = new main.strategy.Simple();	
+		} else if (type.equals("Basic")){
+			strategy = new main.strategy.BasicStrategy();
 		} else {
 			strategy = new main.strategy.Dull();
 		}
