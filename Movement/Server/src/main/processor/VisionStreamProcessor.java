@@ -46,7 +46,7 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		    	int robotAY = (int) Float.parseFloat(lines[1]);
 		    	float robotAT = Float.parseFloat(lines[2]);
 		    	
-		    	Robot robotB = new Robot(robotAX, robotAY, robotAT);
+		    	Robot robotA = new Robot(robotAX, robotAY, robotAT);
 		    	
 		    	int ballX = (int) Float.parseFloat(lines[3]);
 		    	int ballY = (int) Float.parseFloat(lines[4]);		    
@@ -57,7 +57,7 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		    	int robotBY = (int) Float.parseFloat(lines[6]);
 		    	float robotBT = Float.parseFloat(lines[7]);    
 		    	
-		    	Robot robotA = new Robot(robotBX, robotBY, robotBT);
+		    	Robot robotB = new Robot(robotBX, robotBY, robotBT);
 		    	
 		    	Location loc = new Location(robotA, robotB, ball);
 		    	

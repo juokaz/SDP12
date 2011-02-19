@@ -39,7 +39,7 @@ public class Goal extends Point {
 			super.setX(0);
 		} else {
 			// TODO: check pitch size to get correct entry here
-			super.setX(755);
+			super.setX(550);
 		}
 	}
 
