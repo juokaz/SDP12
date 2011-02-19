@@ -9,13 +9,9 @@ import main.data.VelocityVec;
 
 
 /**
- * 
  * This strategy should find a position behind the ball and move the robot to it.
  * I think the methods used in finding a point behind the ball might be more useful 
  * than the movement strategy that could be implemented here.
- * 
- * @author calumjackson
- *
  */
 public class BasicStrategy extends AbstractStrategy implements Strategy {
 
@@ -38,6 +34,7 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 		
 		
 		moveToBall(robotA, ball, dirPoint);
+		
 	}
 	
 	/**
@@ -48,15 +45,36 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 	 */
 	public void moveToBall(Robot robot, Ball ball, Point dirPoint) {
 		
+		
+		
 		// Gets the angle between the goal and the ball
 		double ballGoalAngle = calculateBallToGoalAngle(ball);
 		
 		// Sets the points in Point dirPoint to the position we want to move to
 		calculatePosBehindBall(ballGoalAngle, ball, dirPoint);
 		
+		// Get angle between robot and the point to move to
+		double robotPointAngle = calculateRobotPointAngle(robot, dirPoint);
 		
+		// Rotate robot to angle needed
+		executor.rotate(robot, (int) robotPointAngle);
+		
+		double distance = calculateRobotPointDistance(robot, dirPoint);
+		int velocity = (int) distance%200;
+		executor.rotateWheels(robot, velocity, velocity);
+		
+		// Once robot has reached ball, turn to face ball
+		executor.rotate(robot, (int) (calculateBallToGoalAngle(ball)-robot.getT()));
+		executor.rotate(robot, (int) calculateRobotPointAngle(robot, ball));
 		
 	}
+	private double calculateRobotPointDistance(Robot robot, Point dirPoint) {
+		
+		double distance = Math.sqrt(robot.getX()*dirPoint.getX()+robot.getY()*dirPoint.getY());
+
+		return distance;
+	}
+
 	/**
 	 * Find a position behind the ball to navigate to
 	 * Uses the 'gap' parameter as a distance behind the ball
@@ -79,9 +97,7 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 	}
 
 	/**
-	 * 
 	 * Find the angle between the ball and  the centre of the goal.
-	 * TODO: Adapt to find distance as well?
 	 * 
 	 * @param robot
 	 * @param ball
@@ -101,6 +117,37 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 		}
 		
 		return angle;
+		
+	}
+	
+	/** 
+	 * Works out angle between robot and the point the robot wants to move to,
+	 * taking into account the angle the robot is currently at.
+	 * @param robotA
+	 * @param point
+	 * @return
+	 */
+	public double calculateRobotPointAngle(Robot robot, Point point) {
+		
+		double dirAngle = 0;
+		double robotAngle = robot.getT();
+		//Angle that robot needs to turn to head towards ball
+		double turnAngle = 0;
+		
+		//Direction angle between robot and point to move to
+		dirAngle = Math.atan2(point.getY()-robot.getY(), point.getX()-robot.getX());
+		if (dirAngle < 0) {
+			dirAngle = (-Math.PI - dirAngle);
+		} else {
+			dirAngle = (Math.PI - dirAngle);
+		}
+		
+		// Works out difference between angles
+		turnAngle = dirAngle - robotAngle;			
+			
+		
+		
+		return turnAngle;
 		
 	}
 
