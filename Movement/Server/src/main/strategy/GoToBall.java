@@ -68,7 +68,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			a = (int) (1*distance)/35;
 			b = (int) (1*distance)/35;		
 		}
-		executor.rotateWheels(robot, a*50, b*50);
+		executor.rotateWheels(a*50, b*50);
 		
 	}
 
