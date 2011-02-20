@@ -3,7 +3,7 @@ package main.data;
 /**
  * A robot
  */
-public class Robot extends Point{
+public class Robot extends Point {
 
 	protected float T;
 	
@@ -18,15 +18,5 @@ public class Robot extends Point{
 
 	public void setT(float t) {
 		T = t;
-	}
-	
-	private double calculateRobotPointDistance(Point dirPoint) {
-		
-		double dx = getX()-dirPoint.getX();
-		double dy = getY()-dirPoint.getY();
-		
-		double distance = Math.sqrt(dx*dx+dy*dy);
-		
-		return distance;
 	}
 }

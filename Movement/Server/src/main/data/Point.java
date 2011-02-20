@@ -15,13 +15,13 @@ public class Point {
 		this.Y = Y;
 	}
 	
-	
 	/**
-	 * Fings the distance between two points, using dirPoint as the point to move to
+	 * Finds the distance between two points, using dirPoint as the point to move to
+	 * 
 	 * @param dirPoint
 	 * @return
 	 */
-	private double distanceBetweenPoints(Point dirPoint) {
+	public double distanceBetweenPoints(Point dirPoint) {
 		
 		double dx = getX()-dirPoint.getX();
 		double dy = getY()-dirPoint.getY();
@@ -31,16 +31,18 @@ public class Point {
 		return distance;
 	}
 
-	
 	public double getX() {
 		return X;
 	}
+	
 	public void setX(double x) {
 		X = x;
 	}
+	
 	public double getY() {
 		return Y;
 	}
+	
 	public void setY(double y) {
 		Y = y;
 	}

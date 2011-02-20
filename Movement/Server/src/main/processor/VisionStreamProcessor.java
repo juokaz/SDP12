@@ -18,7 +18,7 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 
 	protected void process(InputStream stream) throws NumberFormatException, IOException {
 		
-	    // clean up if any output in stdout
+	    // clean up if any output in std out
 	    BufferedReader brCleanUp = new BufferedReader (new InputStreamReader (stream));
 		
 		String line = null;
@@ -57,11 +57,11 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		    	
 		    	int robotBX = (int) Float.parseFloat(lines[5]);
 		    	int robotBY = (int) Float.parseFloat(lines[6]);
-		    	float robotBT = Float.parseFloat(lines[7]);    
+		    	float robotBT = Float.parseFloat(lines[7]);  
+		    	
+		    	Robot robotB = new Robot(robotBX, robotBY, robotBT);  
 		    	
 		    	Goal goal = new Goal(550,175);
-		    	
-		    	Robot robotB = new Robot(robotBX, robotBY, robotBT);
 		    	
 		    	Location loc = null;
 		    	

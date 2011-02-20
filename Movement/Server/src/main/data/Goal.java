@@ -2,14 +2,10 @@ package main.data;
 
 public class Goal extends Point {
 
-	
-
-	
 	// TODO: Put in real post points, these are not correct, just examples.
 	protected int leftPost = 100;
 	protected int rightPost = 250;
 	protected int centre;
-	
 	
 	/**
 	 * Store the position for the goal.
@@ -23,12 +19,17 @@ public class Goal extends Point {
 		super(X, Y);
 	}
 	
-	
-	private double calculateGoalBallAngle(Ball ball) {
+	/**
+	 * Calculates an angle between a point and goal
+	 * 
+	 * @param point
+	 * @return
+	 */
+	public double calculateGoalAndPointAngle(Point point) {
 		//Middle of the goal position.
 		double goalX = getX(), goalY = getY();
 		// Gets the angle between the ball and the centre of the goal.
-		double angle = Math.atan2(goalY-ball.getY(), goalX-ball.getX());
+		double angle = Math.atan2(goalY-point.getY(), goalX-point.getX());
 		if (getX() == 0) {	
 			if (angle < 0) {
 				angle = (-Math.PI - angle);
@@ -38,32 +39,13 @@ public class Goal extends Point {
 		}
 		
 		return angle;
-	}
-	
-	
-	private double calculateGoalRobotAngle(Robot robot) {
-		//Middle of the goal position.
-		double goalX = getX(), goalY = getY();
-		// Gets the angle between the ball and the centre of the goal.
-		double angle = Math.atan2(goalY-robot.getY(), goalX-robot.getX());
-		
-		if (getX() == 0) {			
-			if (angle < 0) {
-				angle = (-Math.PI - angle);
-			} else {
-				angle = (Math.PI - angle);
-			}
-		}
-		
-		return angle;
-	}
-	
+	}	
 
-	private int getLeftPost() {
+	public int getLeftPost() {
 		return leftPost;
 	}
-	private int getRightPost() {
+	
+	public int getRightPost() {
 		return rightPost;
 	}
-
 }
