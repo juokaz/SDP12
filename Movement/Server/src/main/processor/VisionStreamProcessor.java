@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 
 import main.Runner;
 import main.data.Ball;
+import main.data.Goal;
 import main.data.Location;
 import main.data.Robot;
 
@@ -57,14 +58,16 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		    	int robotBY = (int) Float.parseFloat(lines[6]);
 		    	float robotBT = Float.parseFloat(lines[7]);    
 		    	
+		    	Goal goal = new Goal(0,0,true);
+		    	
 		    	Robot robotB = new Robot(robotBX, robotBY, robotBT);
 		    	
 		    	Location loc = null;
 		    	
 		    	if (isOurRobotFirst()) {
-		    		loc = new Location(robotA, robotB, ball);
+		    		loc = new Location(robotA, robotB, ball, goal);
 		    	} else {
-		    		loc = new Location(robotB, robotA, ball);		    		
+		    		loc = new Location(robotB, robotA, ball, goal);		    		
 		    	}
 		    	
 		    	strategy.updateLocation(loc);

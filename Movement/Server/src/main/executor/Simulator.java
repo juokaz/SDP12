@@ -6,6 +6,7 @@ import javax.swing.SwingUtilities;
 
 import main.Executor;
 import main.data.Ball;
+import main.data.Goal;
 import main.data.Location;
 import main.data.Robot;
 import main.processor.AbstractProcessor;
@@ -78,13 +79,16 @@ public class Simulator extends AbstractProcessor implements Executor {
 				(int) robot2.getYPos(), (float) robot2.getTheta());
 		Ball ball = new Ball((int) this.ball.getXPos(),
 				(int) this.ball.getYPos());
+
+		Goal goal = new Goal(0, 0, true);
+		
 		
 		Location data = null;
 
 		if (isOurRobotFirst()) {
-			data = new Location(robotA, robotB, ball);
+			data = new Location(robotA, robotB, ball, goal);
 		} else {
-			data = new Location(robotB, robotA, ball);
+			data = new Location(robotB, robotA, ball, goal);
 		}
 		
 		while (true) {

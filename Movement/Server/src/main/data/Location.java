@@ -10,11 +10,14 @@ public class Location {
 	private Robot ours;
 	private Robot opponent;
 	private Ball ball;
+	private Goal goal;
 	
-	public Location(Robot ours, Robot oponent, Ball ball) {
+
+	public Location(Robot ours, Robot oponent, Ball ball, Goal oppGoal) {
 		this.ours = ours;
 		this.opponent = oponent;
 		this.ball = ball;
+		this.goal = oppGoal;
 	}
 
 	public Robot getOurRobot() {
@@ -39,5 +42,13 @@ public class Location {
 
 	public void setBall(Ball ball) {
 		this.ball = ball;
+	}
+	
+	public Goal getGoal() {
+		return goal;
+	}
+	
+	public void setGoal(Goal goal) {
+		this.goal = goal;
 	}
 }

@@ -28,6 +28,8 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 		Robot robotA = data.getOurRobot();
 		Ball ball = data.getBall();
 		
+		
+		
 		// Create point object to store data to store 
 		Point dirPoint = new Point(0,0);
 		
@@ -47,6 +49,7 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 		
 		
 		// Gets the angle between the goal and the ball
+		
 		double ballGoalAngle = calculateBallToGoalAngle(ball);
 		
 		// Sets the points in Point dirPoint to the position we want to move to
@@ -64,7 +67,7 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 		
 		
 		// Once robot has reached ball, turn to face ball
-		executor.rotate((int) (calculateBallToGoalAngle(ball)-robot.getT()));
+		//executor.rotate((int) (calculateBallToGoalAngle(ball)-robot.getT()));
 		executor.rotate((int) calculateRobotPointAngle(robot, ball));
 		
 	}

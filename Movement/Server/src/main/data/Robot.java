@@ -19,4 +19,14 @@ public class Robot extends Point{
 	public void setT(float t) {
 		T = t;
 	}
+	
+	private double calculateRobotPointDistance(Point dirPoint) {
+		
+		double dx = getX()-dirPoint.getX();
+		double dy = getY()-dirPoint.getY();
+		
+		double distance = Math.sqrt(dx*dx+dy*dy);
+		
+		return distance;
+	}
 }
