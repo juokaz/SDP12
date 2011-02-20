@@ -101,6 +101,8 @@ void launch(config conf)
 	bool back=false;
 	CvCapture* capture;
 	CvRect rect_B;
+	rect_B.x=-1;
+	rect_B.y=-1;
 	CvBox2D sel_TB;
 	CvBox2D sel_TY;
 	std::vector<CvContour*> selectedDataSet_Ball;
@@ -434,7 +436,7 @@ void launch(config conf)
 			showResuts(current_frame,current_frame_pro_TB,current_frame_pro_TY,current_frame_pro_B,endTick-startTick,sel_TB,sel_TY,rect_B);
 
 
-			if( (cvWaitKey(5) & 255) == 27 ) break;
+			if( (cvWaitKey(500) & 255) == 27 ) break;
 		}
 release:
 
