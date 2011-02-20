@@ -130,7 +130,6 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 		}
 		
 		return angle;
-		
 	}
 	
 	/** 
@@ -156,12 +155,9 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 		}
 		
 		// Works out difference between angles
-		turnAngle = dirAngle - robotAngle;			
-			
-		
+		turnAngle = dirAngle - robotAngle;
 		
 		return turnAngle;
-		
 	}
 	
 	public void setGap(int newGap) {
@@ -171,5 +167,4 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 	public int getGap() {
 		return gap;
 	}
-
 }

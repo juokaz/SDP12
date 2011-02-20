@@ -26,10 +26,8 @@ public class Goal extends Point {
 	 * @return
 	 */
 	public double calculateGoalAndPointAngle(Point point) {
-		//Middle of the goal position.
-		double goalX = getX(), goalY = getY();
-		// Gets the angle between the ball and the centre of the goal.
-		double angle = Math.atan2(goalY-point.getY(), goalX-point.getX());
+		double angle = getAngleBetweenPoints(point);
+		
 		if (getX() == 0) {	
 			if (angle < 0) {
 				angle = (-Math.PI - angle);

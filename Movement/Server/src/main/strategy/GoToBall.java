@@ -2,6 +2,7 @@ package main.strategy;
 
 import main.Strategy;
 import main.data.Ball;
+import main.data.Goal;
 import main.data.Location;
 import main.data.Robot;
 import main.data.Point;
@@ -22,16 +23,21 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		Ball ball = data.getBall();
 		Robot robot = data.getOurRobot();
 		Robot opponent = data.getOpponentRobot();
+		Goal goal = data.getGoal();
+		
+		Point optimum = getPointOutsideOfABall(ball, goal);
 
 		// This state machine covers the basic stages robot can be in 
 		if (isBallInACorner(ball)) {
 			// Don't do anything, wait for it move from there
-		} else if (isObstacleInFront(robot, opponent)) {
-			Point point = getPointToAvoidObstacle(robot, opponent);
+		} else if (isObstacleInFront(robot, opponent, optimum)) {
+			Point point = getPointToAvoidObstacle(robot, opponent, optimum);
 			moveToPoint(robot, point);
-		} else if (!isBallInFront(robot, ball)) {
-			Point point = getPointToFaceBallFromCorrectSide(robot, ball);
+		} else if (isBallBehindRobot(robot, ball, optimum)) {
+			Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum);
 			moveToPoint(robot, point);
+		} else if (!isRobotInOptimumPosition(robot, optimum)) {
+			moveToPoint(robot, optimum);
 		} else if (isBallReached(robot, ball)) {
 			executor.kick();
 		} else {
@@ -44,9 +50,10 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * 
 	 * @param robot
 	 * @param opponent
+	 * @param optimum
 	 * @return
 	 */
-	protected boolean isObstacleInFront(Robot robot, Robot opponent) {
+	protected boolean isObstacleInFront(Robot robot, Robot opponent, Point optimum) {
 		// TODO implement his
 		return false;
 	}
@@ -57,9 +64,10 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * 
 	 * @param robot
 	 * @param opponent
+	 * @param optimum
 	 * @return
 	 */
-	protected Point getPointToAvoidObstacle(Robot robot, Robot opponent) {
+	protected Point getPointToAvoidObstacle(Robot robot, Robot opponent, Point optimum) {
 		// TODO implement this
 		return new Point(0, 0);
 	}
@@ -71,9 +79,10 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * 
 	 * @param robot
 	 * @param ball
+	 * @param optimum
 	 * @return
 	 */
-	protected boolean isBallInFront(Robot robot, Ball ball) {
+	protected boolean isBallBehindRobot(Robot robot, Ball ball, Point optimum) {
 		// TODO implement this
 		return false;
 	}
@@ -84,11 +93,34 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * 
 	 * @param robot
 	 * @param ball
+	 * @param optimum
 	 * @return
 	 */
-	protected Point getPointToFaceBallFromCorrectSide(Robot robot, Ball ball) {
-		// TODO implement this
+	protected Point getPointToFaceBallFromCorrectSide(Robot robot, Ball ball, Point optimum) {
+		// TODO
 		return new Point(0, 0);
+	}
+	
+	/**
+	 * Get point outside of ball far enough to have enough space to turn
+	 * 
+	 * @param ball
+	 * @param goal
+	 * @return
+	 */
+	protected Point getPointOutsideOfABall(Ball ball, Goal goal) {
+		return ball.calculatePosBehindBall(goal.calculateGoalAndPointAngle(ball), ball, gap);
+	}
+	
+	/**
+	 * Is robot in a position where it can turn and reach a ball facing correct direction for a kick
+	 * 
+	 * @param robot
+	 * @param optimum
+	 * @return
+	 */
+	protected boolean isRobotInOptimumPosition(Robot robot, Point optimum) {
+		return robot.isInPoint(optimum);
 	}
 	
 	/**
@@ -99,8 +131,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isBallReached(Robot robot, Ball ball) {
-		// TODO implement this
-		return false;
+		return robot.isInPoint(ball);
 	}
 	
 	/**

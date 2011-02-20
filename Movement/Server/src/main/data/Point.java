@@ -21,14 +21,49 @@ public class Point {
 	 * @param dirPoint
 	 * @return
 	 */
-	public double distanceBetweenPoints(Point dirPoint) {
-		
+	public double getDistanceBetweenPoints(Point dirPoint) {
 		double dx = getX()-dirPoint.getX();
 		double dy = getY()-dirPoint.getY();
 		
-		double distance = Math.sqrt((dx*dx) + (dy*dy));
-		
-		return distance;
+		return Math.sqrt((dx*dx) + (dy*dy));
+	}
+	
+	/**
+	 * Finds the distance between two points, using dirPoint as the point to move to
+	 * 
+	 * @param dirPoint
+	 * @return
+	 */
+	public double getAngleBetweenPoints(Point dirPoint) {
+		return Math.atan2(getY()-dirPoint.getY(), getX()-dirPoint.getX());
+	}
+	
+	/**
+	 * Is this point in area of destination point 
+	 * 
+	 * @param point
+	 * @return
+	 */
+	public boolean isInPoint(Point point) {
+		// TODO check 5
+		return isInPoint(point, 5);
+	}
+	
+	/**
+	 * Is this point in area of threshold of destination point 
+	 * 
+	 * @param point
+	 * @param treshold
+	 * @return
+	 */
+	public boolean isInPoint(Point point, int threshold) {
+		double x = getX();
+		double y = getY();
+		double p_x = point.getX();
+		double p_y = point.getY();
+			
+		return x < p_x + threshold && x > p_x - threshold && 
+			   y < p_y + threshold && y > p_y - threshold;
 	}
 
 	public double getX() {

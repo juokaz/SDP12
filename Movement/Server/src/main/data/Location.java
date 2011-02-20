@@ -3,7 +3,7 @@ package main.data;
 /**
  * Data structure holding two robots and a ball
  * 
- * Robot A should always be our controllabe robot
+ * Robot A should always be our controllable robot
  */
 public class Location {
 
@@ -12,7 +12,6 @@ public class Location {
 	private Ball ball;
 	private Goal goal;
 	
-
 	public Location(Robot ours, Robot oponent, Ball ball, Goal oppGoal) {
 		this.ours = ours;
 		this.opponent = oponent;
