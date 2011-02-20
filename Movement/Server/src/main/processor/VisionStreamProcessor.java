@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.security.acl.Owner;
 
 import main.Runner;
 import main.data.Ball;
@@ -58,7 +59,7 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		    	int robotBY = (int) Float.parseFloat(lines[6]);
 		    	float robotBT = Float.parseFloat(lines[7]);    
 		    	
-		    	Goal goal = new Goal(0,0,true);
+		    	Goal goal = new Goal(550,175);
 		    	
 		    	Robot robotB = new Robot(robotBX, robotBY, robotBT);
 		    	

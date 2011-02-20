@@ -80,7 +80,7 @@ public class Simulator extends AbstractProcessor implements Executor {
 		Ball ball = new Ball((int) this.ball.getXPos(),
 				(int) this.ball.getYPos());
 
-		Goal goal = new Goal(0, 0, true);
+		Goal goal = new Goal(0, 175);
 		
 		
 		Location data = null;
