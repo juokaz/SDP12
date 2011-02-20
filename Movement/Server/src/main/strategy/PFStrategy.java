@@ -70,10 +70,4 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 
 	}
 
-	@Override
-	public VelocityVec getVelocity() {
-		// TODO Auto-generated method stub
-		return current;
-	}
-
 }

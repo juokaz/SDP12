@@ -23,11 +23,4 @@ public interface Strategy {
 	 * @param executor
 	 */
 	public void setExecutor(Executor executor);
-	
-	/**
-	 * TODO what is this?
-	 * 
-	 * @return
-	 */
-	public VelocityVec getVelocity();
 }

@@ -5,7 +5,6 @@ import main.data.Ball;
 import main.data.Location;
 import main.data.Point;
 import main.data.Robot;
-import main.data.VelocityVec;
 
 
 /**
@@ -160,12 +159,6 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 		
 		return turnAngle;
 		
-	}
-
-	@Override
-	public VelocityVec getVelocity() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	public void setGap(int newGap) {

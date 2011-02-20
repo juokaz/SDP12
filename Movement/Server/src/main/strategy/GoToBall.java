@@ -4,7 +4,6 @@ import main.Strategy;
 import main.data.Ball;
 import main.data.Location;
 import main.data.Robot;
-import main.data.VelocityVec;
 
 
 /**
@@ -70,12 +69,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		}
 		executor.rotateWheels(a*50, b*50);
 		
-	}
-
-	@Override
-	public VelocityVec getVelocity() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	public void setGap(int newGap) {

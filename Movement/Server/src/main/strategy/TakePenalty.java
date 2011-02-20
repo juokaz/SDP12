@@ -4,7 +4,6 @@ import main.Strategy;
 import main.data.Location;
 import main.data.Robot;
 import main.data.Point;
-import main.data.VelocityVec;
 
 public class TakePenalty extends AbstractStrategy implements Strategy {
 
@@ -48,13 +47,5 @@ public class TakePenalty extends AbstractStrategy implements Strategy {
 		else {
 			System.out.println("TakePenalty::Cannot find suitable theta");
 		}
-		
 	}
-
-	@Override
-	public VelocityVec getVelocity() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
