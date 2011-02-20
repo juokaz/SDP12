@@ -7,6 +7,7 @@
 
 IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,IplImage* frame_back,CvScalar hsv_min,CvScalar hsv_max,bool back,bool bgr)
 {
+	
 	// Convert the image from BGR to HSV colour space
 	CvSize size = cvSize(frame->width,frame->height);
 	IplImage* hsv_frame;
@@ -26,34 +27,33 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,IplImage* f
 		hsv_back_frame=frame_back;
 	}
 	IplImage* sub_frame = cvCreateImage(size, frame->depth,3);
-		//subtract images according to back variable.
+	//subtract images according to back variable.
 	if(!back)
-	cvSub(hsv_back_frame,hsv_frame,sub_frame);
+		cvSub(hsv_back_frame,hsv_frame,sub_frame);
 	else
 		cvSub(hsv_frame,hsv_back_frame,sub_frame);
 	//show subtracted image for debugging
-	cvShowImage("Subtracted",sub_frame);
+	//cvShowImage("Subtracted",sub_frame);
 	//return sub_frame;
-	
+
 	IplImage* thresholded = cvCreateImage(size, frame->depth,1);
 	//Remove irrelavant pixels
 	cvInRangeS(sub_frame, hsv_min, hsv_max, thresholded);
 	//uncomment for debugging...
-	cvShowImage("Ranges",thresholded);
-	//cvWaitKey(5000);
-	IplImage* edged_frame=thresholded;
-	
+
+
+
 	if(!bgr)
 	{
 		cvReleaseImage(&hsv_frame);
 		cvReleaseImage(&hsv_back_frame);
 	}
-	
+
 	cvReleaseImage(&sub_frame);
-	
-	cvSmooth(edged_frame, edged_frame, CV_GAUSSIAN, 5, 5);
-	
-	return edged_frame;
+
+	//cvSmooth(edged_frame, edged_frame, CV_GAUSSIAN, 5, 5);
+	//cvShowImage("Ranges",thresholded);
+	return thresholded;
 }
 IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,CvScalar hsv_min,CvScalar hsv_max)
 {
@@ -61,38 +61,38 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,CvScalar hs
 	// Convert the image from BGR to HSV colour space
 	CvSize size = cvSize(frame->width,frame->height);
 	IplImage* hsv_frame = cvCreateImage(size, frame->depth,3);
-	
+
 	cvCvtColor(frame, hsv_frame, CV_BGR2HSV);
-	
+
 	double	lowThresh	= 70;
 	double	highThresh	= lowThresh*3;
 	int	N		= 7;
-	
+
 	CvPoint offset = cvPoint((N-1)/2,(N-1)/2);
 	size = cvSize(frame->width+N-1,frame->height+N-1);
-	
+
 	// Creating a grayscale thresholded image
 	IplImage* thresholded = cvCreateImage(size, frame->depth,1);
 	IplImage* border_frame = cvCreateImage(size, frame->depth,3);
 	IplImage* edged_frame = cvCreateImage(size, frame->depth,1);
-	
-	
+
+
 	// Eliminate noise at the borders
 	cvCopyMakeBorder( hsv_frame, border_frame, offset, IPL_BORDER_CONSTANT, cvScalarAll(0));
-	
+
 	// Look at a specific colour boundaries
 	cvInRangeS(border_frame, hsv_min, hsv_max, thresholded);
-	
+
 	// Perform the Canny edge detection algorithm
 	cvCanny( thresholded,edged_frame, lowThresh*N*N, highThresh*N*N, N);
-	
+
 	cvReleaseImage(&thresholded);
 	cvReleaseImage(&hsv_frame);
 	cvReleaseImage(&border_frame);
-	
+
 	//std::cout<<"Finding edges"<<std::endl;
 	cvSmooth(edged_frame, edged_frame, CV_GAUSSIAN, 5, 5);
-	
+
 	return edged_frame;
 }
 
@@ -100,37 +100,37 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,CvScalar hs
 CvBox2D objDetection::DotCloseObjectDetection(IplImage* robot_frame,IplImage* dot_frame,CvMemStorage* storage,config conf)
 {
 	// Mearsure time before processing of frame
-	#ifdef MEASURE_TIME
+#ifdef MEASURE_TIME
 	boost::posix_time::ptime stime = boost::posix_time::microsec_clock::local_time();
-	#endif
-	
+#endif
+
 	// Find a robot
 	CvContour* robot_contour = rankedArea(robot_frame,storage);
-	
+
 	// Find the black dot on the plate
 	std::vector<CvContour*> dot_contour = objDetection::getContours(dot_frame,storage);
 	//CvContour* dot_contour = rankedArea(dot_frame,storage);
-	
+
 	// Measure time after processing of frame
-	#ifdef MEASURE_TIME
+#ifdef MEASURE_TIME
 	boost::posix_time::ptime etime = boost::posix_time::microsec_clock::local_time();
 	// See how long it took to process
 	long long diff = (etime-stime).total_milliseconds();
 	time_total+ = diff;
 	std::cout<<"time: "<<diff<<std::endl;
-	#endif
-	
+#endif
+
 	CvBox2D res;
 	res.angle = 400;
-	
+
 	if(!robot_contour ) //dot_contour.size()>0
 	{
 		return res;
 	}
-	
+
 	//std::cout<<"calculating orientation"<<std::endl;
 	res=orientation3(robot_contour,dot_contour);// objDetection::getorientation_with_dot(robot_contour,dot_contour);
-		
+
 	return res;
 }
 
@@ -141,10 +141,11 @@ bool UDgreater (CvContour* elem1, CvContour* elem2 )
 
 CvContour* objDetection::rankedArea(IplImage* frame,CvMemStorage* storage)
 {
+
 	std::vector<CvContour*> contour=objDetection::getContours(frame,storage);
 	std::sort(contour.begin(),contour.end(),UDgreater);
-	
 	if(contour.size()>0) return contour.at(0);
+	
 	return NULL;
 }
 
@@ -153,11 +154,16 @@ std::vector<CvContour*> objDetection::getContours(IplImage* frame,CvMemStorage* 
 {
 	std::vector<CvContour*> selectedContours;
 	CvSeq* first_contour;
-	
+
 	// Try all four values and see what happens
 	//It seems that this mode works better with different models of object detetcion.
-	int Nc = cvFindContours(frame,storage,&first_contour,sizeof(CvContour),CV_RETR_EXTERNAL);
-	
+	IplImage* temp=cvCreateImage(cvSize(frame->width,frame->height),frame->depth,frame->nChannels);
+	cvCopy(frame,temp);
+
+	int Nc = cvFindContours(temp,storage,&first_contour,sizeof(CvContour),CV_RETR_EXTERNAL);
+	cvReleaseImage(&temp);
+
+
 	for(CvSeq* c=first_contour;c!=NULL;c=c->h_next)
 	{
 		for(CvSeq* d=c;d!=NULL;d=d->v_next)
@@ -165,7 +171,7 @@ std::vector<CvContour*> objDetection::getContours(IplImage* frame,CvMemStorage* 
 			selectedContours.push_back((CvContour*)d);
 		}
 	}
-	
+
 	return selectedContours;
 }
 
@@ -186,12 +192,12 @@ CvContour* objDetection::findClosest(CvContour* robot_contour,std::vector<CvCont
 	CvContour* dot;
 	CvBox2D dotm_bbox;
 	double m_dist=-1;
-	
+
 	for(unsigned int i=0;i<dot_contour.size();i++)
 	{
 		CvBox2D dot_bbox = cvMinAreaRect2(dot_contour.at(i));
 		int 	dist	 = distance(robot_contour,dot_contour.at(i));
-		
+
 		if((dist<m_dist)||(m_dist==-1))
 		{
 			dot=dot_contour.at(i);
@@ -232,15 +238,15 @@ CvBox2D objDetection::orientation_centerMoment(CvContour* cntr,IplImage* img)
 	cenMoment.y=y;
 	//uncomment for debugging...
 
-	cvDrawContours(img,(CvSeq*)cntr,cvScalar(150,150,150),cvScalar(150,150,150),0,5);
-	cvDrawCircle(img,cvPointFrom32f(center),14,cvScalar(100,0,100),5);
-	cvDrawCircle(img,cvPointFrom32f(cenMoment),14,cvScalar(0,200,200),3);
+	//cvDrawContours(img,(CvSeq*)cntr,cvScalar(150,150,150),cvScalar(150,150,150),0,5);
+	//cvDrawCircle(img,cvPointFrom32f(center),14,cvScalar(100,0,100),5);
+	//cvDrawCircle(img,cvPointFrom32f(cenMoment),14,cvScalar(0,200,200),3);
 	std::cout<<"Moment"<<cenMoment.x<<","<<cenMoment.y<<"- circle"<<center.x<<","<<center.y<<std::endl;
 	//cvDrawLine(img,cvPoint(x,y),cvPointFrom32f(result.center),cvScalar(200,0,255),10);
 	result.center=center;
 	result.angle= -1*atan2(result.center.y-cenMoment.y, result.center.x-cenMoment.x)*180/PI;
-	
-	
+
+
 	return result;
 
 }
@@ -255,7 +261,7 @@ CvBox2D objDetection::orientation2(CvContour* cntr)
 	if(cen1.size.height<cen1.size.width)
 	{
 		cen1.angle-=90;
-	return cen1;
+		return cen1;
 	}
 }
 CvBox2D objDetection::orientation_plate(CvContour* cntr, std::vector<CvContour*> plate_vector,IplImage* img)
@@ -265,11 +271,11 @@ CvBox2D objDetection::orientation_plate(CvContour* cntr, std::vector<CvContour*>
 	CvBox2D robot_rect;
 	//Get CvBox2D
 	CvBox2D plate_rect= cvMinAreaRect2(plate_contour);
-	
+
 	float r=0;
 	//Get center of the contour of T by fitting a circle. other modes makes it very vulnurable. 
 	cvMinEnclosingCircle(cntr,&robot_rect.center,&r);
-	
+
 	//Sometimes the returned angle needs to be rotated since width and height are swaped.
 	if(plate_rect.size.width>plate_rect.size.height)
 	{
@@ -288,17 +294,17 @@ CvBox2D objDetection::orientation_plate(CvContour* cntr, std::vector<CvContour*>
 	//For different cases of T location angle is changed.
 	cvEllipseBox(img,plate_rect,cvScalar(255,255,0));
 	std::cout<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
-	
-	
+
+
 	if((robot_rect.center.x>plate_rect.center.x)&&(robot_rect.center.y>plate_rect.center.y)&&(plate_rect.angle>90))
 	{
 		plate_rect.angle-=180;
-	std::cout<<"Modified2:"<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
+		std::cout<<"Modified2:"<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
 	}
 	if((robot_rect.center.x<plate_rect.center.x)&&(robot_rect.center.y>plate_rect.center.y)&&(plate_rect.angle<90))
 	{
 		plate_rect.angle-=180;
-	std::cout<<"Modified3:"<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
+		std::cout<<"Modified3:"<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
 	}
 	//Normalize angles again!
 	NORMALIZE(plate_rect.angle);
@@ -310,13 +316,13 @@ CvBox2D objDetection::orientation_plate(CvContour* cntr, std::vector<CvContour*>
 CvBox2D objDetection::orientation3(CvContour* robot_contour, std::vector<CvContour*> plate_vector)
 {
 	CvContour* plate_contour= findClosest(robot_contour,plate_vector);
-	
+
 	CvBox2D robot_rect= cvMinAreaRect2(robot_contour);
 	CvBox2D plate_rect= cvMinAreaRect2(plate_contour);
 	robot_rect.angle= atan2(robot_rect.center.y - plate_rect.center.y, robot_rect.center.x - plate_rect.center.x)*180/PI;
-	
+
 	//std::cout<<robot_rect.angle<<std::endl;
-	
+
 	return robot_rect;
 }
 
@@ -326,7 +332,7 @@ void objDetection::drawOrientation(IplImage* frame, CvBox2D box,CvScalar color)
 	float	angle	= box.angle;
 	CvPoint point1;
 	CvPoint point2;
-	
+
 	point1.x= box.center.x;
 	point1.y= box.center.y;
 	point2.x= box.center.x + cos(ANGLE_TO_RAD(angle))*20;
@@ -335,8 +341,8 @@ void objDetection::drawOrientation(IplImage* frame, CvBox2D box,CvScalar color)
 	//cvEllipseBox(frame,box,color,2);
 	if(frame)
 	{
-	cvDrawLine(frame,point1,point2,cvScalar(139,131,120),4);
-	cvCircle(frame,pointc,10,color,2);
+		cvDrawLine(frame,point1,point2,cvScalar(139,131,120),4);
+		cvCircle(frame,pointc,10,color,2);
 	}
 }
 

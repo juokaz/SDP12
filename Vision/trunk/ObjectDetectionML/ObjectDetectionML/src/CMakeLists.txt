@@ -15,7 +15,7 @@ SOURCE_GROUP("Source Files" FILES ${folder_source})
 SOURCE_GROUP("Header Files" FILES ${folder_header})
   
 # create the project
-ADD_EXECUTABLE(your_project ${folder_source} ../../../ObjectDetection/src/objdetection.cpp ${folder_header})
+ADD_EXECUTABLE(your_project ${folder_source} ../../../ObjectDetection/src/objdetection.cpp ../../../ObjectDetectionUtil/ObjectDetectionUtil/src/objdetectionutil.cpp ${folder_header})
          
 # add include directories
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})

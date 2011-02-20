@@ -31,6 +31,14 @@ struct image_base
 	char* basefile;
 	int current;
 };
+struct ROI
+{
+	int X;
+	int Y;
+	int Width;
+	int Height;
+};
+
 struct config
 {
 	bool image_file;
@@ -46,6 +54,7 @@ struct config
 	bool predict_minor;
 	bool train_major;
 	bool predict_major;
+	ROI windowOfInterest;
 	CvScalar hsv_min_B;
 	CvScalar hsv_max_B;
 	CvScalar hsv_min_TB;

@@ -24,6 +24,7 @@ namespace objDetection
 	{
 		CvScalar colorPicker(IplImage* img);
 		void thresholdFinder(const char* traininputbase,CvScalar& min,CvScalar& max,bool hsv_true=true);
+		IplImage* cvShowManyImages(char* title, int nArgs, ...);
 	}
 }
 #endif
