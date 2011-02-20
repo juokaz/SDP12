@@ -1,5 +1,9 @@
 package main.strategy;
 
+import java.awt.Color;
+import java.util.ArrayList;
+
+import sdp12.simulator.Drawable;
 import main.Strategy;
 import main.Executor;
 import main.data.Point;
@@ -51,5 +55,12 @@ public abstract class AbstractStrategy implements Strategy {
 			b = (int) (1*distance)/35;		
 		}
 		executor.rotateWheels(a*50, b*50);
+		
+		ArrayList<Drawable> drawables = new ArrayList<Drawable>();
+		drawables.add(new Drawable(Drawable.LABEL, "Distance: " + distance, 50, 30, Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL, "dirAngle: " + dirAngle, 50, 50, Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL, "robotAngle: " + robot.getT(), 50, 70, Color.WHITE));
+		
+		executor.setDrawables(drawables);
 	}
 }

@@ -49,7 +49,7 @@ public class Runner {
 	 * Available strategies
 	 * TODO make this automatic
 	 */
-	public final String[] strategies = {"GoToBall", "PFS", "Take penalty", "Basic", "Simple"};
+	public final String[] strategies = {"GoToBall", "PFS", "Take penalty", "Basic"};
 	/**
 	 * Available executors
 	 * TODO make this automatic

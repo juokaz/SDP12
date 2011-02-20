@@ -97,7 +97,7 @@ public class Kicker implements ActionListener {
 	public void draw(Graphics2D g2d) {
 		
 		g2d.draw(getShape());
-		g2d.draw(ball.getRectangle());
+		//g2d.draw(ball.getRectangle());
 		
 	}
 	

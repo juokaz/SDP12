@@ -18,7 +18,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	
 	@Override
 	public void updateLocation(Location data) {
-		Robot robotA = data.getRobotB();
+		Robot robotA = data.getRobotA();
 		Ball ball = data.getBall();
 	
 		moveToPoint(robotA, ball);

@@ -1,5 +1,9 @@
 package main;
 
+import java.util.ArrayList;
+
+import sdp12.simulator.Drawable;
+
 /**
  * Executor interface
  * 
@@ -26,6 +30,13 @@ public interface Executor {
 	 * @param T
 	 */
 	public void rotate(int T);
+	
+	/**
+	 * Set objects to draw on screen of Simulator
+	 * 
+	 * @param drawables
+	 */
+	public void setDrawables(ArrayList<Drawable> drawables);
 	
 	/**
 	 * Stop robot

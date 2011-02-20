@@ -1,12 +1,17 @@
 package main.executor;
 
+import java.util.ArrayList;
+
 import javax.swing.SwingUtilities;
+
 import main.Executor;
 import main.data.Ball;
 import main.data.Location;
 import main.data.Robot;
 import main.processor.AbstractProcessor;
-import sdp12.simulator.*;
+import sdp12.simulator.Drawable;
+import sdp12.simulator.LegoSimulator;
+import sdp12.simulator.RobotT;
 
 public class Simulator extends AbstractProcessor implements Executor {
 
@@ -91,6 +96,7 @@ public class Simulator extends AbstractProcessor implements Executor {
 			data.getRobotB().setT((float) (robot2.getTheta()));
 			data.getBall().setX(ball.getX());
 			data.getBall().setY(ball.getY());
+			System.out.println(data.getRobotA().getT());
 			strategy.updateLocation(data);
 			try {
 				Thread.currentThread().sleep(40);// sleep for 1000 ms
@@ -115,8 +121,13 @@ public class Simulator extends AbstractProcessor implements Executor {
 	@Override
 	public void rotate(int T) {
 		// TODO Auto-generated method stub
+		robot1.rotate(T);
 	}
 
+	public void setDrawables(ArrayList<Drawable> drawables) {
+		robot1.setDrawables(drawables);
+	}
+	
 	@Override
 	public void exit() {
 		simulator.close();

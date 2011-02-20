@@ -106,9 +106,9 @@ public class LegoSimulator {
 			
 			public void run() {
 				
-				final RobotT robot1 = new RobotT("images/ty.jpg", 65, 392, -45);
-				final RobotT robot2 = new RobotT("images/ty.jpg", 500, 300, 180);
-				final Ball ball = new Ball("images/ball.jpg", 768/4, 576/2);
+				final RobotT robot1 = new RobotT("images/ty.jpg", 500, 400, 90);
+				final RobotT robot2 = new RobotT("images/ty.jpg", 700, -200, 180);
+				final Ball ball = new Ball("images/ball.jpg", 768/2, 576/2);
 				
 				LegoSimulator legoSimulator = new LegoSimulator(robot1, robot2, ball);
 				legoSimulator.createAndShowGUI();
@@ -122,12 +122,49 @@ public class LegoSimulator {
 //						i++;
 //						if(i%5==0) {robot1.kick();};
 						//if(i==1) ball.kick(Math.toRadians(60));
-						robot1.move(25, 25);
-						robot1.kick();
+//						if(i==0)robot1.rotate(720);i++;
+//						robot1.kick(); 
+//						if(i==2)robot1.rotate(-50);
+						
+						double dirAngle = 1*Math.atan2(ball.getYPos()-robot1.getYPos(),
+														ball.getXPos()-robot1.getXPos());
+						double dy = robot1.getYPos() - ball.getYPos();
+						double dx = robot1.getXPos() - ball.getXPos();
+						double distance = Math.sqrt(dx*dx + dy*dy);
+						System.out.println("CopyOfBasicStrategy::Distance " + distance);
+						
+						System.out.println("CopyOfBasicStrategy::dirAngle " + Math.toDegrees(dirAngle));
+						System.out.println("CopyOfBasicStrategy::dAngle " + Math.toDegrees(Math.abs(dirAngle - robot1.getTheta())));
+						System.out.println(Math.toDegrees(robot1.getTheta()));
+						int a=1;
+						int b=1;
+						if(dirAngle > robot1.getTheta()) {
+							
+							a=-1;
+							b=1;
+							
+						} 
+						
+						if (dirAngle < robot1.getTheta()) {
+							
+							a=1;
+							b=-1;
+							
+						}
+						
+						if((Math.abs(dirAngle - robot1.getTheta()) % Math.toRadians(360)) 
+												< Math.toRadians(30)) {
+							
+							a = (int) (1*distance)/35;
+							b = (int) (1*distance)/35;		
+							
+						}
+						
+						robot1.move(a*50, b*50);
 						
 					}
 				};
-				Timer timer = new Timer(1000,u);
+				Timer timer = new Timer(10,u);
 				timer.setRepeats(true);
 				timer.start();
 				

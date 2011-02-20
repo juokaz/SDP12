@@ -26,6 +26,9 @@ public class RobotT implements ActionListener {
 	private ArrayList<Wall> walls;
 	private RobotT opponent;
 	Pitch pitch;
+	
+	ArrayList<Drawable> drawables;
+	
 	// Position and orientation of robot
 	private double xPos;
 	private double yPos;
@@ -34,7 +37,7 @@ public class RobotT implements ActionListener {
 	private double xPrevPos;
 	private double yPrevPos;
 	private double prevTheta;
-	boolean running = true;
+	
 	// Animation variables
 	private Timer timer;
 	private int animationDuration = 1000;
@@ -47,12 +50,18 @@ public class RobotT implements ActionListener {
 	private double speed;
 	private double leftWheelSpeed;
 	private double rightWheelSpeed;
+	private int operation;
+	
 	// Default values
 	public static final int DEFAULT_TIMER_DELAY = 15;
 	public static final int DEFAULT_DISTANCE = 200;
+	public static final int OPERATION_DEFAULT = 0;
+	public static final int OPERATION_ROTATE = 1;
 	
 	Kicker kicker;
 	Ball ball;
+	ArrayList<Point2D> points;
+	
 	
 	public RobotT(String file, double xPos, double yPos, double theta) {
 		
@@ -154,14 +163,17 @@ public class RobotT implements ActionListener {
 	
 	public void draw(Graphics2D g2d) {
 		
+		// Draw kicker
 		kicker.draw(g2d);
 		
+		// Draw robot by rotating it theta degrees around its center and translating it
 		AffineTransform xform = new AffineTransform();
 		xform.rotate(getTheta(), getXPos() + getWidth()/2, getYPos() + getHeight()/2);
 		xform.translate(getXPos(), getYPos());
 		
 		g2d.drawImage(getImage(), xform, null);
 		
+		// Draw the rotated corners of the robot
 		Point2D[] corners = getCorners();
 		
 		for(Point2D corner : corners) {
@@ -169,6 +181,22 @@ public class RobotT implements ActionListener {
 			g2d.drawOval((int)corner.getX(),(int) corner.getY(), 1, 1);
 			
 		}
+
+		if(drawables != null) {
+			
+			for(Drawable drawable : drawables) {
+			
+				drawable.draw(g2d);
+				
+			}
+			
+		}
+		
+	}
+	
+	public void setPoints(ArrayList<Point2D> points) {
+		
+		this.points = points;
 		
 	}
 	
@@ -214,6 +242,7 @@ public class RobotT implements ActionListener {
 		kicker.kick();
 		
 	}
+	
 	public double getCenterX()
 	{
 		//return center of the robot on x axis
@@ -224,9 +253,10 @@ public class RobotT implements ActionListener {
 		//return center of the robot on y axis
 		return (2*this.yPos+this.getHeight())/2;
 	}
+	
 	public synchronized boolean isCollided(Shape robotShape) {
 	
-		Area robotArea = new Area(robotShape);
+		//Area robotArea = new Area(robotShape);
 		Point2D[] corners = getCorners();
 		
 		for(Wall wall : walls) {
@@ -257,13 +287,42 @@ public class RobotT implements ActionListener {
 		
 	}
 	
+	public void rotate(double angleRadians) {
+		
+		endTheta = getTheta() - angleRadians;
+		operation = OPERATION_ROTATE;
+		
+		if(angleRadians > 0) {
+			
+			move(-25, 25);
+			
+		} else {
+			
+			move(25, -25);
+			
+		}
+		
+	}
+	
 	public synchronized void animate2(double fraction) {
 		
 		if(leftWheelSpeed == rightWheelSpeed)
 			rightWheelSpeed -= 0.00000001;
 		
-		//System.out.printf("%d %f %f - ", getHeight(), Math.sin(theta), Math.sin(startTheta));
 		double theta = ((leftWheelSpeed-rightWheelSpeed)*fraction)/getHeight() + startTheta;
+		
+		if(operation == OPERATION_ROTATE) {
+
+			if(Math.abs(theta) > Math.abs(endTheta)) {
+			
+				stop();
+				theta = endTheta;
+				operation = OPERATION_DEFAULT;
+			
+			}	
+		
+		}
+		
 		double ratio = 
 			(getHeight()*(leftWheelSpeed+rightWheelSpeed))/(2*(leftWheelSpeed-rightWheelSpeed));
 		double x = startX + ratio*(Math.sin(theta) - Math.sin(startTheta));
@@ -273,9 +332,8 @@ public class RobotT implements ActionListener {
 		
 			setXPos(x);
 			setYPos(y);
-			setTheta(theta);
-		//System.out.printf("%f %f %f\n", x, y, theta);
-		
+			setTheta(theta % Math.toRadians(360)); // keep theta within bounds 2*pi
+			
 		} else { 
 			
 			resetMovement();
@@ -309,12 +367,9 @@ public class RobotT implements ActionListener {
 	
 	public void resetMovement() {
 		
-//		System.out.println("reset");
-//		System.out.printf("Before reset: %f %f %f\n", startX, startY, startTheta);
 		startX = getXPos();
 		startY = getYPos();
 		startTheta = getTheta();
-//		System.out.printf("After reset: %f %f %f\n", startX, startY, startTheta);
 		
 	}
 	
@@ -332,13 +387,19 @@ public class RobotT implements ActionListener {
 	
 	public void stop() {
 		
-		timer.stop(); running = false;
+		timer.stop();
 		
 	}
 	
 	/*
 	 *  GETTERS AND SETTERS
 	 */
+	
+	public void setDrawables(ArrayList<Drawable> drawables) {
+		
+		this.drawables = drawables;
+		
+	}
 	
 	public BufferedImage getImage() {
 		
@@ -384,14 +445,14 @@ public class RobotT implements ActionListener {
 
 	public double getTheta() {
 		
-		return theta;
+		return theta; 
 		
 	}
 
 	public void setTheta(double theta) {
 		
 		this.theta = theta;
-		
+
 	}
 	
 }
