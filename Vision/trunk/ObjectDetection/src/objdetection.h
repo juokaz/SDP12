@@ -84,6 +84,7 @@ CvBox2D orientation(CvContour* cntr);
 CvBox2D orientation2(CvContour* cntr);
 //calculating orientation using center of Mass
 CvBox2D orientation_centerMoment(CvContour* cntr,IplImage* img);
+CvBox2D orientation_hueMoment(CvContour* cntr,IplImage* img);
 CvBox2D orientation3(CvContour* cntr, std::vector<CvContour*> plate_vector);
 //calculating orientation using plate and a T contour.
 CvBox2D orientation_plate(CvContour* cntr, std::vector<CvContour*> plate_vector,IplImage* img);

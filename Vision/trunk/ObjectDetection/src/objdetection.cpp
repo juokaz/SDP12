@@ -37,10 +37,12 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,IplImage* f
 	//return sub_frame;
 
 	IplImage* thresholded = cvCreateImage(size, frame->depth,1);
+	
 	//Remove irrelavant pixels
 	cvInRangeS(sub_frame, hsv_min, hsv_max, thresholded);
 	//uncomment for debugging...
-
+	
+	
 
 
 	if(!bgr)
@@ -50,7 +52,7 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,IplImage* f
 	}
 
 	cvReleaseImage(&sub_frame);
-
+	
 	//cvSmooth(edged_frame, edged_frame, CV_GAUSSIAN, 5, 5);
 	//cvShowImage("Ranges",thresholded);
 	return thresholded;
@@ -149,7 +151,52 @@ CvContour* objDetection::rankedArea(IplImage* frame,CvMemStorage* storage)
 	return NULL;
 }
 
+CvBox2D objDetection::orientation_hueMoment(CvContour* cntr,IplImage* img)
+{
+	float r=0;
+	CvBox2D result;
+	
+	CvBox2D res1= orientation_centerMoment(cntr,img);
+	
+	//Next we calculate Center of mass. 
+	CvMoments moments;
+	cvMoments(cntr,&moments);
+	float x= (moments.m10/moments.m00);
+	float y= (moments.m01/moments.m00);
+	CvPoint2D32f cenMoment;
+	result.center.x=x;
+	result.center.y=y;
+	float mu20=moments.m20/moments.m00 - x*x;
+	float mu02=moments.m02/moments.m00 - y*y;
+	float mu11=moments.m11/moments.m00 - x*y;
+	float angle=-1*(1.0/2*atan(2*mu11/(mu20-mu02)))*180/PI;
 
+	if (res1.angle>(90)&&(res1.angle<=(180)))
+	{
+		angle=90+angle;
+	}else
+	if (res1.angle<(270)&&(res1.angle>=(180))&&angle>0)
+	{
+		angle=180+angle;
+	}else
+	if (res1.angle<(270)&&(res1.angle>=(180))&&angle<0)
+	{
+		angle=180-angle;
+	}
+	result.angle=angle;
+	//uncomment for debugging...
+
+	//cvDrawContours(img,(CvSeq*)cntr,cvScalar(150,150,150),cvScalar(150,150,150),0,5);
+	//cvDrawCircle(img,cvPointFrom32f(center),14,cvScalar(100,0,100),5);
+	//cvDrawCircle(img,cvPointFrom32f(cenMoment),14,cvScalar(0,200,200),3);
+	//std::cout<<"Moment"<<cenMoment.x<<","<<cenMoment.y<<"- circle"<<center.x<<","<<center.y<<std::endl;
+	//cvDrawLine(img,cvPoint(x,y),cvPointFrom32f(result.center),cvScalar(200,0,255),10);
+	
+	//result.angle= -1*atan2(result.center.y-cenMoment.y, result.center.x-cenMoment.x)*180/PI;
+
+
+	return result;
+}
 std::vector<CvContour*> objDetection::getContours(IplImage* frame,CvMemStorage* storage)
 {
 	std::vector<CvContour*> selectedContours;
