@@ -1,7 +1,6 @@
 package main;
 
 import main.data.Location;
-import main.data.VelocityVec;
 
 /**
  * Strategy interface

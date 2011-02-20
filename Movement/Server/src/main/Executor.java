@@ -1,7 +1,5 @@
 package main;
 
-import main.data.Robot;
-
 /**
  * Executor interface
  * 
