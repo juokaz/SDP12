@@ -25,8 +25,9 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		Robot opponent = data.getOpponentRobot();
 		Goal goal = data.getGoal();
 		
-		Point optimum = getPointOutsideOfABall(ball, goal);
-
+		Point optimum = getOptimumPoint(ball, goal);
+		
+		
 		// This state machine covers the basic stages robot can be in 
 		if (isBallInACorner(ball)) {
 			// Don't do anything, wait for it move from there
@@ -54,8 +55,11 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isObstacleInFront(Robot robot, Robot opponent, Point optimum) {
-		// TODO implement his
-		return false;
+		/** 
+		 * TODO: edit to take into account size of opponent, will probably have to 
+		 * change so that checks if inbetween two angles.
+		 */
+		return robot.getAngleBetweenPoints(optimum) == robot.getAngleBetweenPoints(opponent);
 	}
 	
 	/**
@@ -83,8 +87,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isBallBehindRobot(Robot robot, Ball ball, Point optimum) {
-		// TODO implement this
-		return false;
+		return ((optimum.getX() < ball.getX() && ball.getX() < robot.getX()) || 
+				(optimum.getX() > ball.getX() && ball.getX() > robot.getX()));
 	}
 	
 	/**
@@ -98,6 +102,18 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 */
 	protected Point getPointToFaceBallFromCorrectSide(Robot robot, Ball ball, Point optimum) {
 		// TODO
+		
+		// If robot is not very close to the ball	
+		if (robot.getDistanceBetweenPoints(ball) > 20) {
+			// Checks to see which side of the ball the robot is on
+			if (robot.getAngleBetweenPoints(ball) - ball.getAngleBetweenPoints(optimum) > 180) {				
+				ball.calculatePosBehindBall(ball.getAngleBetweenPoints(optimum) + 45, ball, gap*2);
+			} else {
+				ball.calculatePosBehindBall(ball.getAngleBetweenPoints(optimum) - 45, ball, gap*2);
+			}
+		} else {
+			// TODO: maybe just turn and move ball?
+		}
 		return new Point(0, 0);
 	}
 	
@@ -108,7 +124,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @param goal
 	 * @return
 	 */
-	protected Point getPointOutsideOfABall(Ball ball, Goal goal) {
+	protected Point getOptimumPoint(Ball ball, Goal goal) {
 		return ball.calculatePosBehindBall(goal.calculateGoalAndPointAngle(ball), ball, gap);
 	}
 	
