@@ -77,7 +77,7 @@ public class PointObject extends Vector implements Object {
 				System.out.println("obstacle Distance:" + distance);
 				System.out.println("PFPlanning::PointObject::inf_distance:"+infl_distance);
 			}		
-			if (distance < infl_distance) {
+			if (distance < infl_distance & power!=0) {
 				try
 				{
 				Vector out_point = new Vector(point.getLocation());
