@@ -24,7 +24,7 @@ public class Ball extends Point {
 		
 		
 		
-		if (goal.isLeftGoal()) {
+		if (goal.getX() == 0) {
 			if (angle < 0) {
 				angle = (-Math.PI - angle);
 			} else {
