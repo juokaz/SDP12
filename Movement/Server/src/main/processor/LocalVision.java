@@ -37,6 +37,7 @@ public class LocalVision extends VisionStreamProcessor implements Processor {
 	public void stop() {
 		super.stop();
 		
-		process.destroy();
+		if (process != null)
+			process.destroy();
 	}
 }

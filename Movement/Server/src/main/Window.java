@@ -3,6 +3,8 @@ package main;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.*;
 import java.io.*;
@@ -65,7 +67,12 @@ public class Window {
 		// create main window
 		frame = new JFrame("SDP12");
 		// close whole program on exit click
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+		      public void windowClosing(WindowEvent e) {
+		        Window.this.runner.stopRunner();
+		        System.exit(0);
+		      }
+		    });
 		// default size
 		frame.setSize(1000, 300);
 		// text area
