@@ -244,8 +244,9 @@ CvBox2D objDetection::orientation_centerMoment(CvContour* cntr,IplImage* img)
 	std::cout<<"Moment"<<cenMoment.x<<","<<cenMoment.y<<"- circle"<<center.x<<","<<center.y<<std::endl;
 	//cvDrawLine(img,cvPoint(x,y),cvPointFrom32f(result.center),cvScalar(200,0,255),10);
 	result.center=center;
-	result.angle= -1*atan2(result.center.y-cenMoment.y, result.center.x-cenMoment.x)*180/PI;
-
+	result.angle = -1*atan2(result.center.y-cenMoment.y, result.center.x-cenMoment.x)*180/PI;
+	if(result.angle<0)
+		result.angle+=PI*2;
 
 	return result;
 

@@ -65,7 +65,7 @@ IplImage* objDetection::utilities::cvShowManyImages(char* title, int nArgs, ...)
 
     // Create a new 3 channel image
     DispImage = cvCreateImage( cvSize(100 + size*w, 60 + size*h), 8, 3 );
-
+    cvSet(DispImage,cvScalarAll(100),0);
     // Used to get the arguments passed
     va_list args;
     va_start(args, nArgs);

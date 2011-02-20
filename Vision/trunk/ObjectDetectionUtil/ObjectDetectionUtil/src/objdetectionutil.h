@@ -17,7 +17,8 @@
 #include <iostream>
 #include <ml.h>
 #include <time.h>
-#include "..\..\ObjectDetection\src\objdetection.h"
+#include <stdarg.h>
+#include "../../../ObjectDetection/src/objdetection.h"
 namespace objDetection
 {
 	namespace utilities

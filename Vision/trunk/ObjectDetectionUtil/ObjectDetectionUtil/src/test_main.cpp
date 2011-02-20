@@ -8,24 +8,27 @@
 #include <string.h>
 #include <assert.h>
 #include <math.h>
+#include <cstring>
 #include <float.h>
 #include <limits.h>
 #include <time.h>
 #include <ctype.h>
 #include <iostream>
-#include "..\..\..\ObjectDetection\src\objdetection.h"
+#include "../../../ObjectDetection/src/objdetection.h"
 #include "objdetectionutil.h"
 #include <sstream>
 
 
 // MIN values for yellow robot
+//0, 161, 114, 0
 int ty_min_1	= 0;
-int ty_min_2	= 39;
-int ty_min_3	= 59;
+int ty_min_2	= 42;
+int ty_min_3	= 64;
 // MAX values for yellow robot
-int ty_max_1	= 8;
-int ty_max_2	= 140;
-int ty_max_3	= 220;
+//10, 255, 255, 255
+int ty_max_1	= 35;
+int ty_max_2	= 255;
+int ty_max_3	= 255;
 
 // Color threshold for Black Dot
 
@@ -42,9 +45,9 @@ void launch(config conf)
 	CvCapture* capture;
 	bool back=false;
 	
-	ofstream writer;
+	ofstream* writer;
 	if(conf.outputToText)
-		writer=ofstream(conf.outputfile);
+		writer=new ofstream(conf.outputfile);
 	
 	if(conf.camera)
 	{
@@ -59,15 +62,41 @@ void launch(config conf)
 	{
 		if(conf.camera)
 		{
-			if(!back)
+			if(conf.camera)
 			{
-				std::cout<<"Setup for Background image"<<std::endl;
-			if( !cvGrabFrame( capture ))
-			{
-				std::cout<<"Camera Stopped working, Closing"<<std::endl;
-               break;
-			}
-            frame = cvRetrieveFrame( capture );
+
+				if(!back)
+				{
+					frame=cvLoadImage("bg.jpg");
+					if(frame)
+					{
+						std::cout<<"background loaded"<<std::endl;
+
+					}
+					else
+					{
+						std::cout<<"Setup for Background image"<<std::endl;
+						std::getchar();
+
+						std::cout<<"grabbing frame"<<std::endl;
+						if( !cvGrabFrame( capture ))
+						{
+							std::cout<<"Camera Stopped working, Closing"<<std::endl;
+							break;
+						}
+						frame = cvRetrieveFrame( capture );
+						std::cout<<"frame grabbed"<<std::endl;
+					}
+				}
+				else
+				{
+					if( !cvGrabFrame( capture ))
+					{
+						std::cout<<"Camera Stopped working, Closing"<<std::endl;
+						break;
+					}
+					frame = cvRetrieveFrame( capture );
+				}
 			}
 		}
 
@@ -87,27 +116,30 @@ void launch(config conf)
 			std::cout<<"Error: No Image, Closing"<<std::endl;
 			break;
 	}
-	int w=720;
-	int h=380; 
+	int w=540;
+	int h=290; 
 	IplImage* buffer_frame  = cvCreateImage(cvSize(frame->width,frame->height),frame->depth,3);
 	IplImage* current_frame = cvCreateImage(cvSize(w,h), frame->depth,3);
 	cvCopy(frame,buffer_frame);
-	cvSetImageROI(buffer_frame,cvRect(20,100,w,h));
+	cvSetImageROI(buffer_frame,cvRect(80,110,w,h));
 	cvCopy(buffer_frame,current_frame);
 	cvResetImageROI(buffer_frame);
-	
+	IplImage* current_frame_pro_TY=NULL;
 	cvReleaseImage(&buffer_frame);
 	if(!back)
 	{
 		goto after_release;
 	}
 	
+	//std::cout<<"Show: "<<<<conf.show<<std::endl;
+	current_frame_pro_TY= objDetection::preprocess_to_single_channel(current_frame,back_img,hsv_min_TY,hsv_max_TY);
 	
-	IplImage* current_frame_pro_TY= objDetection::preprocess_to_single_channel(current_frame,back_img,conf.hsv_min_D,conf.hsv_max_D);
-	cvShowImage("Yellow",current_frame_pro_TY);
-	objDetection::utilities::colorPicker(current_frame_pro_TY);
+	cvShowImage("Thresholds",current_frame_pro_TY);
+	//objDetection::utilities::colorPicker(current_frame_pro_TY);
 	
 after_release:
+		if(conf.show)
+		cvShowImage( "Camera", current_frame );
 		if(!back)
 		{	
 		back=true;
@@ -117,8 +149,8 @@ after_release:
 		{
 			cvReleaseImage(&current_frame);
 		}
-		if(conf.show)
-		cvShowImage( "Camera", current_frame );
+		
+		
 		
 		if( (cvWaitKey(50) & 255) == 27 ) break;
 		if(conf.image_file)
@@ -132,7 +164,7 @@ after_release:
 		cvClearMemStorage(storage);
 	}
 	if(conf.outputfile)
-			writer.close();
+			writer->close();
 	cvReleaseMemStorage(&storage);
 }
 config get_Config(int argc, char* argv[])
@@ -184,37 +216,37 @@ config get_Config(int argc, char* argv[])
 		res.i_base.image_end=atoi(argv[currentIndex]);
 		currentIndex++;
 	}
-	currentIndex++;
+	//currentIndex++;
 	if(currentIndex==argc)
 	{
 		return res;
 	}
-	if(!std::strcmp(argv[currentIndex],"show"))
+	if(!strcmp(argv[currentIndex],"show"))
 		res.show=true;
-	if(!std::strcmp(argv[currentIndex],"outputToText"))
+	if(!strcmp(argv[currentIndex],"outputToText"))
 	{
 		res.outputToText=true;
 		currentIndex++;
 		res.outputfile=argv[currentIndex];
 	}
-	if(!std::strcmp(argv[currentIndex],"outputToConsole"))
+	if(!strcmp(argv[currentIndex],"outputToConsole"))
 		res.outputToConsole=true;
 	currentIndex++;
 	if(currentIndex==argc)
 	{
 		return res;
 	}
-	if(!std::strcmp(argv[currentIndex],"show"))
+	if(!strcmp(argv[currentIndex],"show"))
 	{
 		res.show=true;
 	}
-	if(!std::strcmp(argv[currentIndex],"outputToText"))
+	if(!strcmp(argv[currentIndex],"outputToText"))
 	{
 		res.outputToText=true;
 		currentIndex++;
 		res.outputfile=argv[currentIndex];
 	}
-	if(!std::strcmp(argv[currentIndex],"outputToConsole"))
+	if(!strcmp(argv[currentIndex],"outputToConsole"))
 	{
 		res.outputToConsole=true;
 	}
@@ -223,17 +255,17 @@ config get_Config(int argc, char* argv[])
 	{
 		return res;
 	}
-	if(!std::strcmp(argv[currentIndex],"show"))
+	if(!strcmp(argv[currentIndex],"show"))
 	{
 		res.show=true;
 	}
-	if(!std::strcmp(argv[currentIndex],"outputToText"))
+	if(!strcmp(argv[currentIndex],"outputToText"))
 	{
 		res.outputToText=true;
 		currentIndex++;
 		res.outputfile=argv[currentIndex];
 	}
-	if(!std::strcmp(argv[currentIndex],"outputToConsole"))
+	if(!strcmp(argv[currentIndex],"outputToConsole"))
 	{	
 		res.outputToConsole=true;
 

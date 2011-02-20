@@ -31,15 +31,17 @@ CvScalar hsv_max_B = cvScalar(10, 255, 255, 255);//CvScalar hsv_max_B = cvScalar
 
 // Color threshold for Yellow T 
 
-CvScalar hsv_min_TY = cvScalar(0, 39, 79, 0);//cvScalar(0, 39, 79, 0);//CvScalar hsv_min_D = cvScalar(11, 30, 60, 0);
-CvScalar hsv_max_TY = cvScalar(4, 140, 220, 0);//CvScalar hsv_max_TY = cvScalar(40, 255, 255, 255);
+CvScalar hsv_min_TY = cvScalar(0, 13, 64, 0);//cvScalar(0, 39, 79, 0);//CvScalar hsv_min_D = cvScalar(11, 30, 60, 0);
+CvScalar hsv_max_TY = cvScalar(3, 255, 255, 0);//CvScalar hsv_max_TY = cvScalar(40, 255, 255, 255);
 
 // Color threshold for Blue T
 
-CvScalar hsv_min_TB = cvScalar(30, 30, 50, 0);//CvScalar hsv_min_D = cvScalar(11, 30, 60, 0);
-CvScalar hsv_max_TB = cvScalar(90, 105, 140, 0);//CvScalar hsv_max_TB = cvScalar(110, 255, 255, 255);
+CvScalar hsv_min_TB = cvScalar(39, 23, 0, 0);//CvScalar hsv_min_D = cvScalar(11, 30, 60, 0);
+CvScalar hsv_max_TB = cvScalar(78, 255, 255, 0);//CvScalar hsv_max_TB = cvScalar(110, 255, 255, 255);
 
-void showResuts(IplImage*& frame,IplImage*& thresh1,IplImage*& thresh2,IplImage*& thresh3,int64 diffTime,CvBox2D TB,CvBox2D TY,CvRect B)
+int64 totalTime;
+int Opcount;
+void showResuts(IplImage*& frame,IplImage*& thresh1,IplImage*& thresh2,IplImage*& thresh3,int64 diffTime,CvBox2D TB,CvBox2D TY,CvRect B,bool display)
 {
 
 	//cvShowImage("Test Window4",frame);
@@ -56,15 +58,17 @@ void showResuts(IplImage*& frame,IplImage*& thresh1,IplImage*& thresh2,IplImage*
 	cvConvertImage(thresh3,thresh3_c);
 
 	IplImage* disp=objDetection::utilities::cvShowManyImages("Camera",4,frame_c,thresh1_c,thresh2_c,thresh3_c);
-
-	if(disp)
+	totalTime+=diffTime;
+	Opcount++;
+	float meanfps=1/( ( ( (float)totalTime )/Opcount) /cv::getTickFrequency());
+	float fps=1/(((float)diffTime)/cv::getTickFrequency());
+	if(disp && display)
 	{
 		int w=disp->width;
 		int h=disp->height;
 
 		CvFont font;
 		cvInitFont(&font, CV_FONT_HERSHEY_SIMPLEX, 0.4, 0.4, 0, 1, CV_AA);
-		float fps=1/(((float)diffTime)/cv::getTickFrequency());
 		stringstream ss;
 		ss.setf(ios::fixed,ios::floatfield);
 		ss.precision(1);
@@ -72,21 +76,29 @@ void showResuts(IplImage*& frame,IplImage*& thresh1,IplImage*& thresh2,IplImage*
 		CvPoint point=cvPoint(10, h-100);
 		cvPutText(disp,ss.str().c_str(),point, &font, cvScalar(0, 0, 0, 0));
 		ss.str("");
+		ss<<"mean fps: "<<meanfps;
+		CvPoint point2=point;
+		point2.x+=80;
+		cvPutText(disp,ss.str().c_str(),point2, &font, cvScalar(0, 0, 0, 0));
+		ss.str("");
 		point.y+=20;
-		ss<<"Blue T pos:"<<TB.center.x<<","<<TB.center.y<<TB.angle;
+		ss<<"Blue T pos:"<<TB.center.x<<","<<TB.center.y<<","<<TB.angle;
 		cvPutText(disp,ss.str().c_str(),point, &font, cvScalar(0, 0, 0, 0));
 		ss.str("");
 		point.y+=20;
-		ss<<"Yellow T pos:"<<TY.center.x<<","<<TY.center.y<<TY.angle;
+		ss<<"Yellow T pos:"<<TY.center.x<<","<<TY.center.y<<","<<TY.angle;
 		cvPutText(disp,ss.str().c_str(),point, &font, cvScalar(0, 0, 0, 0));
 		ss.str("");
 		point.y+=20;
 		ss<<"Ball pos:"<<B.x<<","<<B.y;
 		cvPutText(disp,ss.str().c_str(),point, &font, cvScalar(0, 0, 0, 0));
 		cvShowImage("Camera",disp);
+		
 	}
-
-
+	std::cout.setf(ios::fixed,ios::floatfield);
+	std::cout.precision(1);
+	std::cout<<"fps: "<<fps<<" - mean fps: "<<meanfps<<std::endl;
+	cvReleaseImage(&disp);
 	cvReleaseImage(&frame_c);
 	cvReleaseImage(&thresh1_c);
 	cvReleaseImage(&thresh2_c);
@@ -104,7 +116,11 @@ void launch(config conf)
 	rect_B.x=-1;
 	rect_B.y=-1;
 	CvBox2D sel_TB;
+	int64 endTick=0;
+	int64 startTick=0;
 	CvBox2D sel_TY;
+	totalTime=0;
+	Opcount=0;
 	std::vector<CvContour*> selectedDataSet_Ball;
 	std::vector<CvContour*> rejectedDataSet_Ball;
 	std::vector<CvContour*> selectedDataSet_D;
@@ -140,7 +156,7 @@ void launch(config conf)
 
 	while(true)
 	{
-		
+		startTick= cv::getTickCount();
 		if(conf.camera)
 		{
 			if(conf.camera)
@@ -198,7 +214,7 @@ void launch(config conf)
 			std::cout<<"Error: No Image, Closing"<<std::endl;
 			break;
 		}
-		int64 startTick= cv::getTickCount();
+		
 		
 		std::cout<<"reformat"<<std::endl;
 		int w=conf.windowOfInterest.Width;
@@ -429,14 +445,15 @@ void launch(config conf)
 				}
 			}
 		}
-		int64 endTick= cv::getTickCount();
+		endTick= cv::getTickCount();
+		cvClearMemStorage(storage);
 		if(conf.show)
 		{
 			
-			showResuts(current_frame,current_frame_pro_TB,current_frame_pro_TY,current_frame_pro_B,endTick-startTick,sel_TB,sel_TY,rect_B);
+			showResuts(current_frame,current_frame_pro_TB,current_frame_pro_TY,current_frame_pro_B,endTick-startTick,sel_TB,sel_TY,rect_B,true);
 
 
-			if( (cvWaitKey(500) & 255) == 27 ) break;
+			if( (cvWaitKey(10) & 255) == 27 ) break;
 		}
 release:
 
