@@ -19,10 +19,10 @@ public class File extends VisionStreamProcessor implements Processor {
 		SEPARATOR = " ";
 	}
 
-	public void run() {
+	public void run(boolean our_robot) {
 		
 		// this needed to set running to true or set it manually
-		super.run();
+		super.run(our_robot);
 		
 		try {
 			java.io.File file = new java.io.File(this.file);

@@ -64,7 +64,6 @@ public abstract class AbstractStrategy implements Strategy {
 				b = (int) (1*distance)/35;		
 			}
 			executor.rotateWheels(a*50, b*50);
-			
 		}
 		
 		ArrayList<Drawable> drawables = new ArrayList<Drawable>();

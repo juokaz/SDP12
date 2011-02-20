@@ -22,10 +22,10 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 	public void updateLocation(Location data) {
 
 
-		Pos current = new Pos(new Point(data.getRobotA().getX(), data
-				.getRobotA().getY()), data.getRobotA().getT());
-		Pos opponent = new Pos(new Point(data.getRobotB().getX(), data
-				.getRobotB().getY()), data.getRobotB().getT());
+		Pos current = new Pos(new Point(data.getOurRobot().getX(), data
+				.getOurRobot().getY()), data.getOurRobot().getT());
+		Pos opponent = new Pos(new Point(data.getOurRobot().getX(), data
+				.getOurRobot().getY()), data.getOurRobot().getT());
 		Point ball = new Point(data.getBall().getX(), data.getBall().getY());
 		// getting new velocity vectors
 		VelocityVec vector = planner.update(current, opponent, ball, false,

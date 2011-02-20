@@ -15,10 +15,10 @@ public class LocalVision extends VisionStreamProcessor implements Processor {
 		this.command = command;
 	}
 
-	public void run() {
+	public void run(boolean our_robot) {
 		
 		// this needed to set running to true or set it manually
-		super.run();
+		super.run(our_robot);
 		
 		try {
 			// execute Vision program

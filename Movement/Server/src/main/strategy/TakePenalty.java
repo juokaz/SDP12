@@ -11,7 +11,7 @@ public class TakePenalty extends AbstractStrategy implements Strategy {
 	
 	public void updateLocation(Location data) {
 
-		Robot robotA = data.getRobotA();
+		Robot robotA = data.getOurRobot();
 		
 		//define a threshold for knowing which way the robot is facing
 		float angThresh = 30;

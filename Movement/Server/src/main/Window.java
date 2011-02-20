@@ -40,6 +40,11 @@ public class Window {
 	 * Executors list
 	 */
 	private JComboBox executor;
+	
+	/** 
+	 * Robots list
+	 */
+	private JComboBox robots;
 
 	/**
 	 * Text field containg system.out
@@ -103,12 +108,17 @@ public class Window {
 			public void actionPerformed(ActionEvent e) {
 				runner.toggle((String) processor.getSelectedItem(),
 						(String) strategy.getSelectedItem(),
-						(String) executor.getSelectedItem());
+						(String) executor.getSelectedItem(),
+						(String) robots.getSelectedItem());
 			}
 		});
 
 		// get content container (jframe contains one container)
 		Container contentPane = frame.getContentPane();
+		
+		// robots combobox
+		robots = new JComboBox(runner.robots);
+		JLabel robotsl = new JLabel("Our Robot:");
 
 		// processors combobox
 		processor = new JComboBox(runner.processors);
@@ -124,6 +134,8 @@ public class Window {
 
 		// use a panel, this is will make everything automatically aligned horizontaly
 		JPanel panel = new JPanel();
+		panel.add(robotsl);
+		panel.add(robots);
 		panel.add(processorl);
 		panel.add(processor);
 		panel.add(strategyl);

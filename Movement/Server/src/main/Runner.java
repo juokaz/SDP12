@@ -57,6 +57,22 @@ public class Runner {
 	public final String[] executors = { "Simulator", "Bluetooth" };
 
 	/**
+	 * Robot blue
+	 */
+	private final String ROBOT_BLUE = "Blue";
+	
+	/**
+	 * Robot yellow
+	 */
+	private final String ROBOT_YELLOW = "Yellow";
+	
+	/**
+	 * Available robots
+	 * TODO make this automatic
+	 */
+	public final String[] robots = { ROBOT_BLUE, ROBOT_YELLOW };
+
+	/**
 	 * Start Runner statically
 	 * 
 	 * @param args
@@ -82,9 +98,10 @@ public class Runner {
 	 * @param processor
 	 * @param strategy
 	 * @param executor
+	 * @param our_robot
 	 * @throws Exception
 	 */
-	public void startRunner(String processor, String strategy, String executor)
+	public void startRunner(String processor, String strategy, String executor, String our_robot)
 			throws Exception {
 		// Disable button from being clicked 
 		window.setButton("Running...", false);
@@ -103,7 +120,7 @@ public class Runner {
 		System.out.println("Processing starting");
 
 		// start running processor
-		this.processor.run();
+		this.processor.run(our_robot.equals(ROBOT_BLUE));
 	}
 
 	/**
@@ -129,7 +146,7 @@ public class Runner {
 	 * @param type
 	 */
 	private void setStrategy(String type) {
-
+		
 		// TODO refactor this
 		if (type.equals("PFS")) {
 			// wheel radius = 2.48
@@ -213,9 +230,10 @@ public class Runner {
 	 * @param processor
 	 * @param strategy
 	 * @param executor
+	 * @param our_robot
 	 * @return true for started, false for stopped
 	 */
-	public boolean toggle(String processor, String strategy, String executor) {
+	public boolean toggle(String processor, String strategy, String executor, String our_robot) {
 		
 		// is it running now?
 		if (running) {
@@ -233,7 +251,7 @@ public class Runner {
 
 		// create a worker thread and execute it
 		// this is needed so processor doesn't block UI
-		worker = new ProcessingWorker(processor, strategy, executor);
+		worker = new ProcessingWorker(processor, strategy, executor, our_robot);
 		worker.execute();
 
 		return true;
@@ -248,11 +266,13 @@ public class Runner {
 		protected String processor;
 		protected String strategy;
 		protected String executor;
+		protected String our_robot;
 
-		public ProcessingWorker(String processor, String strategy, String executor) {
+		public ProcessingWorker(String processor, String strategy, String executor, String our_robot) {
 			this.processor = processor;
 			this.strategy = strategy;
 			this.executor = executor;
+			this.our_robot = our_robot;
 
 			if (Runner.DEBUG) {
 				System.out.printf("Creating worker for Processor: %s, Strategy: %s, Executor: %s\n", 
@@ -264,7 +284,7 @@ public class Runner {
 		public String doInBackground() {
 			try {
 				// try starting runner
-				startRunner(processor, strategy, executor);
+				startRunner(processor, strategy, executor, our_robot);
 			} catch (Exception e) {
 				// runner cannot be started
 				System.out.println("Runner cannot be started: " + e.getMessage());

@@ -7,30 +7,30 @@ package main.data;
  */
 public class Location {
 
-	private Robot robotA;
-	private Robot robotB;
+	private Robot ours;
+	private Robot oponent;
 	private Ball ball;
 	
-	public Location(Robot robotA, Robot robotB, Ball ball) {
-		this.robotA = robotA;
-		this.robotB = robotB;
+	public Location(Robot ours, Robot oponent, Ball ball) {
+		this.ours = ours;
+		this.oponent = oponent;
 		this.ball = ball;
 	}
 
-	public Robot getRobotA() {
-		return robotA;
+	public Robot getOurRobot() {
+		return ours;
 	}
 
-	public void setRobotA(Robot robotA) {
-		this.robotA = robotA;
+	public void setOurRobot(Robot robot) {
+		this.ours = robot;
 	}
 
-	public Robot getRobotB() {
-		return robotB;
+	public Robot getOponentRobot() {
+		return oponent;
 	}
 
-	public void setRobotB(Robot robotB) {
-		this.robotB = robotB;
+	public void setOponentRobot(Robot robot) {
+		this.oponent = robot;
 	}
 
 	public Ball getBall() {

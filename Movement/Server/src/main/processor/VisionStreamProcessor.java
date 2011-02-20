@@ -59,7 +59,13 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		    	
 		    	Robot robotB = new Robot(robotBX, robotBY, robotBT);
 		    	
-		    	Location loc = new Location(robotA, robotB, ball);
+		    	Location loc = null;
+		    	
+		    	if (isOurRobotFirst()) {
+		    		loc = new Location(robotA, robotB, ball);
+		    	} else {
+		    		loc = new Location(robotB, robotA, ball);		    		
+		    	}
 		    	
 		    	strategy.updateLocation(loc);
 	    	}

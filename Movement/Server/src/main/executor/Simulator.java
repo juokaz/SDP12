@@ -64,13 +64,13 @@ public class Simulator extends AbstractProcessor implements Executor {
 	}
 
 	@SuppressWarnings("static-access")
-	public void run() {
+	public void run(boolean our_robot) {
 
-		super.run();
+		super.run(our_robot);
 		try {
-			Thread.currentThread().sleep(2000);// sleep for 1000 ms
+			Thread.currentThread().sleep(2000);// sleep for 2000 ms
 		} catch (Exception ie) {
-			// If this thread was intrrupted by nother thread
+			// If this thread was interrupted by another thread
 		}
 		Robot robotA = new Robot((int) robot1.getXPos(),
 				(int) robot1.getYPos(), (float) robot1.getTheta());
@@ -78,8 +78,15 @@ public class Simulator extends AbstractProcessor implements Executor {
 				(int) robot2.getYPos(), (float) robot2.getTheta());
 		Ball ball = new Ball((int) this.ball.getXPos(),
 				(int) this.ball.getYPos());
+		
+		Location data = null;
 
-		Location data = new Location(robotA, robotB, ball);
+		if (isOurRobotFirst()) {
+			data = new Location(robotA, robotB, ball);
+		} else {
+			data = new Location(robotB, robotA, ball);
+		}
+		
 		while (true) {
 			// stop this from running
 			if (stopped) {
@@ -88,15 +95,15 @@ public class Simulator extends AbstractProcessor implements Executor {
 			}
 
 			// simulate wait
-			data.getRobotA().setX(robot1.getCenterX());
-			data.getRobotA().setY(robot1.getCenterY());
-			data.getRobotA().setT((float) (robot1.getTheta()));
-			data.getRobotB().setX(robot2.getCenterX());
-			data.getRobotB().setY(robot2.getCenterY());
-			data.getRobotB().setT((float) (robot2.getTheta()));
+			data.getOurRobot().setX(robot1.getCenterX());
+			data.getOurRobot().setY(robot1.getCenterY());
+			data.getOurRobot().setT((float) (robot1.getTheta()));
+			data.getOponentRobot().setX(robot2.getCenterX());
+			data.getOponentRobot().setY(robot2.getCenterY());
+			data.getOponentRobot().setT((float) (robot2.getTheta()));
 			data.getBall().setX(ball.getX());
 			data.getBall().setY(ball.getY());
-			System.out.println(data.getRobotA().getT());
+			System.out.println(data.getOurRobot().getT());
 			strategy.updateLocation(data);
 			try {
 				Thread.currentThread().sleep(40);// sleep for 1000 ms
@@ -109,13 +116,20 @@ public class Simulator extends AbstractProcessor implements Executor {
 
 	@Override
 	public void rotateWheels(final int leftWheelSpeed, final int rightWheelSpeed) {
-
-		robot1.move(leftWheelSpeed, rightWheelSpeed);
+		if (isOurRobotFirst()) {
+			robot1.move(leftWheelSpeed, rightWheelSpeed);
+		} else {
+			robot2.move(leftWheelSpeed, rightWheelSpeed);
+		}
 	}
 
 	@Override
 	public void kick() {
-		robot1.kick();
+		if (isOurRobotFirst()) {
+			robot1.kick();
+		} else {
+			robot2.kick();
+		}
 	}
 
 	@Override
@@ -135,6 +149,10 @@ public class Simulator extends AbstractProcessor implements Executor {
 
 	@Override
 	public void stop() {
-		robot1.move(0, 0);
+		if (isOurRobotFirst()) {
+			robot1.move(0, 0);
+		} else {
+			robot2.move(0, 0);
+		}
 	}
 }

@@ -9,8 +9,10 @@ public interface Processor {
 
 	/**
 	 * Start processing data
+	 * 
+	 * @param our_robot
 	 */
-	public void run();
+	public void run(boolean our_robot);
 	
 	/**
 	 * Stop processing data

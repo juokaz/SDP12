@@ -25,7 +25,7 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 		 * Get position of ball, robot, and move to ball
 		 */
 		
-		Robot robotA = data.getRobotA();
+		Robot robotA = data.getOurRobot();
 		Ball ball = data.getBall();
 		
 		// Create point object to store data to store 
