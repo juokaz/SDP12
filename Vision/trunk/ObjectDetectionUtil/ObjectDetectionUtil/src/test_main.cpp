@@ -13,15 +13,25 @@
 #include <time.h>
 #include <ctype.h>
 #include <iostream>
-#include "..\..\ObjectDetection\src\objdetection.h"
+#include "..\..\..\ObjectDetection\src\objdetection.h"
 #include "objdetectionutil.h"
 #include <sstream>
 
 
+// MIN values for yellow robot
+int ty_min_1	= 0;
+int ty_min_2	= 39;
+int ty_min_3	= 59;
+// MAX values for yellow robot
+int ty_max_1	= 8;
+int ty_max_2	= 140;
+int ty_max_3	= 220;
+
 // Color threshold for Black Dot
 
-CvScalar hsv_min_D = cvScalar(0, 39, 79, 0);//cvScalar(0, 39, 79, 0);//CvScalar hsv_min_D = cvScalar(11, 30, 60, 0);
-CvScalar hsv_max_D = cvScalar(4, 140, 220, 0);//CvScalar hsv_max_D = cvScalar(80, 70, 120, 0);
+CvScalar hsv_min_TY = cvScalar(ty_min_1, ty_min_2, ty_min_3);//cvScalar(0, 39, 79, 0);//CvScalar hsv_min_D = cvScalar(11, 30, 60, 0);
+CvScalar hsv_max_TY = cvScalar(ty_max_1, ty_max_2, ty_max_3);
+
 
 void launch(config conf)
 {	
@@ -93,8 +103,9 @@ void launch(config conf)
 	}
 	
 	
-	IplImage* current_frame_pro_D= objDetection::preprocess_to_single_channel(current_frame,back_img,conf.hsv_min_D,conf.hsv_max_D);
-	objDetection::utilities::colorPicker(current_frame_pro_D);
+	IplImage* current_frame_pro_TY= objDetection::preprocess_to_single_channel(current_frame,back_img,conf.hsv_min_D,conf.hsv_max_D);
+	cvShowImage("Yellow",current_frame_pro_TY);
+	objDetection::utilities::colorPicker(current_frame_pro_TY);
 	
 after_release:
 		if(!back)
@@ -135,8 +146,8 @@ config get_Config(int argc, char* argv[])
 	res.outputToText=false;
 	res.closeObjects=false;
 	
-	res.hsv_max_D=hsv_max_D;
-	res.hsv_min_D=hsv_min_D;
+	res.hsv_max_TY=hsv_max_TY;
+	res.hsv_min_TY=hsv_min_TY;
 	
 	
 
@@ -229,13 +240,40 @@ config get_Config(int argc, char* argv[])
 	}
 	return res;
 }
+// Yellow robot trackbar setting
+void change_ty_min_1(int position){
+	hsv_min_TY.val[0] = (double) position;
+}
+void change_ty_max_1(int position){
+	hsv_max_TY.val[0] = (double) position;
+}
+void change_ty_min_2(int position){
+	hsv_min_TY.val[1] = (double) position;
+}
+void change_ty_max_2(int position){
+	hsv_max_TY.val[1] = (double) position;
+}
+void change_ty_min_3(int position){
+	hsv_min_TY.val[2] = (double) position;
+}
+void change_ty_max_3(int position){
+	hsv_max_TY.val[2] = (double) position;
+}
 int main(int argc, char* argv[])
 {
 	
 
 	
     cvNamedWindow( "Camera", CV_WINDOW_AUTOSIZE );
-    
+    cvNamedWindow("YellowThreshold",0);
+	cvMoveWindow("YellowThreshold", 400, 600);
+	cvCreateTrackbar( "Yellow_Min_Hue",   "YellowThreshold", &ty_min_1, 255, &change_ty_min_1);
+	cvCreateTrackbar( "Yellow_Max_Hue",   "YellowThreshold", &ty_max_1, 255, &change_ty_max_1);
+	cvCreateTrackbar( "Yellow_Min_Sat",   "YellowThreshold", &ty_min_2, 255, &change_ty_min_2);
+	cvCreateTrackbar( "Yellow_Max_Sat",   "YellowThreshold", &ty_max_2, 255, &change_ty_max_2);
+	cvCreateTrackbar( "Yellow_Min_Light", "YellowThreshold", &ty_min_3, 255, &change_ty_min_3);
+	cvCreateTrackbar( "Yellow_Max_Light", "YellowThreshold", &ty_max_3, 255, &change_ty_max_3);
+
 	config conf=get_Config(argc,argv);
 	launch(conf);
 	cvWaitKey(0);
