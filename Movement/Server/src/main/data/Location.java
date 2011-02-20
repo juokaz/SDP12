@@ -8,12 +8,12 @@ package main.data;
 public class Location {
 
 	private Robot ours;
-	private Robot oponent;
+	private Robot opponent;
 	private Ball ball;
 	
 	public Location(Robot ours, Robot oponent, Ball ball) {
 		this.ours = ours;
-		this.oponent = oponent;
+		this.opponent = oponent;
 		this.ball = ball;
 	}
 
@@ -25,12 +25,12 @@ public class Location {
 		this.ours = robot;
 	}
 
-	public Robot getOponentRobot() {
-		return oponent;
+	public Robot getOpponentRobot() {
+		return opponent;
 	}
 
-	public void setOponentRobot(Robot robot) {
-		this.oponent = robot;
+	public void setOpponentRobot(Robot robot) {
+		this.opponent = robot;
 	}
 
 	public Ball getBall() {

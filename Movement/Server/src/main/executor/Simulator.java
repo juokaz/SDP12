@@ -98,9 +98,9 @@ public class Simulator extends AbstractProcessor implements Executor {
 			data.getOurRobot().setX(robot1.getCenterX());
 			data.getOurRobot().setY(robot1.getCenterY());
 			data.getOurRobot().setT((float) (robot1.getTheta()));
-			data.getOponentRobot().setX(robot2.getCenterX());
-			data.getOponentRobot().setY(robot2.getCenterY());
-			data.getOponentRobot().setT((float) (robot2.getTheta()));
+			data.getOpponentRobot().setX(robot2.getCenterX());
+			data.getOpponentRobot().setY(robot2.getCenterY());
+			data.getOpponentRobot().setT((float) (robot2.getTheta()));
 			data.getBall().setX(ball.getX());
 			data.getBall().setY(ball.getY());
 			System.out.println(data.getOurRobot().getT());

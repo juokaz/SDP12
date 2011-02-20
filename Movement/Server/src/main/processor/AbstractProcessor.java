@@ -24,6 +24,12 @@ public abstract class AbstractProcessor implements Processor {
 		this.our_robot_first = our_robot;
 	}
 	
+	/**
+	 * Is the first robot returned by processor (given that it returns ROBOT BALL ROBOT)
+	 * our robot or opponent robot
+	 * 
+	 * @return
+	 */
 	protected boolean isOurRobotFirst() {
 		return our_robot_first;
 	}
