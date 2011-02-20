@@ -13,7 +13,7 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 
 	public PFStrategy(double b, double r) {
 		RobotConf conf = new RobotConf(b, r);
-		planner = new PFPlanning(conf, 500, 200, 0.009, 250000.0);
+		planner = new PFPlanning(conf, 0, 200, 0.018, 250000.0);
 		current = new VelocityVec(0, 0);
 
 	}
@@ -23,9 +23,9 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 
 
 		Pos current = new Pos(new Point(data.getOurRobot().getX(), data
-				.getOurRobot().getY()), data.getOurRobot().getT());
+				.getOurRobot().getY()),Math.toRadians(data.getOurRobot().getT()));
 		Pos opponent = new Pos(new Point(data.getOurRobot().getX(), data
-				.getOurRobot().getY()), data.getOurRobot().getT());
+				.getOurRobot().getY()), Math.toRadians(data.getOurRobot().getT()));
 		Point ball = new Point(data.getBall().getX(), data.getBall().getY());
 		// getting new velocity vectors
 		VelocityVec vector = planner.update(current, opponent, ball, false,
@@ -66,7 +66,7 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 		if (Runner.DEBUG){
 			System.out.println("Final Command:"+left+","+right);
 		}
-		executor.rotateWheels(left, right);
+		executor.rotateWheels(left,right);
 
 	}
 
