@@ -45,9 +45,9 @@ public class Simulator extends AbstractProcessor implements Executor {
 	}
 
 	@SuppressWarnings("static-access")
-	public void run(boolean our_robot) {
+	public void run(boolean our_robot, boolean left_goal) {
 
-		super.run(our_robot);
+		super.run(our_robot, left_goal);
 		try {
 			Thread.currentThread().sleep(2000);// sleep for 2000 ms
 		} catch (Exception ie) {
@@ -60,7 +60,15 @@ public class Simulator extends AbstractProcessor implements Executor {
 		Ball ball = new Ball((int) this.ball.getXPos(),
 				(int) this.ball.getYPos());
 
-		Goal goal = new Goal(0, 290);
+		Goal goal = null;
+    	Goal RightGoal = new Goal(730,290);
+    	Goal LeftGoal = new Goal(0,290);
+    	
+    	if (this.isGoalLeft()){
+    		goal = LeftGoal;
+    	} else {
+    		goal = RightGoal;
+    	}	
 		
 		Location data = null;
 

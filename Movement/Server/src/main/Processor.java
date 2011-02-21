@@ -12,7 +12,7 @@ public interface Processor {
 	 * 
 	 * @param our_robot
 	 */
-	public void run(boolean our_robot);
+	public void run(boolean our_robot, boolean left_goal);
 	
 	/**
 	 * Stop processing data
