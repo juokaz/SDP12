@@ -11,10 +11,10 @@ import main.data.Robot;
 
 public abstract class AbstractStrategy implements Strategy {
 	
-	protected final int PITCH_X_MIN = 0;
+	protected final int PITCH_X_MIN = 18;
 	protected final int PITCH_Y_MIN = 114;
-	protected final int PITCH_X_MAX = 735; // TODO check those
-	protected final int PITCH_Y_MAX = 460; // TODO check those
+	protected final int PITCH_X_MAX = 725; // TODO check those
+	protected final int PITCH_Y_MAX = 454; // TODO check those
 
 	/**
 	 * Drawables field to be used throughout the strategy and passed 

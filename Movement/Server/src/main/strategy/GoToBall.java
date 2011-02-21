@@ -180,8 +180,12 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isBallInACorner(Ball ball) {
-		// TODO implement this
-		return false;
+		int threshold = 30;
+		
+		return ball.getX() < PITCH_X_MIN + threshold && ball.getY() < PITCH_Y_MIN + threshold ||
+			   ball.getX() > PITCH_X_MAX - threshold && ball.getY() < PITCH_Y_MIN + threshold ||
+			   ball.getX() > PITCH_X_MAX - threshold && ball.getY() > PITCH_Y_MAX - threshold ||
+			   ball.getX() < PITCH_X_MIN + threshold && ball.getY() > PITCH_Y_MAX - threshold;
 	}
 	
 	/**
