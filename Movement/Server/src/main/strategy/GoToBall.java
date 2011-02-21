@@ -20,14 +20,10 @@ import main.data.Point;
 public class GoToBall extends AbstractStrategy implements Strategy {
 
 	// Gap is the distance behind ball for the point we want to move to.
-	private int gap;
+	private int gap = 50;
 	
 	@Override
 	public void updateLocation(Location data) {
-		// Creating new object every time because of reasons related to
-		// the way Swing draws stuff. Will be fixed later.
-		drawables = new ArrayList<Drawable>();
-		setGap(50);
 		Ball ball = data.getBall();
 		Robot robot = data.getOurRobot();
 		Robot opponent = data.getOpponentRobot();
@@ -226,6 +222,9 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @param optimum
 	 */
 	protected void addDrawables(Robot robot, Robot opponent, Ball ball, Goal goal, Point optimum) {
+		// Creating new object every time because of reasons related to
+		// the way Swing draws stuff. Will be fixed later.
+		drawables = new ArrayList<Drawable>();
 
 		drawables.add(new Drawable(Drawable.CIRCLE,
 						(int) goal.getX(), (int) goal.getY(), Color.WHITE));
