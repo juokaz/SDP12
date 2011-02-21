@@ -14,7 +14,7 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,IplImage* f
 	IplImage* hsv_back_frame;
 	if(!bgr)
 	{
-		//if bgr is unset then we convert images to HSV.
+		//if bgr (meaning BGR colourspace) is unset then we convert images to HSV.
 		hsv_frame = cvCreateImage(size, frame->depth,3);
 		hsv_back_frame = cvCreateImage(size, frame->depth,3);
 		cvCvtColor(frame, hsv_frame, CV_BGR2HSV);
@@ -32,6 +32,7 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,IplImage* f
 		cvSub(hsv_back_frame,hsv_frame,sub_frame);
 	else
 		cvSub(hsv_frame,hsv_back_frame,sub_frame);
+
 	//show subtracted image for debugging
 	//cvShowImage("Subtracted",sub_frame);
 	//return sub_frame;
@@ -40,6 +41,7 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,IplImage* f
 	
 	//Remove irrelavant pixels
 	cvInRangeS(sub_frame, hsv_min, hsv_max, thresholded);
+	
 	//uncomment for debugging...
 	
 	
@@ -291,10 +293,10 @@ CvBox2D objDetection::orientation_centerMoment(CvContour* cntr,IplImage* img)
 	std::cout<<"Moment"<<cenMoment.x<<","<<cenMoment.y<<"- circle"<<center.x<<","<<center.y<<std::endl;
 	//cvDrawLine(img,cvPoint(x,y),cvPointFrom32f(result.center),cvScalar(200,0,255),10);
 	result.center=center;
-	result.angle = -1*atan2(result.center.y-cenMoment.y, result.center.x-cenMoment.x)*180/PI;
+	result.angle = -1*atan2(result.center.y-cenMoment.y, result.center.x-cenMoment.x);
 	
-	if(result.angle<0)
-		result.angle+=360;
+	//if(result.angle<0)
+	//	result.angle+=360;
 
 	return result;
 
@@ -384,8 +386,8 @@ void objDetection::drawOrientation(IplImage* frame, CvBox2D box,CvScalar color)
 
 	point1.x= box.center.x;
 	point1.y= box.center.y;
-	point2.x= box.center.x + cos(ANGLE_TO_RAD(angle))*20;
-	point2.y= box.center.y - sin(ANGLE_TO_RAD(angle))*20;
+	point2.x= box.center.x + cos(angle)*20;
+	point2.y= box.center.y - sin(angle)*20;
 	//uncomment for debugging
 	//cvEllipseBox(frame,box,color,2);
 	if(frame)

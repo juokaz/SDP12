@@ -125,24 +125,28 @@ void launch(config conf)
 		cvSetImageROI(buffer_frame,cvRect(70,100,w,h));
 		cvCopy(buffer_frame,current_frame);
 		cvResetImageROI(buffer_frame);
-	
 		cvReleaseImage(&buffer_frame);
+		
+		IplImage* bg=cvLoadImage("bg.jpg");
+		cvSetImageROI(bg,cvRect(70,100,w,h));
 
-		current_frame_pro_TB=objDetection::preprocess_to_single_channel(current_frame,hsv_min_TB,hsv_max_TB);
+		current_frame_pro_TB=objDetection::preprocess_to_single_channel(current_frame,bg,hsv_min_TB,hsv_max_TB,true,false);
 		if(!current_frame_pro_TB) std::cout<<"Error in transforming image"<<std::endl;
 		cvShowImage("Blue",current_frame_pro_TB);
 
-		current_frame_pro_TY=objDetection::preprocess_to_single_channel(current_frame,hsv_min_TY,hsv_max_TY);
+		current_frame_pro_TY=objDetection::preprocess_to_single_channel(current_frame,bg,hsv_min_TY,hsv_max_TY,true,false);
 		if(!current_frame_pro_TY) std::cout<<"Error in transforming image"<<std::endl;
 		cvShowImage("Yellow",current_frame_pro_TY);
 
-		current_frame_pro_B=objDetection::preprocess_to_single_channel(current_frame,hsv_min_B,hsv_max_B);
+		current_frame_pro_B=objDetection::preprocess_to_single_channel(current_frame,bg,hsv_min_B,hsv_max_B,true,false);
 		if(!current_frame_pro_B) std::cout<<"Error in transforming image"<<std::endl;
 		cvShowImage("Ball",current_frame_pro_B);
 
-		current_frame_pro_D=objDetection::preprocess_to_single_channel(current_frame,hsv_min_D,hsv_max_D);
+		current_frame_pro_D=objDetection::preprocess_to_single_channel(current_frame,bg,hsv_min_D,hsv_max_D,true,false);
 		if(!current_frame_pro_D) std::cout<<"Error in transforming image"<<std::endl;
 		cvShowImage("Dot",current_frame_pro_D);
+		
+		cvResetImageROI(bg);
 
 		// Find objects based on the biggest contours in the image producing only positions
 		if(conf.rankedArea)

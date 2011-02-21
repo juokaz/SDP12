@@ -82,11 +82,11 @@ void showResuts(IplImage*& frame,IplImage*& thresh1,IplImage*& thresh2,IplImage*
 		cvPutText(disp,ss.str().c_str(),point2, &font, cvScalar(0, 0, 0, 0));
 		ss.str("");
 		point.y+=20;
-		ss<<"Blue T pos:"<<TB.center.x<<","<<TB.center.y<<","<<TB.angle;
+		ss<<"Blue T pos:"<<TB.center.x<<","<<TB.center.y<<","<<TB.angle*180/PI;
 		cvPutText(disp,ss.str().c_str(),point, &font, cvScalar(0, 0, 0, 0));
 		ss.str("");
 		point.y+=20;
-		ss<<"Yellow T pos:"<<TY.center.x<<","<<TY.center.y<<","<<TY.angle;
+		ss<<"Yellow T pos:"<<TY.center.x<<","<<TY.center.y<<","<<TY.angle*180/PI;
 		cvPutText(disp,ss.str().c_str(),point, &font, cvScalar(0, 0, 0, 0));
 		ss.str("");
 		point.y+=20;
@@ -104,8 +104,8 @@ void showResuts(IplImage*& frame,IplImage*& thresh1,IplImage*& thresh2,IplImage*
 	cvReleaseImage(&thresh2_c);
 	cvReleaseImage(&thresh3_c);
 }
-void launch(config conf)	
-{	
+void launch(config conf)
+{
 
 	CvMemStorage* storage=cvCreateMemStorage(0);
 	IplImage* frame;
