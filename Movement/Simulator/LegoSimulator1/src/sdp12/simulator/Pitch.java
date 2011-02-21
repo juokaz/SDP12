@@ -6,17 +6,20 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
 
-public class Pitch extends JComponent implements ActionListener {
+public class Pitch extends JComponent implements ActionListener, KeyListener {
 
 	// List of robots
 	RobotT robot1;
@@ -28,6 +31,8 @@ public class Pitch extends JComponent implements ActionListener {
 	// Pitch background
 	BufferedImage pitchBackground;
 	BufferedImage dbImage;
+	
+	private JButton bEnableRobot1, bDisableRobot1;
 	
 	// Timer 
 	Timer time;
@@ -117,6 +122,8 @@ public class Pitch extends JComponent implements ActionListener {
 		
 		MyMouseListener mouseListener = new MyMouseListener();
 		addMouseListener(mouseListener);
+		setFocusable(true);
+		addKeyListener(this);
 		
 		// Start timer
 		time = new Timer(15, this);
@@ -219,6 +226,29 @@ public class Pitch extends JComponent implements ActionListener {
 		
 	}
 	
+	@Override
+	public void keyPressed(KeyEvent keyEvent) {
+
+		if(keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
+			
+			robot1.toggleCommandReceiving();
+			
+		}
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	public int getPitchWidth() {
 		
 		return pitchBackground.getWidth();
@@ -236,4 +266,5 @@ public class Pitch extends JComponent implements ActionListener {
 		return pitchBackground;
 		
 	}
+
 }

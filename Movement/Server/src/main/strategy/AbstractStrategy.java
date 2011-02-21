@@ -65,7 +65,15 @@ public abstract class AbstractStrategy implements Strategy {
 		if (executor instanceof main.executor.Simulator) {
 			dirAngle = Math.toDegrees(Math.atan2(point.getY()-robot.getY(), point.getX()-robot.getX()));
 			
+			// Convert both angles to positive within the range (0, 360)
+			// 	clockwise is positive
+			//dirAngle = changeToPositive(dirAngle);
+			//robot.setT((float) changeToPositive(Math.toDegrees(robot.getT())));
 			robot.setT((float) Math.toDegrees(robot.getT()));
+			
+			drawables.add(new Drawable(
+							Drawable.LABEL, (robot.getT() - dirAngle < 0) ? "Negative" : "Positive",
+							50, 90, Color.WHITE));
 			
 			if(dirAngle > robot.getT()) {
 				// turn left
@@ -107,5 +115,15 @@ public abstract class AbstractStrategy implements Strategy {
 		drawables.add(new Drawable(Drawable.LABEL, "Distance: " + formatter.format(distance), 50, 30, Color.WHITE));
 		drawables.add(new Drawable(Drawable.LABEL, "dirAngle: " + formatter.format(dirAngle), 50, 50, Color.WHITE));
 		drawables.add(new Drawable(Drawable.LABEL, "robotAngle: " + formatter.format(robot.getT()), 50, 70, Color.WHITE));
+	}
+	
+	public double changeToPositive(double angle) {
+		angle = angle % 360;
+		
+		if(angle < 0) {
+			angle = 360 - Math.abs(angle);
+		}
+		
+		return angle;
 	}
 }

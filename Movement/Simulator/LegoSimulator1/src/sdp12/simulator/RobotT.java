@@ -35,6 +35,8 @@ public class RobotT implements ActionListener {
 	private double yPrevPos;
 	private double prevTheta;
 	
+	private boolean isEnabled;
+	
 	// Animation variables
 	private Timer timer;
 	private int animationDuration = 1000;
@@ -83,6 +85,7 @@ public class RobotT implements ActionListener {
 		}
 		
 		defineRobot(xPos, yPos, Math.toRadians(theta));
+		isEnabled = true;
 		kicker = new Kicker(getXPos(), getYPos(), getTheta(), getHeight(), getWidth());
 		//pitch = new Rectangle(30, 107, 705, 370);
 		timer = new Timer(DEFAULT_TIMER_DELAY, this);
@@ -396,17 +399,26 @@ public class RobotT implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		
-		long currentTime = System.currentTimeMillis();
-		long totalTime = currentTime - animationStartTime;
-		
-		float fraction = (float) totalTime / animationDuration;
-		fraction = Math.min(1.0f, fraction);
-		animate2(fraction);
-		
-		if(totalTime > animationDuration) {
+		if(isEnabled) {
 			
-			resetMovement();
-			animationStartTime = currentTime;
+			long currentTime = System.currentTimeMillis();
+			long totalTime = currentTime - animationStartTime;
+		
+			float fraction = (float) totalTime / animationDuration;
+			fraction = Math.min(1.0f, fraction);
+			animate2(fraction);
+		
+			if(totalTime > animationDuration) {
+			
+				resetMovement();
+				animationStartTime = currentTime;
+			
+			}
+		
+		} else {
+			
+			kicker.updateLocation(getXPos(), getYPos(), getTheta());
+			stop();
 			
 		}
 		
@@ -417,6 +429,20 @@ public class RobotT implements ActionListener {
 		startX = getXPos();
 		startY = getYPos();
 		startTheta = getTheta();
+		
+	}
+	
+	public void toggleCommandReceiving() {
+		
+		if(isEnabled) {
+			
+			isEnabled = false;
+			
+		} else {
+			
+			isEnabled = true;
+			
+		}
 		
 	}
 	
