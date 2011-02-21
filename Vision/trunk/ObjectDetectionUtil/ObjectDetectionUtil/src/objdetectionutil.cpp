@@ -4,6 +4,67 @@ CvScalar color;
 CvScalar max_color;
 CvScalar min_color;
 
+void objDetection::utilities::cb_init(circular_buffer *cb, size_t capacity, size_t sz)
+{
+    cb->buffer = malloc(capacity * sz);
+    if(cb->buffer == NULL);
+        // handle error
+    cb->buffer_end = (char *)cb->buffer + capacity * sz;
+    cb->capacity = capacity;
+    cb->count = 0;
+    cb->sz = sz;
+    cb->head = cb->buffer;
+    cb->tail = cb->buffer;
+}
+float objDetection::utilities::average_cb_buffer(circular_buffer *cb)
+{
+	void* item=cb->tail;
+	int count=cb->count;
+	float value;
+	float sum=0;
+	while(true)
+	{
+	if(count == 0)
+        break;
+    memcpy(&value, item, cb->sz);
+	sum+=value;
+    item = (char*)cb->tail + cb->sz;
+    if(item == cb->buffer_end)
+        item = cb->buffer;
+    count--;
+	}
+	return sum/cb->count;
+}
+void objDetection::utilities::cb_free(circular_buffer *cb)
+{
+    free(cb->buffer);
+    // clear out other fields too, just to be safe
+}
+
+void objDetection::utilities::cb_push_back(circular_buffer *cb, const void *item)
+{
+    if(cb->count == cb->capacity)
+        cb->count--;
+    memcpy(cb->head, item, cb->sz);
+    cb->head = (char*)cb->head + cb->sz;
+    if(cb->head == cb->buffer_end)
+        cb->head = cb->buffer;
+    cb->count++;
+}
+
+void objDetection::utilities::cb_pop_front(circular_buffer *cb, void *item)
+{
+    if(cb->count == 0);
+	{
+        item=NULL;
+		return;
+	}
+    memcpy(item, cb->tail, cb->sz);
+    cb->tail = (char*)cb->tail + cb->sz;
+    if(cb->tail == cb->buffer_end)
+        cb->tail = cb->buffer;
+    cb->count--;
+}
 IplImage* objDetection::utilities::cvShowManyImages(char* title, int nArgs, ...) {
 
     // img - Used for getting the arguments 

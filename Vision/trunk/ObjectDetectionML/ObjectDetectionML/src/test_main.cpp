@@ -39,6 +39,7 @@ CvScalar hsv_max_TY = cvScalar(3, 255, 255, 0);//CvScalar hsv_max_TY = cvScalar(
 CvScalar hsv_min_TB = cvScalar(39, 23, 0, 0);//CvScalar hsv_min_D = cvScalar(11, 30, 60, 0);
 CvScalar hsv_max_TB = cvScalar(78, 255, 255, 0);//CvScalar hsv_max_TB = cvScalar(110, 255, 255, 255);
 
+
 int64 totalTime;
 int Opcount;
 void showResuts(IplImage*& frame,IplImage*& thresh1,IplImage*& thresh2,IplImage*& thresh3,int64 diffTime,CvBox2D TB,CvBox2D TY,CvRect B,bool display)
@@ -121,6 +122,9 @@ void launch(config conf)
 	CvBox2D sel_TY;
 	totalTime=0;
 	Opcount=0;
+	objDetection::circular_buffer TY_Buffer;
+	objDetection::circular_buffer TB_Buffer;
+	
 	std::vector<CvContour*> selectedDataSet_Ball;
 	std::vector<CvContour*> rejectedDataSet_Ball;
 	std::vector<CvContour*> selectedDataSet_D;
@@ -153,7 +157,16 @@ void launch(config conf)
 	{
 		conf.i_base.current=conf.i_base.image_start;
 	}
-
+	if(conf.image_file)
+	{
+	objDetection::utilities::cb_init(&TY_Buffer,1,sizeof(float));
+	objDetection::utilities::cb_init(&TB_Buffer,1,sizeof(float));
+	}
+	if(conf.camera)
+	{
+	objDetection::utilities::cb_init(&TY_Buffer,5,sizeof(float));
+	objDetection::utilities::cb_init(&TB_Buffer,5,sizeof(float));
+	}
 	while(true)
 	{
 		startTick= cv::getTickCount();
@@ -261,6 +274,7 @@ void launch(config conf)
 		{
 			std::cout<<"Error in transforming image"<<std::endl;
 		}
+		
 		std::cout<<"Color transformation completed"<<std::endl;
 		
 
@@ -323,7 +337,11 @@ void launch(config conf)
 
 				CvBox2D sel_D;
 				if(cnt_TB!=NULL)
+				{
 					sel_TB=objDetection::orientation_centerMoment(cnt_TB,current_frame);//,cnt_D,current_frame);
+					objDetection::utilities::cb_push_back(&TB_Buffer,(void*)&sel_TB.angle);
+					sel_TB.angle=objDetection::utilities::average_cb_buffer(&TB_Buffer);
+				}
 				else
 				{
 					sel_TB.center.x=-1;
@@ -332,7 +350,11 @@ void launch(config conf)
 				}
 				
 				if(cnt_TY!=NULL)
+				{
 					sel_TY=objDetection::orientation_centerMoment(cnt_TY,current_frame);//,cnt_D,current_frame);
+					objDetection::utilities::cb_push_back(&TY_Buffer,(void*)&sel_TY.angle);
+					sel_TY.angle=objDetection::utilities::average_cb_buffer(&TY_Buffer);
+				}
 				else
 				{
 					sel_TY.center.x=-1;
