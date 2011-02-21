@@ -59,7 +59,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		}
 		else if (isBallBehindRobot(robot, ball, optimum))
 		{
-			setIAmDoing("Ball behing robot");
+			setIAmDoing("Ball behind robot");
 			Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum);
 			drawPoint(point, "Behind");
 			moveToPoint(robot, point);
@@ -84,6 +84,13 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	
 	/**
 	 * Is it possible for a ball to be reached by going straight?
+	 * Currently this checks to see if there is an obstacle inbetween the robot and
+	 * the optimum point, judging this by the difference in angles between the 
+	 * optimum to Robot angle and the optimum to Opponent angle. 
+	 * 
+	 * TODO: Calculate this for when the ball is between two Y-axis values
+	 * TODO: Make this take into account distance from the obstacle, as difference in 
+	 * angle will need to be larger the further from the ball we are.
 	 * 
 	 * @param robot
 	 * @param opponent
@@ -91,11 +98,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isObstacleInFront(Robot robot, Robot opponent, Point optimum) {
-		/** 
-		 * TODO: edit to take into account size of opponent, will probably have to 
-		 * change so that checks if inbetween two angles.
-		 */					
-		
 		return  Math.abs(Math.abs(robot.getAngleBetweenPoints(optimum)) - Math.abs(opponent.getAngleBetweenPoints(optimum))) < 0.5 &&
 				robot.getDistanceBetweenPoints(optimum) > opponent.getDistanceBetweenPoints(optimum) && 
 				((opponent.getX() <= robot.getX() && opponent.getX() >= optimum.getX() || 
@@ -106,32 +108,29 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * Get a point which would make robot to avoid obstacle and go to a point
 	 * which will have straight path to a ball
 	 * 
+	 * TODO: Calculating based on Y-axis doesn't work.
+	 * 
 	 * @param robot
 	 * @param opponent
 	 * @param optimum
 	 * @return
 	 */
 	protected Point getPointToAvoidObstacle(Robot robot, Robot opponent, Point optimum) {
-		// TODO implement this
-		// 
-		double xOffset = robot.getDistanceBetweenPoints(opponent);
-		double yOffset = robot.getDistanceBetweenPoints(opponent)*Math.tan(robot.getAngleBetweenPoints(opponent) + 40);
-		Point dirPoint = new Point(opponent.getX(), opponent.getY() + 50);
-		
 		if (robot.getY() > opponent.getY()) {				
 
 			return calculatePosBehindBall(optimum.getAngleBetweenPoints(opponent) + 45, opponent, gap*2);
 		} else {	
 			return calculatePosBehindBall(optimum.getAngleBetweenPoints(opponent) - 45, opponent, gap*2);
 		}
-		//return calculatePosBehindBall(optimum.getAngleBetweenPoints(opponent) + 45, opponent, gap*2);
-
 	}
 	
 	/**
 	 * Is robot is further away from a goal than a ball or in other words
 	 * if we would go to a ball, can we kick from there or do we need to go to
 	 * the other side?
+	 * 
+	 * TODO: Change this or take into account earlier that robot could be in position 
+	 * where it could get to ball 
 	 * 
 	 * @param robot
 	 * @param ball
@@ -140,6 +139,11 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 */
 	protected boolean isBallBehindRobot(Robot robot, Ball ball, Point optimum) {
 		//TODO
+		Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum);
+		if (robot.isInPoint(point, 5)) {
+			return false;
+		}
+		
 		return ((optimum.getX() < ball.getX() && ball.getX() < robot.getX()) || 
 				(optimum.getX() > ball.getX() && ball.getX() > robot.getX()));
 	}
