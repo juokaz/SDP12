@@ -28,36 +28,52 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		Robot robot = data.getOurRobot();
 		Robot opponent = data.getOpponentRobot();
 		Goal goal = data.getGoal();
-		
 		Point optimum = getOptimumPoint(ball, goal);
 		
 		// statistics
-		addDrawables(robot, opponent, ball, goal, optimum);		
+		addDrawables(robot, opponent, ball, optimum);
+		drawPoint(opponent, null);
+		drawPoint(goal, "Optimum");
+		drawPoint(optimum, "Optimum");		
 		
 		// This state machine covers the basic stages robot can be in 
-		if (isBallOutOfPitch(ball)) {
+		if (isBallOutOfPitch(ball))
+		{
 			setIAmDoing("Ball out of pitch");
 			// We have scored (hopefully)
 			executor.stop();
-		} else if (isBallInACorner(ball)) {
+		}
+		else if (isBallInACorner(ball))
+		{
 			setIAmDoing("Ball in a corner");
 			// Don't do anything, wait for it move from there
 			executor.stop();
-		} else if (isObstacleInFront(robot, opponent, optimum)) {
+		}
+		else if (isObstacleInFront(robot, opponent, optimum))
+		{
 			setIAmDoing("Obstacle in front");
 			Point point = getPointToAvoidObstacle(robot, opponent, optimum);
+			drawPoint(point, "Avoid");
 			moveToPoint(robot, point);
-		} else if (isBallBehindRobot(robot, ball, optimum)) {
+		}
+		else if (isBallBehindRobot(robot, ball, optimum))
+		{
 			setIAmDoing("Ball behing robot");
 			Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum);
+			drawPoint(point, "Behind");
 			moveToPoint(robot, point);
-		} else if (!isRobotInOptimumPosition(robot, optimum)) {
+		}
+		else if (!isRobotInOptimumPosition(robot, optimum))
+		{
 			setIAmDoing("Not in optimum");
 			moveToPoint(robot, optimum);
-		} else if (isBallReached(robot, ball)) {
+		}
+		else if (isBallReached(robot, ball))
+		{
 			setIAmDoing("Kick");
 			executor.kick();
-		} else {
+		}
+		else {
 			setIAmDoing("Reaching ball");
 			moveToPoint(robot, ball);
 		}
@@ -224,33 +240,12 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @param robot
 	 * @param opponent
 	 * @param ball
-	 * @param goal
 	 * @param optimum
 	 */
-	protected void addDrawables(Robot robot, Robot opponent, Ball ball, Goal goal, Point optimum) {
+	protected void addDrawables(Robot robot, Robot opponent, Ball ball, Point optimum) {
 		// Creating new object every time because of reasons related to
 		// the way Swing draws stuff. Will be fixed later.
 		drawables = new ArrayList<Drawable>();
-
-		drawables.add(new Drawable(Drawable.CIRCLE,
-						(int) goal.getX(), (int) goal.getY(), Color.WHITE));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"Goal",
-						(int) goal.getX() + 5, (int) goal.getY(), Color.WHITE));
-		drawables.add(new Drawable(Drawable.CIRCLE,
-						(int) opponent.getX(), (int) opponent.getY(), Color.WHITE));
-		drawables.add(new Drawable(Drawable.CIRCLE,
-						(int) optimum.getX(), (int) optimum.getY(), Color.WHITE));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"Optimum",
-						(int) optimum.getX() + 5, (int) optimum.getY(), Color.WHITE));
-		
-		drawables.add(new Drawable(Drawable.LABEL,
-						"Optimum (X, Y): " + (int) optimum.getX() + " " + (int) optimum.getY(),
-						250, 30, Color.WHITE));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"goalAndPointAngle: " + (float) Math.toDegrees(goal.calculateGoalAndPointAngle(ball)),
-						250, 50, Color.WHITE));
 		
 		// Robot states of execution
 		drawables.add(new Drawable(Drawable.LABEL,
@@ -286,6 +281,22 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		drawables.add(new Drawable(Drawable.LABEL,
 						"I am doing: " + name,
 						800, 150, Color.RED));
+	}
+	
+	/**
+	 * Draw point on screen to show its position
+	 * 
+	 * @param point
+	 * @param label
+	 */
+	protected void drawPoint(Point point, String label) {
+		drawables.add(new Drawable(Drawable.CIRCLE,
+						(int) point.getX(), (int) point.getY(), Color.WHITE));
+		if (label != null) {
+			drawables.add(new Drawable(Drawable.LABEL,
+					label,
+					(int) point.getX() + 5, (int) point.getY(), Color.WHITE));
+		}
 	}
 	
 	public void setGap(int newGap) {
