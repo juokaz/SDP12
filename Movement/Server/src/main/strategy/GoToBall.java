@@ -33,7 +33,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		// statistics
 		addDrawables(robot, opponent, ball, optimum);
 		drawPoint(opponent, null);
-		drawPoint(goal, "Optimum");
+		drawPoint(goal, "Goal");
 		drawPoint(optimum, "Optimum");		
 		
 		// This state machine covers the basic stages robot can be in 
