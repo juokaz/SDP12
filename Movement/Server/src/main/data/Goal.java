@@ -30,13 +30,13 @@ public class Goal extends Point {
 		
 		if (getX() == 0) {	
 			if (angle < 0) {
-				angle = (-Math.PI - angle);
-			} else {
 				angle = (Math.PI - angle);
+			} else {
+				angle = (-Math.PI - angle);
 			}
 		}
 		
-		return angle;
+		return -angle;
 	}	
 
 	public int getLeftPost() {

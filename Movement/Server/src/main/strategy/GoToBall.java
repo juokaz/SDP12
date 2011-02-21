@@ -1,5 +1,9 @@
 package main.strategy;
 
+import java.awt.Color;
+import java.util.ArrayList;
+
+import sdp12.simulator.Drawable;
 import main.Strategy;
 import main.data.Ball;
 import main.data.Goal;
@@ -20,6 +24,10 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	
 	@Override
 	public void updateLocation(Location data) {
+		// Creating new object every time because of reasons related to
+		// the way Swing draws stuff. Will be fixed later.
+		drawables = new ArrayList<Drawable>();
+		setGap(50);
 		Ball ball = data.getBall();
 		Robot robot = data.getOurRobot();
 		Robot opponent = data.getOpponentRobot();
@@ -27,6 +35,64 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		
 		Point optimum = getOptimumPoint(ball, goal);
 		
+		/*
+		 * Show some statistics
+		 */
+		drawables.add(new Drawable(Drawable.CIRCLE,
+						(int) goal.getX(), (int) goal.getY(), Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"Goal",
+						(int) goal.getX() + 5, (int) goal.getY(), Color.WHITE));
+		drawables.add(new Drawable(Drawable.CIRCLE,
+						(int) opponent.getX(), (int) opponent.getY(), Color.WHITE));
+		drawables.add(new Drawable(Drawable.CIRCLE,
+						(int) optimum.getX(), (int) optimum.getY(), Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"Optimum",
+						(int) optimum.getX() + 5, (int) optimum.getY(), Color.WHITE));
+		
+		drawables.add(new Drawable(Drawable.LABEL,
+						"Optimum (X, Y): " + (int) optimum.getX() + " " + (int) optimum.getY(),
+						250, 30, Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"goalAndPointAngle: " + (float) Math.toDegrees(goal.calculateGoalAndPointAngle(ball)),
+						250, 50, Color.WHITE));
+		
+		// Robot states of execution
+		drawables.add(new Drawable(Drawable.LABEL,
+						"isBallInACorner: " + isBallInACorner(ball),
+						800, 30, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"isObstacleInFront: " + isObstacleInFront(robot, opponent, optimum),
+						800, 50, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"isBallBehindRobot: " + isBallBehindRobot(robot, ball, optimum),
+						800, 70, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"!isRobotInOptimumPosition: " + !isRobotInOptimumPosition(robot, optimum),
+						800, 90, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"isBallReached: " + isBallReached(robot, ball),
+						800, 110, Color.BLACK));
+		
+		drawables.add(new Drawable(Drawable.LABEL,
+						"gap: " + gap,
+						450, 30, Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"Ball (X, Y): " + ball.getX() + " " + ball.getY(),
+						450, 50, Color.WHITE));
+		/*
+		 * End statistics
+		 */
+		
+		
+		/*
+		 * TEST
+		 */
+		//Point point = getPointToFaceBallFromCorrectSide();
+		/*
+		 * END TEST
+		 */
 		
 		// This state machine covers the basic stages robot can be in 
 		if (isBallInACorner(ball)) {
@@ -44,6 +110,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		} else {
 			moveToPoint(robot, ball);
 		}
+		
+		executor.setDrawables(drawables);
 	}
 	
 	/**

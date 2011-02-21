@@ -94,7 +94,7 @@ public class LegoSimulator {
 		
 		simulatorFrame = new JFrame("Simulator");
 		simulatorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		simulatorFrame.setSize(pitch.getPitchWidth(), pitch.getPitchHeight());
+		simulatorFrame.setSize(pitch.getPitchWidth() + 250, pitch.getPitchHeight());
 		simulatorFrame.add(pitch);
 		simulatorFrame.setVisible(true);
 		
@@ -126,16 +126,12 @@ public class LegoSimulator {
 //						robot1.kick(); 
 //						if(i==2)robot1.rotate(-50);
 						
-						double dirAngle = 1*Math.atan2(ball.getYPos()-robot1.getYPos(),
+						double dirAngle = Math.atan2(ball.getYPos()-robot1.getYPos(),
 														ball.getXPos()-robot1.getXPos());
 						double dy = robot1.getYPos() - ball.getYPos();
 						double dx = robot1.getXPos() - ball.getXPos();
 						double distance = Math.sqrt(dx*dx + dy*dy);
-						System.out.println("CopyOfBasicStrategy::Distance " + distance);
 						
-						System.out.println("CopyOfBasicStrategy::dirAngle " + Math.toDegrees(dirAngle));
-						System.out.println("CopyOfBasicStrategy::dAngle " + Math.toDegrees(Math.abs(dirAngle - robot1.getTheta())));
-						System.out.println(Math.toDegrees(robot1.getTheta()));
 						int a=1;
 						int b=1;
 						if(dirAngle > robot1.getTheta()) {

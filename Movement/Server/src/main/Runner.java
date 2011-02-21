@@ -134,7 +134,7 @@ public class Runner {
 		if (type.equals("Local process")) {
 			processor = new main.processor.LocalVision("../../Vision/trunk/ObjectDetectionML/ObjectDetectionML/src/build/your_project c predict_major outputToConsole show");
 		} else if (type.equals("Simulator")) {
-			processor = new main.executor.Simulator(100,300,180,400,-250,600,200);
+			processor = new main.executor.Simulator(400,400,180,500,250,200,400);
 		} else {
 			processor = new main.processor.File("data/Outputlocs.txt");
 		}

@@ -80,7 +80,7 @@ public class Simulator extends AbstractProcessor implements Executor {
 		Ball ball = new Ball((int) this.ball.getXPos(),
 				(int) this.ball.getYPos());
 
-		Goal goal = new Goal(0, 175);
+		Goal goal = new Goal(0, 290);
 		
 		
 		Location data = null;
@@ -105,9 +105,9 @@ public class Simulator extends AbstractProcessor implements Executor {
 			data.getOpponentRobot().setX(robot2.getCenterX());
 			data.getOpponentRobot().setY(robot2.getCenterY());
 			data.getOpponentRobot().setT((float) (robot2.getTheta()));
-			data.getBall().setX(ball.getX());
-			data.getBall().setY(ball.getY());
-			System.out.println(data.getOurRobot().getT());
+			data.getBall().setX(this.ball.getXPos());
+			data.getBall().setY(this.ball.getYPos());
+			
 			strategy.updateLocation(data);
 			try {
 				Thread.currentThread().sleep(40);// sleep for 1000 ms

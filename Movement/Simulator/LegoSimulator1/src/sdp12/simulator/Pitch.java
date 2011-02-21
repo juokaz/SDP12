@@ -1,12 +1,12 @@
 package sdp12.simulator;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.Timer;
+import javax.swing.event.MouseInputAdapter;
 
 public class Pitch extends JComponent implements ActionListener {
 
@@ -26,6 +27,7 @@ public class Pitch extends JComponent implements ActionListener {
 	
 	// Pitch background
 	BufferedImage pitchBackground;
+	BufferedImage dbImage;
 	
 	// Timer 
 	Timer time;
@@ -104,10 +106,17 @@ public class Pitch extends JComponent implements ActionListener {
 		robot1.pitch = this;
 		robot1.setWalls(walls);
 		robot1.setOpponent(robot2);
-		robot2.setWalls(walls);
-		ball.setWalls(walls);
 		robot1.setBall(ball);
+		
+		robot2.pitch = this;
+		robot2.setWalls(walls);
+		robot2.setOpponent(robot1);
 		robot2.setBall(ball);
+		
+		ball.setWalls(walls);
+		
+		MyMouseListener mouseListener = new MyMouseListener();
+		addMouseListener(mouseListener);
 		
 		// Start timer
 		time = new Timer(15, this);
@@ -162,9 +171,9 @@ public class Pitch extends JComponent implements ActionListener {
 		
 		g2d.drawImage(getPitchImage(), 0, 0, null);
 		
-		robot1.draw(g2d);
-		robot2.draw(g2d);
 		ball.draw(g2d);
+		robot2.draw(g2d);
+		robot1.draw(g2d);
 		
 //		for(Wall wall : walls) {
 //			
@@ -172,6 +181,28 @@ public class Pitch extends JComponent implements ActionListener {
 //			wall.draw(g2d);
 //			
 //		}
+		
+	}
+	
+	private class MyMouseListener extends MouseInputAdapter {
+		
+		public void mousePressed(MouseEvent e) {
+			
+			int x = e.getX();
+			int y = e.getY();
+			ball.setXPos(x);
+			ball.setYPos(y);
+
+		}
+		
+		public void mouseDragged(MouseEvent e) {
+			
+			int x = e.getX();
+			int y = e.getY();
+			ball.setXPos(x);
+			ball.setYPos(y);
+			
+		}
 		
 	}
 	

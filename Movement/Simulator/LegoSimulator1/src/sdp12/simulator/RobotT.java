@@ -62,7 +62,17 @@ public class RobotT implements ActionListener {
 	Ball ball;
 	ArrayList<Point2D> points;
 	
-	
+	/**
+	 * Constructor for RobotT 
+	 * 	- loads the image used for the robot
+	 * 	- set position and orientation of robot
+	 * 	- instantiate timer
+	 * 
+	 * @param file name to get image from
+	 * @param xPos of robot
+	 * @param yPos of robot
+	 * @param theta orientation
+	 */
 	public RobotT(String file, double xPos, double yPos, double theta) {
 		
 		try {
@@ -82,6 +92,11 @@ public class RobotT implements ActionListener {
 		timer.setInitialDelay(0);
 	}
 	
+	/**
+	 * Tell the robot and the kicker which object the ball is
+	 * 
+	 * @param ball
+	 */
 	public void setBall(Ball ball) {
 		
 		this.ball = ball;
@@ -89,18 +104,33 @@ public class RobotT implements ActionListener {
 		
 	}
 	
+	/**
+	 * Set the opponent of this robot
+	 * 
+	 * @param opponent
+	 */
 	public void setOpponent(RobotT opponent) {
 		
 		this.opponent = opponent;
 		
 	}
 	
+	/**
+	 * Set boundaries of the pitch 
+	 * 
+	 * @param walls
+	 */
 	public void setWalls(ArrayList<Wall> walls) {
 		
 		this.walls = walls;
 		
 	}
 	
+	/**
+	 * Get a bounding rectangle of the robot
+	 * 
+	 * @return
+	 */
 	public Rectangle getRectangle() {
 		
 		return new Rectangle(
@@ -112,6 +142,12 @@ public class RobotT implements ActionListener {
 		
 	}
 	
+	/**
+	 * Get the corners of the rotated robot
+	 * 	Used to check for collisions
+	 * 
+	 * @return
+	 */
 	public Point2D[] getCorners() {
 		
 		double x = (-getWidth()/2)*Math.cos(getTheta())
@@ -144,6 +180,14 @@ public class RobotT implements ActionListener {
 		
 	}
 	
+	/**
+	 * Get the shape of the rotated robot
+	 * 
+	 * @param x
+	 * @param y
+	 * @param theta
+	 * @return
+	 */
 	public Shape getShape(double x, double y, double theta) {
 		
 		Shape robotShape = new Rectangle2D.Double(x, y,
@@ -161,6 +205,11 @@ public class RobotT implements ActionListener {
 		
 	}
 	
+	/**
+	 * Draw everything that needs drawing here
+	 * 
+	 * @param g2d
+	 */
 	public void draw(Graphics2D g2d) {
 		
 		// Draw kicker
@@ -193,6 +242,7 @@ public class RobotT implements ActionListener {
 		}
 		
 	}
+	
 	
 	public void setPoints(ArrayList<Point2D> points) {
 		
@@ -229,7 +279,7 @@ public class RobotT implements ActionListener {
 		
 	}
 	
-	public synchronized void move(double leftWheelSpeed, double rightWheelSpeed) {
+	public void move(double leftWheelSpeed, double rightWheelSpeed) {
 		
 		resetMovement();
 		updateWheelSpeeds(leftWheelSpeed, rightWheelSpeed);
@@ -446,6 +496,12 @@ public class RobotT implements ActionListener {
 	public double getTheta() {
 		
 		return theta; 
+		
+	}
+	
+	public double getThetaDegrees() {
+		
+		return Math.toDegrees(theta);
 		
 	}
 
