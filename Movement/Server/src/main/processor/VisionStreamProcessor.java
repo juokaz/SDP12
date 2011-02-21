@@ -68,7 +68,7 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		    	
 		    	Robot robotB = new Robot(robotBX, robotBY, robotBT);  
 		    	
-		    	Goal goal = new Goal(550,175);
+		    	Goal goal = new Goal(0, 175);
 		    	
 		    	Location loc = null;
 		    	

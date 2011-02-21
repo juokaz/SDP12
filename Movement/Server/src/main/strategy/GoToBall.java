@@ -100,7 +100,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isObstacleInFront(Robot robot, Robot opponent, Point optimum) {
-		return  Math.abs(Math.abs(robot.getAngleBetweenPoints(optimum)) - Math.abs(opponent.getAngleBetweenPoints(optimum))) < 0.5 &&
+		return  Math.abs(Math.abs(robot.getAngleBetweenPoints(optimum)) - Math.abs(opponent.getAngleBetweenPoints(optimum))) < 0.6 &&
 				robot.getDistanceBetweenPoints(optimum) > opponent.getDistanceBetweenPoints(optimum) && 
 				((opponent.getX() <= robot.getX() && opponent.getX() >= optimum.getX() || 
 						(opponent.getX() >= robot.getX() && opponent.getX() <= optimum.getX())));
@@ -110,7 +110,12 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * Get a point which would make robot to avoid obstacle and go to a point
 	 * which will have straight path to a ball
 	 * 
-	 * TODO: Calculating based on Y-axis doesn't work.
+	 * Currently does this by calculating 2 points either side, seeing if either 
+	 * is obstructed, and then heading to the unobstructed point
+	 * TODO: Test to see if there is a situation where both can be obstructed..
+	 * This is likely in a case when robot is close to the opponent. This needs a 
+	 * much more accurate way of measuring if an obstacle is inbetween the robot 
+	 * and its intended point.
 	 * 
 	 * @param robot
 	 * @param opponent
@@ -118,11 +123,19 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected Point getPointToAvoidObstacle(Robot robot, Robot opponent, Point optimum) {
-		if (robot.getY() > opponent.getY()) {				
-
-			return calculatePosBehindBall(optimum.getAngleBetweenPoints(opponent) + 45, opponent, gap*2);
-		} else {	
-			return calculatePosBehindBall(optimum.getAngleBetweenPoints(opponent) - 45, opponent, gap*2);
+		
+		Point pointA = (calculatePosBehindBall(optimum.getAngleBetweenPoints(opponent) + 45, opponent, gap*2));
+		Point pointB = calculatePosBehindBall(optimum.getAngleBetweenPoints(opponent) - 45, opponent, gap*2);
+		
+		if (isObstacleInFront(robot, opponent, pointA)) {
+			return pointB;
+		} 
+		else if (isObstacleInFront(robot, opponent, pointB)) 
+		{	
+			return pointA;
+		} else {
+			return pointA;
+			
 		}
 	}
 	
