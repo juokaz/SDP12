@@ -268,6 +268,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		// the way Swing draws stuff. Will be fixed later.
 		drawables = new ArrayList<Drawable>();
 		
+		NumberFormat formatter = new DecimalFormat("#0.00");
+		
 		// Robot states of execution
 		drawables.add(new Drawable(Drawable.LABEL,
 						"isBallInACorner: " + isBallInACorner(ball),
@@ -289,16 +291,14 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 						"gap: " + gap,
 						450, 30, Color.WHITE));
 		drawables.add(new Drawable(Drawable.LABEL,
-						"Ball (X, Y): " + ball.getX() + " " + ball.getY(),
+						"Ball (X, Y): " + formatter.format(ball.getX()) + " " + formatter.format(ball.getY()),
 						450, 50, Color.WHITE));
 
-		NumberFormat formatter = new DecimalFormat("#0.00");
-		
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Angle between optimum and robot: " + formatter.format(robot.getAngleBetweenPoints(optimum)),
+				"Angle between optimum and robot: " + formatter.format(Math.toDegrees(robot.getAngleBetweenPoints(optimum))),
 				800, 170, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Angle between optimum and opponent: " + formatter.format(opponent.getAngleBetweenPoints(optimum)),
+				"Angle between optimum and opponent: " + formatter.format(Math.toDegrees(opponent.getAngleBetweenPoints(optimum))),
 				800, 190, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
 				"Difference of angles between robots: " + formatter.format(Math.abs(Math.abs(robot.getAngleBetweenPoints(optimum)) - Math.abs(opponent.getAngleBetweenPoints(optimum)))),
