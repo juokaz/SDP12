@@ -97,8 +97,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		 */
 		
 		
-		return  robot.getAngleBetweenPoints(optimum) <= opponent.getAngleBetweenPoints(optimum) + 5 && 
-				robot.getAngleBetweenPoints(optimum) >= opponent.getAngleBetweenPoints(optimum) - 5 &&
+		return  Math.abs(robot.getAngleBetweenPoints(optimum) - opponent.getAngleBetweenPoints(optimum)) < 0.6 &&
 				robot.getDistanceBetweenPoints(optimum) > opponent.getDistanceBetweenPoints(optimum);
 	}
 	
@@ -286,6 +285,19 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		drawables.add(new Drawable(Drawable.LABEL,
 						"Ball (X, Y): " + ball.getX() + " " + ball.getY(),
 						450, 50, Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Angle between optimum and robot: " + robot.getAngleBetweenPoints(optimum),
+				800, 170, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Angle between optimum and opponent: " + opponent.getAngleBetweenPoints(optimum),
+				800, 190, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Distance between optimum and robot: " + robot.getDistanceBetweenPoints(optimum),
+				800, 210, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Distance between optimum and opponent: " + opponent.getDistanceBetweenPoints(optimum),
+				800, 230, Color.BLACK));
+		
 	}
 	
 	/**
