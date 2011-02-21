@@ -35,68 +35,16 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		
 		Point optimum = getOptimumPoint(ball, goal);
 		
-		/*
-		 * Show some statistics
-		 */
-		drawables.add(new Drawable(Drawable.CIRCLE,
-						(int) goal.getX(), (int) goal.getY(), Color.WHITE));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"Goal",
-						(int) goal.getX() + 5, (int) goal.getY(), Color.WHITE));
-		drawables.add(new Drawable(Drawable.CIRCLE,
-						(int) opponent.getX(), (int) opponent.getY(), Color.WHITE));
-		drawables.add(new Drawable(Drawable.CIRCLE,
-						(int) optimum.getX(), (int) optimum.getY(), Color.WHITE));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"Optimum",
-						(int) optimum.getX() + 5, (int) optimum.getY(), Color.WHITE));
-		
-		drawables.add(new Drawable(Drawable.LABEL,
-						"Optimum (X, Y): " + (int) optimum.getX() + " " + (int) optimum.getY(),
-						250, 30, Color.WHITE));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"goalAndPointAngle: " + (float) Math.toDegrees(goal.calculateGoalAndPointAngle(ball)),
-						250, 50, Color.WHITE));
-		
-		// Robot states of execution
-		drawables.add(new Drawable(Drawable.LABEL,
-						"isBallInACorner: " + isBallInACorner(ball),
-						800, 30, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"isObstacleInFront: " + isObstacleInFront(robot, opponent, optimum),
-						800, 50, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"isBallBehindRobot: " + isBallBehindRobot(robot, ball, optimum),
-						800, 70, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"!isRobotInOptimumPosition: " + !isRobotInOptimumPosition(robot, optimum),
-						800, 90, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"isBallReached: " + isBallReached(robot, ball),
-						800, 110, Color.BLACK));
-		
-		drawables.add(new Drawable(Drawable.LABEL,
-						"gap: " + gap,
-						450, 30, Color.WHITE));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"Ball (X, Y): " + ball.getX() + " " + ball.getY(),
-						450, 50, Color.WHITE));
-		/*
-		 * End statistics
-		 */
-		
-		
-		/*
-		 * TEST
-		 */
-		//Point point = getPointToFaceBallFromCorrectSide();
-		/*
-		 * END TEST
-		 */
+		// statistics
+		addDrawables(robot, opponent, ball, goal, optimum);		
 		
 		// This state machine covers the basic stages robot can be in 
-		if (isBallInACorner(ball)) {
+		if (isBallOutOfPitch(ball)) {
+			// We have scored (hopefully)
+			executor.stop();
+		} else if (isBallInACorner(ball)) {
 			// Don't do anything, wait for it move from there
+			executor.stop();
 		} else if (isObstacleInFront(robot, opponent, optimum)) {
 			Point point = getPointToAvoidObstacle(robot, opponent, optimum);
 			moveToPoint(robot, point);
@@ -227,6 +175,73 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	protected boolean isBallInACorner(Ball ball) {
 		// TODO implement this
 		return false;
+	}
+	
+	/**
+	 * Is ball out of pitch
+	 * 
+	 * @param ball
+	 * @return
+	 */
+	protected boolean isBallOutOfPitch(Ball ball) {
+		return ball.getX() < PITCH_X_MIN || ball.getX() > PITCH_X_MAX ||
+			   ball.getY() < PITCH_Y_MIN || ball.getY() > PITCH_Y_MAX;
+	}
+	
+	/**
+	 * Add drawables
+	 * 
+	 * @param robot
+	 * @param opponent
+	 * @param ball
+	 * @param goal
+	 * @param optimum
+	 */
+	protected void addDrawables(Robot robot, Robot opponent, Ball ball, Goal goal, Point optimum) {
+
+		drawables.add(new Drawable(Drawable.CIRCLE,
+						(int) goal.getX(), (int) goal.getY(), Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"Goal",
+						(int) goal.getX() + 5, (int) goal.getY(), Color.WHITE));
+		drawables.add(new Drawable(Drawable.CIRCLE,
+						(int) opponent.getX(), (int) opponent.getY(), Color.WHITE));
+		drawables.add(new Drawable(Drawable.CIRCLE,
+						(int) optimum.getX(), (int) optimum.getY(), Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"Optimum",
+						(int) optimum.getX() + 5, (int) optimum.getY(), Color.WHITE));
+		
+		drawables.add(new Drawable(Drawable.LABEL,
+						"Optimum (X, Y): " + (int) optimum.getX() + " " + (int) optimum.getY(),
+						250, 30, Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"goalAndPointAngle: " + (float) Math.toDegrees(goal.calculateGoalAndPointAngle(ball)),
+						250, 50, Color.WHITE));
+		
+		// Robot states of execution
+		drawables.add(new Drawable(Drawable.LABEL,
+						"isBallInACorner: " + isBallInACorner(ball),
+						800, 30, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"isObstacleInFront: " + isObstacleInFront(robot, opponent, optimum),
+						800, 50, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"isBallBehindRobot: " + isBallBehindRobot(robot, ball, optimum),
+						800, 70, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"!isRobotInOptimumPosition: " + !isRobotInOptimumPosition(robot, optimum),
+						800, 90, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"isBallReached: " + isBallReached(robot, ball),
+						800, 110, Color.BLACK));
+		
+		drawables.add(new Drawable(Drawable.LABEL,
+						"gap: " + gap,
+						450, 30, Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"Ball (X, Y): " + ball.getX() + " " + ball.getY(),
+						450, 50, Color.WHITE));
 	}
 	
 	public void setGap(int newGap) {

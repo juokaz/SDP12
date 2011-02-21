@@ -45,8 +45,8 @@ public class Point {
 	 * @return
 	 */
 	public boolean isInPoint(Point point) {
-		// TODO check 5
-		return isInPoint(point, 5);
+		// TODO check 40
+		return isInPoint(point, 40);
 	}
 	
 	/**
