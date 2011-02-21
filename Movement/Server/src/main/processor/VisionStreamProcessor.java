@@ -22,6 +22,9 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 	    BufferedReader brCleanUp = new BufferedReader (new InputStreamReader (stream));
 		
 		String line = null;
+		
+		// TEMP TEMP FIX
+		int i = 0;
 	    
 	    while (true) {
 	    	
@@ -41,6 +44,11 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		    	
 		    	if (Runner.DEBUG) {
 		    		System.out.println ("[Stdout] " + line);
+		    	}
+		    	
+		    	// TODO TEMP FIX. Limits refresh rate by /5
+		    	if (i++ % 5 != 0) {
+		    		continue;
 		    	}
 		    	
 		    	String[] lines = line.split(SEPARATOR);
