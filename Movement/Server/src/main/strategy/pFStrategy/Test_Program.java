@@ -8,10 +8,11 @@ public class Test_Program {
 		double b = 15.2;
 		double r = 8.27;
 		RobotConf conf = new RobotConf(b, r);
-		PFPlanning plann = new PFPlanning(conf, 1000, 200, 0.05, 500000.0);
-		Pos initPos = new Pos(new Point(100, 380), 0);
-		Pos opponent = new Pos(new Point(400, 380), 0);
-		Point ball = new Point(600, 160);
+		//10000, 500.0
+		PFPlanning plann = new PFPlanning(conf, 10000000, Double.MAX_VALUE, 0.05, 500.0);
+		Pos initPos = new Pos(new Point(0, 380), 0);
+		Pos opponent = new Pos(new Point(300, 550), 0);
+		Point ball = new Point(600, 650);
 
 		double wall_Thickness = 0;
 		Point top_left = new Point(0, 0);
@@ -70,15 +71,17 @@ public class Test_Program {
 
 			Simulate sim = new Simulate(init, config.getb());
 			Pos current = init;
-
+			current=new Pos(current.getLocation(), Math.toRadians(current.getAngle()));
 			double distance = Math.sqrt((current.getLocation().getX() - ball
 					.getX())
 					* (current.getLocation().getX() - ball.getX())
 					+ (current.getLocation().getY() - ball.getY())
 					* (current.getLocation().getY() - ball.getY()));
-			while (distance > 20) {
+			while (true) {
 				VelocityVec res = planner.update(current, opponent, ball, srr,
 						false);
+				if(res.getLeft()==0&&res.getRight()==0)
+					break;
 				System.out.println("Sending :"
 						+ (int) Math.toDegrees(res.getLeft()) + " "
 						+ (int) Math.toDegrees(res.getRight()));

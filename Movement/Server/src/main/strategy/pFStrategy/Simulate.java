@@ -19,7 +19,7 @@ public class Simulate {
 		double S = (rightV + leftV) / 2;
 		double x = S * Math.cos(theta) * time + position.getLocation().getX();
 		double y = S * Math.sin(theta) * time + position.getLocation().getY();
-		position = new Pos(new Point(x, y), theta);
+		position = new Pos(new Point(x, y),theta);
 		return position;
 
 	}

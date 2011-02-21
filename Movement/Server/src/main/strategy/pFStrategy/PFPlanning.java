@@ -111,7 +111,7 @@ public class PFPlanning {
 		this.opponent = opponentObj;
 		this.ball = ballObj;
 		List<Object> complList = updateLocal(srr);
-		Vector res = GoTo(complList, this.ball, robot);
+		Vector res = GoTo(complList, this.ball, robot.getLocation());
 		System.out.println("Result Vector: " + res.toString());
 		if (orig)
 			return (VelocityVec) res;
@@ -214,12 +214,12 @@ public class PFPlanning {
 		double size = inputVel.size();
 		if(size==0)
 			return new VelocityVec(0, 0);
-		double alpha = -1*inputVel.normalAngle();
+		double alpha = inputVel.normalAngle();
 		double dist_alpha = alpha - current.getAngle();
 		if(Runner.DEBUG)
 			System.out.println("Current T: "+current.getAngle()+", dist_alpha="+dist_alpha);
 		double Vlin = Math.cos(dist_alpha) * size;
-		double Vang = dist_alpha*size/200;// Math.sin(dist_alpha)*size;
+		double Vang = dist_alpha;//*size/200;// Math.sin(dist_alpha)*size;
 		if(Runner.DEBUG)
 			System.out.println(Vlin + " " + Vang);
 		return CvtVelocity(Vlin, Vang, config.getr());
