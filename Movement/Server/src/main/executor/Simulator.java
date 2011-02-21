@@ -24,41 +24,21 @@ public class Simulator extends AbstractProcessor implements Executor {
 	public static int i = 0;
 
 	public Simulator() {
-
-		Runnable doCreateAndShowGUI = new Runnable() {
-
-			public void run() {
-
-				robot1 = new RobotT("images/ty.jpg", 65, 292, 0);
-				robot2 = new RobotT("images/ty.jpg", 550, 300, 180);
-				ball = new sdp12.simulator.Ball("images/ball.jpg", 768 / 2,
-						576 / 2);
-				simulator = new LegoSimulator(robot1, robot2, ball);
-				simulator.createAndShowGUI();
-				// simulator.writeToFile();
-				// Simulator.this.strategy.updateLocation()
-			}
-
-		};
-
-		SwingUtilities.invokeLater(doCreateAndShowGUI);
+		// default locations
+		this(65, 292, 0, 550, 300, 180, 768 / 2, 576 / 2);
 	}
 
 	public Simulator(final int X1, final int Y1, final float theta1,
-			final int X2, final int Y2, final int BallX, final int BallY) {
+			final int X2, final int Y2,final float theta2, final int BallX, final int BallY) {
 
 		Runnable doCreateAndShowGUI = new Runnable() {
-
 			public void run() {
-
-				robot1 = new RobotT("images/ty.jpg", X1, Y1, theta1);
-				robot2 = new RobotT("images/ty.jpg", X2, Y2, theta1);
+				robot1 = new RobotT("images/tb.jpg", X1, Y1, theta1);
+				robot2 = new RobotT("images/ty.jpg", X2, Y2, theta2);
 				ball = new sdp12.simulator.Ball("images/ball.jpg", BallX, BallY);
 				simulator = new LegoSimulator(robot1, robot2, ball);
 				simulator.createAndShowGUI();
-
 			}
-
 		};
 
 		SwingUtilities.invokeLater(doCreateAndShowGUI);
@@ -81,7 +61,6 @@ public class Simulator extends AbstractProcessor implements Executor {
 				(int) this.ball.getYPos());
 
 		Goal goal = new Goal(0, 290);
-		
 		
 		Location data = null;
 

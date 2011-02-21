@@ -1,6 +1,8 @@
 package main.strategy;
 
 import java.awt.Color;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import sdp12.simulator.Drawable;
@@ -289,20 +291,23 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		drawables.add(new Drawable(Drawable.LABEL,
 						"Ball (X, Y): " + ball.getX() + " " + ball.getY(),
 						450, 50, Color.WHITE));
+
+		NumberFormat formatter = new DecimalFormat("#0.00");
+		
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Angle between optimum and robot: " + robot.getAngleBetweenPoints(optimum),
+				"Angle between optimum and robot: " + formatter.format(robot.getAngleBetweenPoints(optimum)),
 				800, 170, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Angle between optimum and opponent: " + opponent.getAngleBetweenPoints(optimum),
+				"Angle between optimum and opponent: " + formatter.format(opponent.getAngleBetweenPoints(optimum)),
 				800, 190, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Difference of angles between robots: " + Math.abs(Math.abs(robot.getAngleBetweenPoints(optimum)) - Math.abs(opponent.getAngleBetweenPoints(optimum))),
+				"Difference of angles between robots: " + formatter.format(Math.abs(Math.abs(robot.getAngleBetweenPoints(optimum)) - Math.abs(opponent.getAngleBetweenPoints(optimum)))),
 				800, 210, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Distance between optimum and robot: " + robot.getDistanceBetweenPoints(optimum),
+				"Distance between optimum and robot: " + formatter.format(robot.getDistanceBetweenPoints(optimum)),
 				800, 230, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Distance between optimum and opponent: " + opponent.getDistanceBetweenPoints(optimum),
+				"Distance between optimum and opponent: " + formatter.format(opponent.getDistanceBetweenPoints(optimum)),
 				800, 250, Color.BLACK));
 		
 	}
@@ -315,7 +320,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	protected void setIAmDoing(String name) {
 		drawables.add(new Drawable(Drawable.LABEL,
 						"I am doing: " + name,
-						800, 150, Color.RED));
+						800, 140, Color.RED));
 	}
 	
 	/**
