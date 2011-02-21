@@ -40,22 +40,29 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		
 		// This state machine covers the basic stages robot can be in 
 		if (isBallOutOfPitch(ball)) {
+			setIAmDoing("Ball out of pitch");
 			// We have scored (hopefully)
 			executor.stop();
 		} else if (isBallInACorner(ball)) {
+			setIAmDoing("Ball in a corner");
 			// Don't do anything, wait for it move from there
 			executor.stop();
 		} else if (isObstacleInFront(robot, opponent, optimum)) {
+			setIAmDoing("Obstacle in front");
 			Point point = getPointToAvoidObstacle(robot, opponent, optimum);
 			moveToPoint(robot, point);
 		} else if (isBallBehindRobot(robot, ball, optimum)) {
+			setIAmDoing("Ball behing robot");
 			Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum);
 			moveToPoint(robot, point);
 		} else if (!isRobotInOptimumPosition(robot, optimum)) {
+			setIAmDoing("Not in optimum");
 			moveToPoint(robot, optimum);
 		} else if (isBallReached(robot, ball)) {
+			setIAmDoing("Kick");
 			executor.kick();
 		} else {
+			setIAmDoing("Reaching ball");
 			moveToPoint(robot, ball);
 		}
 		
@@ -242,6 +249,17 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		drawables.add(new Drawable(Drawable.LABEL,
 						"Ball (X, Y): " + ball.getX() + " " + ball.getY(),
 						450, 50, Color.WHITE));
+	}
+	
+	/**
+	 * Set information about what I'm doing doing right now
+	 * 
+	 * @param name
+	 */
+	protected void setIAmDoing(String name) {
+		drawables.add(new Drawable(Drawable.LABEL,
+						"I am doing: " + name,
+						800, 150, Color.RED));
 	}
 	
 	public void setGap(int newGap) {
