@@ -130,9 +130,9 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		if (robot.getDistanceBetweenPoints(ball) > 20) {
 			// Checks to see which side of the ball the robot is on
 			if (robot.getAngleBetweenPoints(ball) - ball.getAngleBetweenPoints(optimum) > 180) {				
-				ball.calculatePosBehindBall(ball.getAngleBetweenPoints(optimum) + 45, ball, gap*2);
+				return calculatePosBehindBall(ball.getAngleBetweenPoints(optimum) + 45, ball, gap*2);
 			} else {
-				ball.calculatePosBehindBall(ball.getAngleBetweenPoints(optimum) - 45, ball, gap*2);
+				return calculatePosBehindBall(ball.getAngleBetweenPoints(optimum) - 45, ball, gap*2);
 			}
 		} else {
 			// TODO: maybe just turn and move ball?
@@ -148,7 +148,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected Point getOptimumPoint(Ball ball, Goal goal) {
-		return ball.calculatePosBehindBall(goal.calculateGoalAndPointAngle(ball), ball, gap);
+		return calculatePosBehindBall(goal.calculateGoalAndPointAngle(ball), ball, gap);
 	}
 	
 	/**
@@ -193,6 +193,23 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	protected boolean isBallOutOfPitch(Ball ball) {
 		return ball.getX() < PITCH_X_MIN || ball.getX() > PITCH_X_MAX ||
 			   ball.getY() < PITCH_Y_MIN || ball.getY() > PITCH_Y_MAX;
+	}
+
+	/**
+	 * Calculates the new X,Y co-ordinates for a point behind the ball.
+	 * Currently does this in relation to the goal at the far end of the pitch
+	 * TODO: Create method that takes into account which goal we are aiming towards.
+	 * 
+	 * @param ballGoalAngle
+	 * @param ball
+	 * @param gap
+	 */
+	protected Point calculatePosBehindBall(double ballGoalAngle, Ball ball, int gap) {
+		// Need to work out sin and cos distances to get new X and Y positions
+		double xOffset = gap*Math.cos(ballGoalAngle);
+		double yOffset = gap*Math.sin(ballGoalAngle);
+		
+		return new Point(ball.getX()+xOffset, ball.getY()+yOffset);
 	}
 	
 	/**
