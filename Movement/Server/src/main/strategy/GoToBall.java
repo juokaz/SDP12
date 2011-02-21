@@ -94,11 +94,12 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		/** 
 		 * TODO: edit to take into account size of opponent, will probably have to 
 		 * change so that checks if inbetween two angles.
-		 */
+		 */					
 		
-		
-		return  Math.abs(robot.getAngleBetweenPoints(optimum) - opponent.getAngleBetweenPoints(optimum)) < 0.6 &&
-				robot.getDistanceBetweenPoints(optimum) > opponent.getDistanceBetweenPoints(optimum);
+		return  Math.abs(Math.abs(robot.getAngleBetweenPoints(optimum)) - Math.abs(opponent.getAngleBetweenPoints(optimum))) < 0.5 &&
+				robot.getDistanceBetweenPoints(optimum) > opponent.getDistanceBetweenPoints(optimum) && 
+				((opponent.getX() <= robot.getX() && opponent.getX() >= optimum.getX() || 
+						(opponent.getX() >= robot.getX() && opponent.getX() <= optimum.getX())));
 	}
 	
 	/**
@@ -116,7 +117,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		double xOffset = robot.getDistanceBetweenPoints(opponent);
 		double yOffset = robot.getDistanceBetweenPoints(opponent)*Math.tan(robot.getAngleBetweenPoints(opponent) + 40);
 		Point dirPoint = new Point(opponent.getX(), opponent.getY() + 50);
-//		return dirPoint;
 		
 		if (robot.getY() > opponent.getY()) {				
 
@@ -292,11 +292,14 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 				"Angle between optimum and opponent: " + opponent.getAngleBetweenPoints(optimum),
 				800, 190, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Distance between optimum and robot: " + robot.getDistanceBetweenPoints(optimum),
+				"Difference of angles between robots: " + Math.abs(Math.abs(robot.getAngleBetweenPoints(optimum)) - Math.abs(opponent.getAngleBetweenPoints(optimum))),
 				800, 210, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Distance between optimum and opponent: " + opponent.getDistanceBetweenPoints(optimum),
+				"Distance between optimum and robot: " + robot.getDistanceBetweenPoints(optimum),
 				800, 230, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Distance between optimum and opponent: " + opponent.getDistanceBetweenPoints(optimum),
+				800, 250, Color.BLACK));
 		
 	}
 	
