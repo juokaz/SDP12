@@ -11,10 +11,13 @@ import main.data.Robot;
 
 public abstract class AbstractStrategy implements Strategy {
 	
-	protected final int PITCH_X_MIN = 18;
-	protected final int PITCH_Y_MIN = 114;
-	protected final int PITCH_X_MAX = 725; // TODO check those
-	protected final int PITCH_Y_MAX = 454; // TODO check those
+	/**
+	 * Pitch dimensions
+	 */
+	protected int PITCH_X_MIN = 0;
+	protected int PITCH_Y_MIN = 0;
+	protected int PITCH_X_MAX = 550; // TODO check those
+	protected int PITCH_Y_MAX = 350; // TODO check those
 
 	/**
 	 * Drawables field to be used throughout the strategy and passed 
@@ -26,6 +29,14 @@ public abstract class AbstractStrategy implements Strategy {
 
 	public void setExecutor(Executor executor) {
 		this.executor  = executor;
+		
+		// TODO FIX THIS ASAP!
+		if (executor instanceof main.executor.Simulator) {
+			PITCH_X_MIN = 18;
+			PITCH_Y_MIN = 114;
+			PITCH_X_MAX = 725;
+			PITCH_Y_MAX = 454;
+		}
 	}
 	
 	/**
@@ -37,47 +48,60 @@ public abstract class AbstractStrategy implements Strategy {
 	 * @param point
 	 */
 	protected void moveToPoint(Robot robot, Point point) {
-			
-		// find the angle the robot must turn to face the ball
-		double dirAngle = Math.atan2(point.getY()-robot.getY(), point.getX()-robot.getX());
 		
+		double dirAngle = 0;
+		int left=1;
+		int right=1;
+
 		// find the distance between the robot and the ball
 		double dy = robot.getY() - point.getY();
 		double dx = robot.getX() - point.getX();
 		double distance = Math.sqrt(dx*dx + dy*dy);
 		
-		// convert to degrees
-		//dirAngle = Math.toDegrees(dirAngle);
-		
-		int a=1;
-		int b=1;
-		if(Math.abs(normalizeAngle(dirAngle) - normalizeAngle(robot.getT())) > Math.PI) {
-			a=-1;
-			b=1;
+		// find the angle the robot must turn to face the ball
+		// TODO FIX THIS ASAP!
+		if (executor instanceof main.executor.Simulator) {
+			dirAngle = Math.toDegrees(Math.atan2(point.getY()-robot.getY(), point.getX()-robot.getX()));
+			
+			robot.setT((float) Math.toDegrees(robot.getT()));
+			
+			if(dirAngle > robot.getT()) {
+				// turn left
+				left=-1;
+				right=1;
+			} else {
+				// turn right
+				left=1;
+				right=-1;
+			}
 		} else {
-			a=1;
-			b=-1;
+			dirAngle = 180 - Math.toDegrees(robot.getAngleBetweenPoints(point));
+			
+			if(dirAngle < robot.getT()) {
+				// turn left
+				left=-1;
+				right=1;
+			} else {
+				// turn right
+				left=1;
+				right=-1;
+			}
 		}
+		
 		// once the robot is facing in direction of the ball, move towards it at
 		// a velocity proportional to the distance between them
-		if(Math.abs(dirAngle - robot.getT()) % Math.toRadians(360) < Math.toRadians(30)) {
-			a = (int) (1*distance)/35;
-			b = (int) (1*distance)/35;		
+		if(Math.abs(dirAngle - robot.getT()) % 360 < 30) {
+			left = (int) (1*distance)/35;
+			right = (int) (1*distance)/35;		
 		}
-		executor.rotateWheels(a*50, b*50);
+
+		left = Math.min(left, 4);
+		right = Math.min(right, 4);
+		
+		executor.rotateWheels(left*50, right*50);
 		
 		drawables.add(new Drawable(Drawable.LABEL, "Distance: " + distance, 50, 30, Color.WHITE));
-		drawables.add(new Drawable(Drawable.LABEL, "dirAngle: " + normalizeAngle(dirAngle), 50, 50, Color.WHITE));
-		drawables.add(new Drawable(Drawable.LABEL, "robotAngle: " + normalizeAngle(robot.getT()), 50, 70, Color.WHITE));
-	}
-	
-	public double normalizeAngle(double angle) {
-		angle = angle % Math.PI*2;
-		
-		if(angle < 0) {
-			return Math.PI*2 - Math.abs(angle);
-		}
-		
-		return angle;
+		drawables.add(new Drawable(Drawable.LABEL, "dirAngle: " + dirAngle, 50, 50, Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL, "robotAngle: " + robot.getT(), 50, 70, Color.WHITE));
 	}
 }

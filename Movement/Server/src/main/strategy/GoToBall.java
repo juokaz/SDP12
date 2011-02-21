@@ -35,7 +35,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		drawPoint(opponent, null);
 		drawPoint(goal, "Goal");
 		drawPoint(optimum, "Optimum");		
-		
+
+		System.out.println(PITCH_Y_MAX);
 		// This state machine covers the basic stages robot can be in 
 		if (isBallOutOfPitch(ball))
 		{
