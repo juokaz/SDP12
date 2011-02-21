@@ -84,6 +84,12 @@ public class Ball implements ActionListener {
 		
 		resolveCollisions();
 		
+		if(getXPos() + getImage().getWidth()*2 < 0 || getYPos() + getImage().getHeight()*2 < 0) {
+			
+			timer.stop();
+			
+		}
+		
 	}
 	
 	public void resolveCollisions() {
