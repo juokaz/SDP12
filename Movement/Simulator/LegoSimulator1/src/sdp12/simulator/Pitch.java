@@ -191,14 +191,15 @@ public class Pitch extends JComponent implements ActionListener {
 			int x = e.getX();
 			int y = e.getY();
 			
-			// TODO implement this
-			//if (e.getButton() == MouseEvent.BUTTON1) {
+			if (e.getButton() == MouseEvent.BUTTON1) {
 				ball.setXPos(x);
 				ball.setYPos(y);
-			//} else {
-			//	robot1.setXPos(x);
-			//	robot1.setYPos(y);
-			//}
+			} else if(e.getButton() == MouseEvent.BUTTON3) {
+				robot1.resetMovement();
+				robot1.stop();
+				robot1.setXPos(x);
+				robot1.setYPos(y);
+			}
 		}
 		
 		public void mouseDragged(MouseEvent e) {
