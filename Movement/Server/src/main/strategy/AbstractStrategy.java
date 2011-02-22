@@ -23,10 +23,20 @@ public abstract class AbstractStrategy implements Strategy {
 	protected int PITCH_Y_MIN = 0;
 	protected int PITCH_X_MAX = 550; // TODO check those
 	protected int PITCH_Y_MAX = 350; // TODO check those
+	
+	/**
+	 * Executor which is going to execute these commands
+	 */
+	protected Executor executor = null;
 
+	/**
+	 * Drawables to display on GUI
+	 */
 	protected ArrayList<Drawable> drawables;
 	
-	protected Executor executor = null;
+	/**
+	 * Listener accepting drawables
+	 */
 	protected DrawablesListener listener = null;
 
 	/**
@@ -120,33 +130,31 @@ public abstract class AbstractStrategy implements Strategy {
 		double differenceAngle = 0;
 		
 		while (true){
-		if (currentAngle < 0)
-			currentAngle_ = 360 - Math.abs(currentAngle); //change to 2pi
-		else
-			currentAngle_ = currentAngle;
-		
-		if (requiredAngle < 0)
-			requiredAngle_ = 360 - Math.abs(requiredAngle);
-		else
-			requiredAngle_ = requiredAngle;
-		
-		differenceAngle = requiredAngle_ - currentAngle_;
-		
-		if (differenceAngle < -10){
-			right = 1;
-			left = -1;
-		}
-		else if (differenceAngle > 10) {
-			right = -1;
-			left = 1;
-		}
-		else 
-			break;
-		
-		executor.rotateWheels(left*50, right*50);
+			if (currentAngle < 0)
+				currentAngle_ = 360 - Math.abs(currentAngle); //change to 2pi
+			else
+				currentAngle_ = currentAngle;
 			
+			if (requiredAngle < 0)
+				requiredAngle_ = 360 - Math.abs(requiredAngle);
+			else
+				requiredAngle_ = requiredAngle;
+			
+			differenceAngle = requiredAngle_ - currentAngle_;
+			
+			if (differenceAngle < -10){
+				right = 1;
+				left = -1;
+			}
+			else if (differenceAngle > 10) {
+				right = -1;
+				left = 1;
+			}
+			else 
+				break;
+			
+			executor.rotateWheels(left*50, right*50);	
 		}
-		
 	}
 	
 	/**

@@ -19,8 +19,6 @@ public class Robot extends BaseEntity implements ActionListener {
 	private ArrayList<Wall> walls;
 	private Robot opponent;
 
-	private ArrayList<Drawable> drawables;
-
 	// Position and orientation of robot
 
 	private double xPrevPos;
@@ -66,19 +64,14 @@ public class Robot extends BaseEntity implements ActionListener {
 	public Robot(String file, double xPos, double yPos, double theta) {
 
 		try {
-
 			image = ImageIO.read(Robot.class.getResource(file));
-
 		} catch (IOException e) {
-
 			e.printStackTrace();
-
 		}
 
 		defineRobot(xPos, yPos, Math.toRadians(theta));
 		isEnabled = true;
-		kicker = new Kicker(getXPos(), getYPos(), getTheta(), getHeight(),
-				getWidth());
+		kicker = new Kicker(getXPos(), getYPos(), getTheta(), getHeight(), getWidth());
 		// pitch = new Rectangle(30, 107, 705, 370);
 		timer = new Timer(DEFAULT_TIMER_DELAY, this);
 		timer.setInitialDelay(0);
@@ -90,10 +83,8 @@ public class Robot extends BaseEntity implements ActionListener {
 	 * @param ball
 	 */
 	public void setBall(Ball ball) {
-
 		this.ball = ball;
 		kicker.setBall(this.ball);
-
 	}
 
 	/**
@@ -102,9 +93,7 @@ public class Robot extends BaseEntity implements ActionListener {
 	 * @param opponent
 	 */
 	public void setOpponent(Robot opponent) {
-
 		this.opponent = opponent;
-
 	}
 
 	/**
@@ -113,9 +102,7 @@ public class Robot extends BaseEntity implements ActionListener {
 	 * @param walls
 	 */
 	public void setWalls(ArrayList<Wall> walls) {
-
 		this.walls = walls;
-
 	}
 
 	/**
@@ -124,10 +111,7 @@ public class Robot extends BaseEntity implements ActionListener {
 	 * @return
 	 */
 	public Rectangle getRectangle() {
-
-		return new Rectangle((int) getXPos(), (int) getYPos(), getImage()
-				.getWidth(), getImage().getHeight());
-
+		return new Rectangle((int) getXPos(), (int) getYPos(), getImage().getWidth(), getImage().getHeight());
 	}
 
 	/**
@@ -166,7 +150,6 @@ public class Robot extends BaseEntity implements ActionListener {
 		Point2D[] corners = { topLeft, topRight, bottomLeft, bottomRight };
 
 		return corners;
-
 	}
 
 	/**
@@ -178,7 +161,6 @@ public class Robot extends BaseEntity implements ActionListener {
 	 * @return
 	 */
 	public Shape getShape(double x, double y, double theta) {
-
 		Shape robotShape = new Rectangle2D.Double(x, y, getImage().getWidth(),
 				getImage().getHeight());
 		AffineTransform xform = new AffineTransform();
@@ -186,13 +168,10 @@ public class Robot extends BaseEntity implements ActionListener {
 				+ getHeight() / 2);
 
 		return xform.createTransformedShape(robotShape);
-
 	}
 
 	public Shape getShape() {
-
 		return getShape(getXPos(), getYPos(), getTheta());
-
 	}
 
 	/**
@@ -218,29 +197,14 @@ public class Robot extends BaseEntity implements ActionListener {
 		Point2D[] corners = getCorners();
 
 		for (Point2D corner : corners) {
-
 			g2d.drawOval((int) corner.getX(), (int) corner.getY(), 1, 1);
-
 		}
-
-		if (drawables != null) {
-
-			for (Drawable drawable : drawables) {
-
-				drawable.draw(g2d);
-
-			}
-
-		}
-
 	}
 
 	public void setPreviousPositions() {
-
 		xPrevPos = xPos;
 		yPrevPos = yPos;
 		prevTheta = theta;
-
 	}
 
 	public void usePreviousPositions() {
@@ -436,16 +400,6 @@ public class Robot extends BaseEntity implements ActionListener {
 	public void stop() {
 
 		timer.stop();
-
-	}
-
-	/*
-	 * GETTERS AND SETTERS
-	 */
-
-	public void setDrawables(ArrayList<Drawable> drawables) {
-
-		this.drawables = drawables;
 
 	}
 

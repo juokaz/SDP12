@@ -22,18 +22,19 @@ import javax.swing.event.MouseInputAdapter;
 public class Pitch extends JComponent implements ActionListener {
 
 	// List of robots
-	Robot robot1;
-	Robot robot2;
-	Ball ball;
+	private Robot robot1;
+	private Robot robot2;
+	private Ball ball;
 	
-	ArrayList<Wall> walls;
+	private ArrayList<Wall> walls;
 	
 	// Pitch background
-	BufferedImage pitchBackground;
-	BufferedImage dbImage;
+	private BufferedImage pitchBackground;
 	
 	// Timer 
-	Timer time;
+	private Timer time;
+
+	private ArrayList<Drawable> drawables;
 	
 	public Pitch(Robot robot1, Robot robot2, final Ball ball) {
 		
@@ -163,9 +164,7 @@ public class Pitch extends JComponent implements ActionListener {
 	
 	// Callback for timer
 	public void actionPerformed(ActionEvent actionEvent) {
-		
 		repaint();
-		
 	}
 	
 	public void simulatorRender(Graphics2D g2d) {
@@ -175,6 +174,22 @@ public class Pitch extends JComponent implements ActionListener {
 		ball.draw(g2d);
 		robot2.draw(g2d);
 		robot1.draw(g2d);
+		
+		// Draw drawables
+		if (drawables != null) {
+			for (Drawable drawable : drawables) {
+				drawable.draw(g2d);
+			}
+		}
+	}
+
+	/*
+	 * GETTERS AND SETTERS
+	 */
+
+	public void setDrawables(ArrayList<Drawable> drawables) {
+
+		this.drawables = drawables;
 	}
 	
 	public int getPitchWidth() {

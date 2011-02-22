@@ -13,8 +13,18 @@ import main.data.Robot;
 
 public abstract class VisionStreamProcessor extends AbstractProcessor {
 	
+	/**
+	 * Separator for data lines
+	 */
 	protected String SEPARATOR = ",";
 
+	/**
+	 * Process input stream
+	 * 
+	 * @param stream
+	 * @throws NumberFormatException
+	 * @throws IOException
+	 */
 	protected void process(InputStream stream) throws NumberFormatException, IOException {
 		
 	    // clean up if any output in std out

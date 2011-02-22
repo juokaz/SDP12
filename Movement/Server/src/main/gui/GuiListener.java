@@ -5,12 +5,25 @@ import main.processor.Listener;
 
 public class GuiListener implements Listener {
 	
+	/**
+	 * Pitch to update on
+	 */
 	protected Pitch pitch;
 
+	/**
+	 * Gui listener
+	 * 
+	 * @param pitch
+	 */
 	public GuiListener(Pitch pitch) {
 		this.pitch = pitch;
 	}
 	
+	/**
+	 * Update locations on screen
+	 * 
+	 * @param data
+	 */
 	public void updateLocation(Location location) {
 		pitch.getRobot1().setXPosRemapped(location.getOurRobot().getX());
 		pitch.getRobot1().setYPosRemapped(location.getOurRobot().getY());

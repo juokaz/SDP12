@@ -2,6 +2,9 @@ package main;
 
 import javax.swing.*;
 
+import main.executor.Simulator;
+import main.gui.DrawablesListener;
+import main.gui.GuiListener;
 import main.strategy.ProcessorListener;
 
 public class Runner {
@@ -146,11 +149,15 @@ public class Runner {
 
 		// allow Runner to be stopped by settings button text
 		window.setButton("Stop", true);
+		// Inform window about running process
+		// TODO handle this better
+		if (!(this.processor instanceof Simulator)) {
+			this.processor.addListener(new GuiListener(window.getPitch()));
+		}
+		this.strategy.setDrawablesListener(new DrawablesListener(window.getPitch()));
 
 		System.out.println("Processing starting");
 		
-		// Inform window about running process
-		window.informRunning(this.processor, this.strategy);
 
 		// start running processor
 		this.processor.run(our_robot.equals(ROBOT_BLUE),left_goal.equals(LEFT_GOAL));

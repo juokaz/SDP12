@@ -22,7 +22,7 @@ public interface Processor {
 	public void stop();
 	
 	/**
-	 * Add data listener
+	 * Add location data listener
 	 * 
 	 * @param listener
 	 */

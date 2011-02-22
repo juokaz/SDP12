@@ -20,55 +20,65 @@ public class Drawable extends BaseEntity {
 	public static final int DEFAULT_WIDTH_HEIGHT = 5;
 	public static final Color DEFAULT_COLOR = Color.WHITE;
 	
+	/**
+	 * Drawable instance
+	 * 
+	 * @param drawableType
+	 * @param xPos
+	 * @param yPos
+	 */
 	public Drawable(int drawableType, int xPos, int yPos) {
-		
-		this.xPos = xPos;
-		this.yPos = yPos;
-		this.drawableType = drawableType;
-		
-		// Default values
-		this.drawableWidth = DEFAULT_WIDTH_HEIGHT;
-		this.drawableHeight = DEFAULT_WIDTH_HEIGHT;
-		color = Color.WHITE;
+		this(drawableType, xPos, yPos, DEFAULT_WIDTH_HEIGHT, DEFAULT_WIDTH_HEIGHT, Color.WHITE);
 	}
 	
+	/**
+	 * Drawable instance
+	 * 
+	 * @param drawableType
+	 * @param xPos
+	 * @param yPos
+	 * @param color
+	 */
 	public Drawable(int drawableType, int xPos, int yPos, Color color) {
-		
-		this.xPos = xPos;
-		this.yPos = yPos;
-		this.drawableType = drawableType;
-		this.color = color;
-		
-		// Default values
-		this.drawableWidth = DEFAULT_WIDTH_HEIGHT;
-		this.drawableHeight = DEFAULT_WIDTH_HEIGHT;
+		this(drawableType, xPos, yPos, DEFAULT_WIDTH_HEIGHT, DEFAULT_WIDTH_HEIGHT, color);
 	}
 	
-	public Drawable(int drawableType, String drawableString,
-						int xPos, int yPos, Color color) {
-		
-		this.xPos = xPos;
-		this.yPos = yPos;
-		this.drawableType = drawableType;
-		this.drawableString = drawableString;
-		this.color = color;
-		
-		// Default values
-		this.drawableWidth = DEFAULT_WIDTH_HEIGHT;
-		this.drawableHeight = DEFAULT_WIDTH_HEIGHT;
+	/**
+	 * Drawable instance
+	 * 
+	 * @param drawableType
+	 * @param drawableString
+	 * @param xPos
+	 * @param yPos
+	 * @param color
+	 */
+	public Drawable(int drawableType, String drawableString, int xPos, int yPos, Color color) {
+		this(drawableType, xPos, yPos, DEFAULT_WIDTH_HEIGHT, DEFAULT_WIDTH_HEIGHT, color, drawableString);
 	}
 	
-	public Drawable(int drawableType, int xPos, int yPos,
-						int drawableWidth, int drawableHeight, Color color) {
-		
-		this.xPos = xPos;
-		this.yPos = yPos;
-		this.drawableWidth = drawableWidth;
-		this.drawableHeight = drawableHeight;
-		this.drawableType = drawableType;
-		this.color = color;
+	/**
+	 * Drawable instance
+	 * 
+	 * @param drawableType
+	 * @param xPos
+	 * @param yPos
+	 * @param drawableWidth
+	 * @param drawableHeight
+	 * @param color
+	 */
+	public Drawable(int drawableType, int xPos, int yPos, int drawableWidth, int drawableHeight, Color color) {
+		this(drawableType, xPos, yPos, drawableWidth, drawableHeight, color, null);
 	}
 	
+	/**
+	 * Drawable instance
+	 * 
+	 * @param drawableType
+	 * @param x
+	 * @param y
+	 * @param color
+	 * @param remap
+	 */
 	public Drawable(int drawableType, int x, int y, Color color, boolean remap) {
 		this(drawableType, x, y, color);
 
@@ -78,8 +88,17 @@ public class Drawable extends BaseEntity {
 		}
 	}
 
-	public Drawable(int drawableType, String label, int x, int y, Color color,
-			boolean remap) {
+	/**
+	 * Drawable instance
+	 * 
+	 * @param drawableType
+	 * @param label
+	 * @param x
+	 * @param y
+	 * @param color
+	 * @param remap
+	 */
+	public Drawable(int drawableType, String label, int x, int y, Color color, boolean remap) {
 		this(drawableType, label, x, y, color);
 
 		if (remap) {
@@ -87,7 +106,34 @@ public class Drawable extends BaseEntity {
 			setYPosRemapped(y);
 		}
 	}
+	
+	/**
+	 * Drawable instance
+	 * 
+	 * @param drawableType
+	 * @param xPos
+	 * @param yPos
+	 * @param drawableWidth
+	 * @param drawableHeight
+	 * @param color
+	 * @param drawableString
+	 */
+	public Drawable(int drawableType, int xPos, int yPos, int drawableWidth, int drawableHeight, Color color, String drawableString) {
+		
+		this.xPos = xPos;
+		this.yPos = yPos;
+		this.drawableWidth = drawableWidth;
+		this.drawableHeight = drawableHeight;
+		this.drawableType = drawableType;
+		this.drawableString = drawableString;
+		this.color = color;
+	}
 
+	/**
+	 * Draw drawable
+	 * 
+	 * @param g2d
+	 */
 	public void draw(Graphics2D g2d) {
 		
 		switch(drawableType) {
@@ -118,9 +164,5 @@ public class Drawable extends BaseEntity {
 				g2d.drawLine((int) xPos, (int) yPos, drawableWidth, drawableHeight);
 			}
 		}	
-	}
-	
-	public void setLabel(String drawableString) {
-		this.drawableString = drawableString;
 	}
 }

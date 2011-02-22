@@ -8,18 +8,42 @@ import main.data.Location;
 
 public abstract class AbstractProcessor implements Processor {
 	
+	/**
+	 * Has the processor been stopped?
+	 */
 	protected boolean stopped = false;
 	
+	/**
+	 * Is our robot the first vision returns or second
+	 * 
+	 * First would be blue
+	 * And second would be yellow
+	 */
 	private boolean our_robot_first = false;
 	
+	/**
+	 * Is our goal left?
+	 */
 	private boolean left_goal = true;
 	
+	/**
+	 * Listeners for new locations data
+	 */
 	private List<Listener> listeners;
 	
+	/**
+	 * Stop processor
+	 */
 	public void stop() {
 		stopped = true;
 	}
 	
+	/**
+	 * Run processor
+	 * 
+	 * @param our_robot
+	 * @param left_goal
+	 */
 	public void run(boolean our_robot, boolean left_goal) {
 		stopped = false;
 		this.our_robot_first = our_robot;

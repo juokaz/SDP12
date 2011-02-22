@@ -10,8 +10,16 @@ import main.Processor;
 
 public class File extends VisionStreamProcessor implements Processor {
 	
+	/**
+	 * File to process
+	 */
 	private String file = null;
 	
+	/**
+	 * File processor instance
+	 * 
+	 * @param filename
+	 */
 	public File(String filename) {
 		file = filename;
 		
@@ -19,6 +27,12 @@ public class File extends VisionStreamProcessor implements Processor {
 		SEPARATOR = " ";
 	}
 
+	/**
+	 * Start processing
+	 * 
+	 * @param our_robot
+	 * @param left_foal
+	 */
 	public void run(boolean our_robot, boolean left_goal) {
 		
 		// this needed to set running to true or set it manually

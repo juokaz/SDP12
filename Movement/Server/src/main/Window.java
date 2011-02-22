@@ -8,10 +8,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.*;
 
-import main.executor.Simulator;
 import main.gui.Ball;
-import main.gui.DrawablesListener;
-import main.gui.GuiListener;
 import main.gui.Pitch;
 
 import java.io.*;
@@ -191,8 +188,10 @@ public class Window {
 		JPanel panel2 = new JPanel();
 		panel2.add(aTextArea);
 
+		// layout for controls
 	    GridBagLayout layout = new GridBagLayout();
 
+	    // constrains, relative position on Y axis and horizontal fill
 	    GridBagConstraints gbcR = new GridBagConstraints();
 	    gbcR.gridx = 1;
 	    gbcR.gridy = GridBagConstraints.RELATIVE;
@@ -221,30 +220,11 @@ public class Window {
 	}
 	
 	/**
-	 * Inform running
-	 * 
-	 * Runner has successfully started
-	 * 
-	 * @param processor
-	 * @param strategy
-	 */
-	public void informRunning(Processor processor, Strategy strategy) {
-		if (runner.isRunning()) {
-			// TDDO check this
-			if (!(processor instanceof Simulator)) {
-				processor.addListener(new GuiListener(pitch));
-			}
-			strategy.setDrawablesListener(new DrawablesListener(pitch));
-		}
-	}
-	
-	/**
 	 * Get pitch
 	 * 
 	 * @return
 	 */
-	public Pitch getPitch()
-	{
+	public Pitch getPitch() {
 		return this.pitch;
 	}
 
@@ -253,7 +233,6 @@ public class Window {
 	 * on machine it's running on.
 	 */
 	private void setNativeLookAndFeel() {
-
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {

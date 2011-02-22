@@ -7,14 +7,31 @@ import main.Processor;
 
 public class LocalVision extends VisionStreamProcessor implements Processor {
 	
+	/**
+	 * Command pointing to Vision program
+	 */
 	private String command = null;
 	
+	/**
+	 * Process instance
+	 */
 	protected Process process;
 	
+	/**
+	 * Local vision progress
+	 * 
+	 * @param command
+	 */
 	public LocalVision(String command) {
 		this.command = command;
 	}
 
+	/**
+	 * Run processor
+	 * 
+	 * @param our_robot
+	 * @param left_foal
+	 */
 	public void run(boolean our_robot, boolean left_goal) {
 		
 		// this needed to set running to true or set it manually
@@ -33,6 +50,9 @@ public class LocalVision extends VisionStreamProcessor implements Processor {
 		}
 	}
 	
+	/**
+	 * Stop processor
+	 */
 	public void stop() {
 		super.stop();
 		
