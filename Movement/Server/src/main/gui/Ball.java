@@ -16,7 +16,7 @@ public class Ball extends BaseEntity implements ActionListener {
 	private double xPrevPos;
 	private double yPrevPos;
 	
-	private Timer timer;	
+	public Timer timer;	
 	private double fraction;
 	private long animationStartTime;
 	private long animationDuration = 15000;
