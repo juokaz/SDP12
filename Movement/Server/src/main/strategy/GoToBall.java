@@ -13,7 +13,6 @@ import main.data.Location;
 import main.data.Robot;
 import main.data.Point;
 
-
 /**
  * This strategy should find a position behind the ball and move the robot to it.
  * I think the methods used in finding a point behind the ball might be more useful 
@@ -23,6 +22,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 
 	// Gap is the distance behind ball for the point we want to move to.
 	private int gap = 50;
+	private int opponentWidth;
 	
 	@Override
 	public void updateLocation(Location data) {
@@ -31,6 +31,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		Robot opponent = data.getOpponentRobot();
 		Goal goal = data.getGoal();
 		Point optimum = getOptimumPoint(ball, goal);
+		opponentWidth = 50; // TODO: calculate width of the opponent taking into account its angle (?)
 		
 		// statistics
 		addDrawables(robot, opponent, ball, optimum);
@@ -91,8 +92,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * optimum to Robot angle and the optimum to Opponent angle. 
 	 * 
 	 * TODO: Calculate this for when the ball is between two Y-axis values
-	 * TODO: Make this take into account distance from the obstacle, as difference in 
-	 * angle will need to be larger the further from the ball we are.
 	 * 
 	 * @param robot
 	 * @param opponent
@@ -100,12 +99,22 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isObstacleInFront(Robot robot, Robot opponent, Point optimum) {
-		return  Math.abs(Math.abs(robot.getAngleBetweenPoints(optimum)) - Math.abs(opponent.getAngleBetweenPoints(optimum))) < 0.6 &&
+		// angle between lines going through opponent center and edge. opponent width is doubled in order to take into account width of both robots.
+		int theta = (int) Math.abs(Math.toDegrees(Math.atan((2*opponentWidth)/robot.getDistanceBetweenPoints(opponent))));
+		// angle between obstacle and optimum point from robot's point of view
+		int theta2 = (int) Math.toDegrees(Math.abs(Math.abs(opponent.getAngleBetweenPoints(robot)) - Math.abs(optimum.getAngleBetweenPoints(robot))));
+		
+		if (theta2 < theta && opponent.getDistanceBetweenPoints(optimum) < robot.getDistanceBetweenPoints(optimum)){ //TODO: test with correct value of opponentWidth
+			return true;
+		} else return false;
+		
+		/*return  Math.abs(Math.abs(robot.getAngleBetweenPoints(optimum)) - Math.abs(opponent.getAngleBetweenPoints(optimum))) < 0.6 &&
 				robot.getDistanceBetweenPoints(optimum) > opponent.getDistanceBetweenPoints(optimum) && 
 				((opponent.getX() <= robot.getX() && opponent.getX() >= optimum.getX() || 
 						(opponent.getX() >= robot.getX() && opponent.getX() <= optimum.getX())));
+	*/
 	}
-	
+
 	/**
 	 * Get a point which would make robot to avoid obstacle and go to a point
 	 * which will have straight path to a ball
@@ -308,10 +317,10 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 						450, 50, Color.WHITE));
 
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Angle between optimum and robot: " + formatter.format(Math.toDegrees(robot.getAngleBetweenPoints(optimum))),
+				"Angle between robot and obstacle edge: " + formatter.format(Math.abs(Math.toDegrees(Math.atan((2*opponentWidth)/robot.getDistanceBetweenPoints(opponent))))),
 				800, 170, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Angle between optimum and opponent: " + formatter.format(Math.toDegrees(opponent.getAngleBetweenPoints(optimum))),
+				"Angle between optimum and opponent from robot view: " + formatter.format(Math.toDegrees(Math.abs(Math.abs(opponent.getAngleBetweenPoints(robot)) - Math.abs(optimum.getAngleBetweenPoints(robot))))),
 				800, 190, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
 				"Difference of angles between robots: " + formatter.format(Math.abs(Math.abs(robot.getAngleBetweenPoints(optimum)) - Math.abs(opponent.getAngleBetweenPoints(optimum)))),
