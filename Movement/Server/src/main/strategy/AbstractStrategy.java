@@ -5,7 +5,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-import sdp12.simulator.Drawable;
+import main.gui.Drawable;
+import main.gui.DrawablesListener;
 import main.Strategy;
 import main.Executor;
 import main.data.Point;
@@ -21,14 +22,16 @@ public abstract class AbstractStrategy implements Strategy {
 	protected int PITCH_X_MAX = 550; // TODO check those
 	protected int PITCH_Y_MAX = 350; // TODO check those
 
-	/**
-	 * Drawables field to be used throughout the strategy and passed 
-	 * 	to the simulator at the end of updateLocation() if needed
-	 */
-	ArrayList<Drawable> drawables;
+	protected ArrayList<Drawable> drawables;
 	
 	protected Executor executor = null;
+	protected DrawablesListener listener = null;
 
+	/**
+	 * Set executor
+	 * 
+	 * @param executor
+	 */
 	public void setExecutor(Executor executor) {
 		this.executor  = executor;
 		
@@ -39,6 +42,16 @@ public abstract class AbstractStrategy implements Strategy {
 			PITCH_X_MAX = 725;
 			PITCH_Y_MAX = 454;
 		}
+	}
+	
+	/**
+	 * Set drawables listener
+	 * 
+	 * @param listener
+	 */
+	public void setDrawablesListener(DrawablesListener listener) 
+	{
+		this.listener = listener;
 	}
 	
 	/**
@@ -63,7 +76,7 @@ public abstract class AbstractStrategy implements Strategy {
 		// find the angle the robot must turn to face the ball
 		// TODO FIX THIS ASAP!
 		if (executor instanceof main.executor.Simulator) {
-			dirAngle = Math.toDegrees(Math.atan2(point.getY()-robot.getY(), point.getX()-robot.getX()));
+			dirAngle = Math.toDegrees(point.getAngleBetweenPoints(robot));
 			
 			// Convert both angles to positive within the range (0, 360)
 			// 	clockwise is positive
@@ -116,6 +129,12 @@ public abstract class AbstractStrategy implements Strategy {
 		drawables.add(new Drawable(Drawable.LABEL, "robotAngle: " + formatter.format(robot.getT()), 50, 70, Color.WHITE));
 	}
 	
+	/**
+	 * Change to positive
+	 * 
+	 * @param angle
+	 * @return
+	 */
 	public double changeToPositive(double angle) {
 		angle = angle % 360;
 		
@@ -124,5 +143,17 @@ public abstract class AbstractStrategy implements Strategy {
 		}
 		
 		return angle;
+	}
+	
+	/**
+	 * Set listener
+	 * 
+	 * @param drawables
+	 */
+	protected void setDrawables(ArrayList<Drawable> drawables) 
+	{
+		if (listener != null) {
+			listener.setDrawables(drawables);
+		}
 	}
 }

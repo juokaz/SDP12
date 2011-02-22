@@ -1,5 +1,7 @@
 package main;
 
+import main.processor.Listener;
+
 /**
  * Processor interface
  * 
@@ -20,9 +22,9 @@ public interface Processor {
 	public void stop();
 	
 	/**
-	 * Strategy is required for this to work
+	 * Add data listener
 	 * 
-	 * @param strategy
+	 * @param listener
 	 */
-	public void setStrategy(Strategy strategy);
+	public void addListener(Listener listener);
 }

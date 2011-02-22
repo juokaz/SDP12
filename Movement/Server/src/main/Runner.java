@@ -2,6 +2,8 @@ package main;
 
 import javax.swing.*;
 
+import main.strategy.ProcessorListener;
+
 public class Runner {
 	
 	/**
@@ -54,7 +56,7 @@ public class Runner {
 	 * Available executors
 	 * TODO make this automatic
 	 */
-	public final String[] executors = { "Simulator", "Bluetooth" };
+	public final String[] executors = { "Simulator", "Bluetooth", "Dull" };
 
 	/**
 	 * Robot blue
@@ -131,14 +133,29 @@ public class Runner {
 		setProcessor(processor);
 		setStrategy(strategy);
 		setExecutor(executor);
+		
+		// if strategy exists, connect strategy with executor
+		if (this.strategy != null) {
+			this.strategy.setExecutor(this.executor);
+		}
+		
+		// if processor exists, connect with strategy
+		if (this.processor != null) {
+			this.processor.addListener(new ProcessorListener(this.strategy));
+		}
 
 		// allow Runner to be stopped by settings button text
 		window.setButton("Stop", true);
 
 		System.out.println("Processing starting");
+		
+		// Inform window about running process
+		window.informRunning(this.processor, this.strategy);
 
 		// start running processor
 		this.processor.run(our_robot.equals(ROBOT_BLUE),left_goal.equals(LEFT_GOAL));
+		
+		stopRunner();
 	}
 
 	/**
@@ -152,7 +169,7 @@ public class Runner {
 		if (type.equals("Local process")) {
 			processor = new main.processor.LocalVision("../../Vision/trunk/ObjectDetectionML/ObjectDetectionML/src/build/your_project c predict_major outputToConsole show");
 		} else if (type.equals("Simulator")) {
-			processor = new main.executor.Simulator(400,400,180,500,250,0,200,400);
+			processor = new main.executor.Simulator(window.getPitch());
 		} else {
 			processor = new main.processor.File("data/Outputlocs.txt");
 		}
@@ -178,12 +195,7 @@ public class Runner {
 			strategy = new main.strategy.BasicStrategy();
 		} else if (type.equals("GoToBall")){
 			strategy = new main.strategy.GoToBall();
-		}
-
-		// if processor exists, connect with strategy
-		if (processor != null) {
-			processor.setStrategy(strategy);
-		}
+		}		
 	}
 
 	/**
@@ -200,16 +212,13 @@ public class Runner {
 		if (type.equals("Bluetooth")) {
 			// TODO move settings to config file
 			executor = new main.executor.Bluetooth("Roboto", "00:16:53:0b:b5:a3");
+		} else if (type.equals("Dull")) {
+			executor = new main.executor.Dull();
 		} else {
 			if (!(this.processor instanceof Executor)) {
 				throw new Exception ("Simulator needs Simulator processor");
 			}
 			executor = (Executor) this.processor;
-		}
-
-		// if strategy exists, connect strategy with executor
-		if (strategy != null) {
-			strategy.setExecutor(executor);
 		}
 	}
 
@@ -275,6 +284,22 @@ public class Runner {
 		return true;
 	}
 
+	public Processor getProcessor() {
+		return processor;
+	}
+
+	public Strategy getStrategy() {
+		return strategy;
+	}
+
+	public Executor getExecutor() {
+		return executor;
+	}
+	
+	public boolean isRunning() {
+		return running;
+	}
+	
 	/**
 	 * ProcessingWorker class containing logic to start worker in separate thread
 	 * using SwingWorker class

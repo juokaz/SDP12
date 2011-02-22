@@ -7,6 +7,5 @@
 	<classpathentry kind="lib" path="lib/pctools.jar"/>
 	<classpathentry kind="lib" path="lib/bluecove.jar"/>
 	<classpathentry kind="lib" path="lib/bluecove-gpl.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/LegoSimulator1"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

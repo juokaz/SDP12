@@ -7,6 +7,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.*;
+
+import main.executor.Simulator;
+import main.gui.Ball;
+import main.gui.DrawablesListener;
+import main.gui.GuiListener;
+import main.gui.Pitch;
+
 import java.io.*;
 
 public class Window {
@@ -61,6 +68,10 @@ public class Window {
 	 */
 	PrintStream aPrintStream = new PrintStream(new FilteredStream(
 			new ByteArrayOutputStream()));
+	/**
+	 * Pitch
+	 */
+	Pitch pitch;
 
 	/**
 	 * Window instance
@@ -83,10 +94,13 @@ public class Window {
 		        System.exit(0);
 		      }
 		    });
-		// default size
-		frame.setSize(1000, 300);
-		// text area
-		frame.getContentPane().add("Center", aTextArea);
+		
+		frame.setLayout(new BorderLayout() ); 
+		
+		addPitch();
+		
+		// frame size
+		frame.setSize(frame.getWidth(), frame.getHeight() + 150);
 
 		// enable system.out pipe
 		System.setOut(aPrintStream); // catches System.out messages
@@ -96,6 +110,19 @@ public class Window {
 
 		// show a window
 		frame.setVisible(true);
+	}
+	
+	private void addPitch() {
+		
+		// TODO FIX THIS!!
+		main.gui.Robot robot1 = new main.gui.Robot("images/tb.jpg", 400, 400, 180);
+		main.gui.Robot robot2 = new main.gui.Robot("images/ty.jpg", 500, 250, 0);
+		Ball ball = new Ball("images/ball.jpg", 200, 400);
+
+		pitch = new Pitch(robot1, robot2, ball);
+		
+		frame.setSize(pitch.getPitchWidth() + 350, pitch.getPitchHeight());
+		frame.add(pitch);
 	}
 
 	/**
@@ -143,6 +170,8 @@ public class Window {
 		JLabel executorl = new JLabel("Executor:");
 
 		// use a panel, this is will make everything automatically aligned horizontaly
+		JPanel panel_main = new JPanel();
+		
 		JPanel panel = new JPanel();
 		panel.add(goals1);
 		panel.add(goals);
@@ -156,8 +185,28 @@ public class Window {
 		panel.add(executor);
 		panel.add(button);
 		
+		aTextArea.setColumns(180);
+		aTextArea.setRows(5);
+		
+		JPanel panel2 = new JPanel();
+		panel2.add(aTextArea);
+
+	    GridBagLayout layout = new GridBagLayout();
+
+	    GridBagConstraints gbcR = new GridBagConstraints();
+	    gbcR.gridx = 1;
+	    gbcR.gridy = GridBagConstraints.RELATIVE;
+	    gbcR.fill = GridBagConstraints.HORIZONTAL;
+
+	    layout.setConstraints(panel2, gbcR);
+	    layout.setConstraints(panel, gbcR);
+
+		panel_main.setLayout(layout);
+		panel_main.add(panel2);
+		panel_main.add(panel);
+		
 		// add to main container
-		contentPane.add(panel, BorderLayout.SOUTH);
+		contentPane.add(panel_main, BorderLayout.SOUTH);
 	}
 	
 	/**
@@ -169,6 +218,34 @@ public class Window {
 	public void setButton(String label, boolean enabled) {
 		button.setText(label);
 		button.setEnabled(enabled);
+	}
+	
+	/**
+	 * Inform running
+	 * 
+	 * Runner has successfully started
+	 * 
+	 * @param processor
+	 * @param strategy
+	 */
+	public void informRunning(Processor processor, Strategy strategy) {
+		if (runner.isRunning()) {
+			// TDDO check this
+			if (!(processor instanceof Simulator)) {
+				processor.addListener(new GuiListener(pitch));
+			}
+			strategy.setDrawablesListener(new DrawablesListener(pitch));
+		}
+	}
+	
+	/**
+	 * Get pitch
+	 * 
+	 * @return
+	 */
+	public Pitch getPitch()
+	{
+		return this.pitch;
 	}
 
 	/**

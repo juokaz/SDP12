@@ -1,6 +1,7 @@
 package main;
 
 import main.data.Location;
+import main.gui.DrawablesListener;
 
 /**
  * Strategy interface
@@ -22,4 +23,11 @@ public interface Strategy {
 	 * @param executor
 	 */
 	public void setExecutor(Executor executor);
+
+	/**
+	 * Set drawables listener
+	 * 
+	 * @param listener
+	 */
+	public void setDrawablesListener(DrawablesListener listener);
 }

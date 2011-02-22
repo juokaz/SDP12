@@ -22,9 +22,6 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		
 		String line = null;
 		
-		// TEMP TEMP FIX
-		int i = 0;
-	    
 	    while (true) {
 	    	
 	    	// stop this from running
@@ -43,11 +40,6 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		    	
 		    	if (Runner.DEBUG) {
 		    		System.out.println ("[Stdout] " + line);
-		    	}
-		    	
-		    	// TODO TEMP FIX. Limits refresh rate by /5
-		    	if (i++ % 5 != 0) {
-		    		continue;
 		    	}
 		    	
 		    	String[] lines = line.split(SEPARATOR);
@@ -86,7 +78,7 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		    		loc = new Location(robotB, robotA, ball, goal);		    		
 		    	}
 		    	
-		    	strategy.updateLocation(loc);
+		    	propogateLocation(loc);
 	    	}
 	    }
 	}

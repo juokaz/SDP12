@@ -5,13 +5,13 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-import sdp12.simulator.Drawable;
 import main.Strategy;
 import main.data.Ball;
 import main.data.Goal;
 import main.data.Location;
 import main.data.Robot;
 import main.data.Point;
+import main.gui.Drawable;
 
 /**
  * This strategy should find a position behind the ball and move the robot to it.
@@ -39,7 +39,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		drawPoint(goal, "Goal");
 		drawPoint(optimum, "Optimum");		
 
-		System.out.println(PITCH_Y_MAX);
 		// This state machine covers the basic stages robot can be in 
 		if (isBallOutOfPitch(ball))
 		{
@@ -82,7 +81,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			moveToPoint(robot, ball);
 		}
 		
-		executor.setDrawables(drawables);
+		setDrawables(drawables);
 	}
 	
 	/**

@@ -1,47 +1,24 @@
 package main.executor;
 
-import java.util.ArrayList;
-
-import javax.swing.SwingUtilities;
-
 import main.Executor;
 import main.data.Ball;
 import main.data.Goal;
 import main.data.Location;
 import main.data.Robot;
 import main.processor.AbstractProcessor;
-import sdp12.simulator.Drawable;
-import sdp12.simulator.LegoSimulator;
-import sdp12.simulator.RobotT;
 
 public class Simulator extends AbstractProcessor implements Executor {
 
-	RobotT robot1;
-	RobotT robot2;
-	sdp12.simulator.Ball ball;
-	LegoSimulator simulator;
+	main.gui.Robot robot1;
+	main.gui.Robot robot2;
+	main.gui.Ball ball;
 
-	public static int i = 0;
-
-	public Simulator() {
-		// default locations
-		this(65, 292, 0, 550, 300, 180, 768 / 2, 576 / 2);
-	}
-
-	public Simulator(final int X1, final int Y1, final float theta1,
-			final int X2, final int Y2,final float theta2, final int BallX, final int BallY) {
-
-		Runnable doCreateAndShowGUI = new Runnable() {
-			public void run() {
-				robot1 = new RobotT("images/tb.jpg", X1, Y1, theta1);
-				robot2 = new RobotT("images/ty.jpg", X2, Y2, theta2);
-				ball = new sdp12.simulator.Ball("images/ball.jpg", BallX, BallY);
-				simulator = new LegoSimulator(robot1, robot2, ball);
-				simulator.createAndShowGUI();
-			}
-		};
-
-		SwingUtilities.invokeLater(doCreateAndShowGUI);
+	public Simulator(main.gui.Pitch pitch) {
+		robot1 = pitch.getRobot1();
+		robot1.getKicker().enable();
+		robot2 = pitch.getRobot2();
+		robot2.getKicker().enable();
+		ball = pitch.getBall();
 	}
 
 	@SuppressWarnings("static-access")
@@ -95,7 +72,8 @@ public class Simulator extends AbstractProcessor implements Executor {
 			data.getBall().setX(this.ball.getXPos());
 			data.getBall().setY(this.ball.getYPos());
 			
-			strategy.updateLocation(data);
+			propogateLocation(data);
+			
 			try {
 				Thread.currentThread().sleep(40);// sleep for 1000 ms
 			} catch (Exception ie) {
@@ -128,14 +106,10 @@ public class Simulator extends AbstractProcessor implements Executor {
 		// TODO Auto-generated method stub
 		robot1.rotate(T);
 	}
-
-	public void setDrawables(ArrayList<Drawable> drawables) {
-		robot1.setDrawables(drawables);
-	}
 	
 	@Override
 	public void exit() {
-		simulator.close();
+		
 	}
 
 	@Override

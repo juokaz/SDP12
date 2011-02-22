@@ -5,14 +5,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-
 import lejos.pc.comm.NXTComm;
 import lejos.pc.comm.NXTCommException;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTInfo;
 import main.Executor;
-import sdp12.simulator.Drawable;
 
 public class Bluetooth implements Executor {
 	/**
@@ -93,10 +90,6 @@ public class Bluetooth implements Executor {
 		if(!closed)
 		server.sendCommand(ROTATE + SPACE + Integer.toString(T));
 	}
-	
-	// Needs to be implemented because this method is used for the simulator
-	@Override 
-	public void setDrawables(ArrayList<Drawable> drawables) {};
 	
 	@Override
 	public void stop(){
