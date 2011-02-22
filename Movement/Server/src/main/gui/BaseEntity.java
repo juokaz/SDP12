@@ -24,13 +24,21 @@ public class BaseEntity {
 	public int getWidth() {
 		return image.getWidth();
 	}
+	
+	/**
+	 * return center of the robot on x axis
+	 * @return
+	 */
 	public double getCenterX() {
-		// return center of the robot on x axis
 		return (2 * this.xPos + this.getWidth()) / 2;
 	}
 
+	/**
+	 * return center of the robot on y axis
+	 * 
+	 * @return
+	 */
 	public double getCenterY() {
-		// return center of the robot on y axis
 		return (2 * this.yPos + this.getHeight()) / 2;
 	}
 	public double getCenterXRemapped() {
@@ -69,6 +77,4 @@ public class BaseEntity {
 	public void setTheta(double theta) {
 		this.theta = theta;
 	}
-
-	
 }

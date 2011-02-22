@@ -92,27 +92,21 @@ public class Drawable extends BaseEntity {
 		
 		switch(drawableType) {
 			case CIRCLE: {
-			
 				g2d.setColor(color);
 				g2d.drawOval((int) xPos, (int) yPos, drawableWidth, drawableHeight);
 				break;
-			
 			}
 				
 			case LABEL: {
-				
 				g2d.setColor(color);
 				g2d.drawString(drawableString, (int) xPos, (int) yPos);
 				break;
-				
 			}
 			
 			case RECTANGLE: {
-				
 				g2d.setColor(color);
 				g2d.drawRect((int) xPos, (int) yPos, drawableWidth, drawableHeight);
 				break;
-				
 			}
 			
 			/* 
@@ -120,10 +114,8 @@ public class Drawable extends BaseEntity {
 			 * 	for the end point of the line
 			 */
 			case LINE: {
-				
 				g2d.setColor(color);
 				g2d.drawLine((int) xPos, (int) yPos, drawableWidth, drawableHeight);
-				
 			}
 		}	
 	}

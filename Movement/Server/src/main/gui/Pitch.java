@@ -35,7 +35,7 @@ public class Pitch extends JComponent implements ActionListener {
 	// Timer 
 	Timer time;
 	
-	public Pitch(final Robot robot1, Robot robot2, final Ball ball) {
+	public Pitch(Robot robot1, Robot robot2, final Ball ball) {
 		
 		// Try to load pitch image or throw exception
 		try {
@@ -57,12 +57,10 @@ public class Pitch extends JComponent implements ActionListener {
 		walls = new ArrayList<Wall>();
 		initializeWalls();
 		
-		robot1.pitch = this;
 		robot1.setWalls(walls);
 		robot1.setOpponent(robot2);
 		robot1.setBall(ball);
 		
-		robot2.pitch = this;
 		robot2.setWalls(walls);
 		robot2.setOpponent(robot1);
 		robot2.setBall(ball);
@@ -76,10 +74,10 @@ public class Pitch extends JComponent implements ActionListener {
 			@Override
 			public void keyPressed(KeyEvent keyEvent) {
 				if(keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
-					robot1.toggleCommandReceiving();
+					getRobot1().toggleCommandReceiving();
 				}
 				if(keyEvent.getKeyCode() == KeyEvent.VK_B) {
-					ball.timer.stop();
+					getBall().getTimer().stop();
 				}
 			}
 

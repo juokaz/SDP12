@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -19,9 +18,8 @@ public class Robot extends BaseEntity implements ActionListener {
 
 	private ArrayList<Wall> walls;
 	private Robot opponent;
-	Pitch pitch;
 
-	ArrayList<Drawable> drawables;
+	private ArrayList<Drawable> drawables;
 
 	// Position and orientation of robot
 
@@ -49,9 +47,8 @@ public class Robot extends BaseEntity implements ActionListener {
 	public static final int OPERATION_DEFAULT = 0;
 	public static final int OPERATION_ROTATE = 1;
 
-	Kicker kicker;
-	Ball ball;
-	ArrayList<Point2D> points;
+	private Kicker kicker;
+	private Ball ball;
 
 	/**
 	 * Constructor for RobotT - loads the image used for the robot - set
@@ -235,12 +232,6 @@ public class Robot extends BaseEntity implements ActionListener {
 			}
 
 		}
-
-	}
-
-	public void setPoints(ArrayList<Point2D> points) {
-
-		this.points = points;
 
 	}
 
