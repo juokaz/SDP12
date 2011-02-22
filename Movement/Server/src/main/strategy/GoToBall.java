@@ -34,7 +34,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		opponentWidth = 50; // TODO: calculate width of the opponent taking into account its angle (?)
 		
 		// statistics
-		addDrawables(robot, opponent, ball, optimum);
+		addDrawables(robot, opponent, ball, optimum, goal);
 		drawPoint(opponent, null);
 		drawPoint(goal, "Goal");
 		drawPoint(optimum, "Optimum");		
@@ -59,10 +59,10 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			drawPoint(point, "Avoid");
 			moveToPoint(robot, point);
 		}
-		else if (isBallBehindRobot(robot, ball, optimum))
+		else if (isBallBehindRobot(robot, ball, optimum, goal))
 		{
 			setIAmDoing("Ball behing robot - going to Behind");
-			Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum);
+			Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum, goal);
 			drawPoint(point, "Behind");
 			moveToPoint(robot, point);
 		}
@@ -105,12 +105,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		if (theta2 < theta && robot.getDistanceBetweenPoints(opponent) < robot.getDistanceBetweenPoints(optimum)){
 			return true;
 		} else return false;
-		
-		/*return  Math.abs(Math.abs(robot.getAngleBetweenPoints(optimum)) - Math.abs(opponent.getAngleBetweenPoints(optimum))) < 0.6 &&
-				robot.getDistanceBetweenPoints(optimum) > opponent.getDistanceBetweenPoints(optimum) && 
-				((opponent.getX() <= robot.getX() && opponent.getX() >= optimum.getX() || 
-						(opponent.getX() >= robot.getX() && opponent.getX() <= optimum.getX())));
-	*/
 	}
 
 	/**
@@ -156,8 +150,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @param optimum
 	 * @return
 	 */
-	protected boolean isBallBehindRobot(Robot robot, Ball ball, Point optimum) {
-		Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum);
+	protected boolean isBallBehindRobot(Robot robot, Ball ball, Point optimum, Goal goal) {
+		Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum, goal);
 		if (robot.isInPoint(point)) {
 			return false;
 		}
@@ -175,24 +169,32 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @param optimum
 	 * @return
 	 */
-	protected Point getPointToFaceBallFromCorrectSide(Robot robot, Ball ball, Point optimum) {		
+	
+	
+	protected Point getPointToFaceBallFromCorrectSide(Robot robot, Ball ball, Point optimum, Goal goal) {		
 		// If robot is not very close to the ball	
 		if (robot.getDistanceBetweenPoints(ball) > 20) {
 			// Checks to see which side of the ball the robot is on
-			if (robot.getY() > optimum.getY()) {				
-
-				return calculatePosBehindBall(optimum.getAngleBetweenPoints(ball) + 45, ball, gap);
-			} else {	
-				return calculatePosBehindBall( optimum.getAngleBetweenPoints(ball) - 45 , ball, gap);
-			}
+			if (goal.getX() == 0) {
+				if (robot.getY() > optimum.getY()) {				
+					
+					return calculatePosBehindBall(optimum.getAngleBetweenPoints(ball) + 45, ball, gap);
+				} else {	
+					return calculatePosBehindBall( optimum.getAngleBetweenPoints(ball) - 45 , ball, gap);
+				}
+			
 		} else {
-			// TODO: maybe just turn and move ball?
+				// Checks to see which side of the ball the robot is on
+				if (robot.getY() < optimum.getY()) {				
+					return calculatePosBehindBall(optimum.getAngleBetweenPoints(ball) + 45, ball, gap);
+				} else {	
+					return calculatePosBehindBall( optimum.getAngleBetweenPoints(ball) - 45 , ball, gap);
+				
+				}
 		}
-		
-		
-		
-		return new Point(ball.getX(), ball.getY() + 50);
-		
+		} else {
+			 return new Point(ball.getX(), ball.getY() + 50);
+		}
 	}
 	
 	/**
@@ -301,7 +303,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @param ball
 	 * @param optimum
 	 */
-	protected void addDrawables(Robot robot, Robot opponent, Ball ball, Point optimum) {
+	protected void addDrawables(Robot robot, Robot opponent, Ball ball, Point optimum, Goal goal) {
 		// Creating new object every time because of reasons related to
 		// the way Swing draws stuff. Will be fixed later.
 		drawables = new ArrayList<Drawable>();
@@ -316,7 +318,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 						"isObstacleInFront: " + isObstacleInFront(robot, opponent, optimum),
 						800, 50, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
-						"isBallBehindRobot: " + isBallBehindRobot(robot, ball, optimum),
+						"isBallBehindRobot: " + isBallBehindRobot(robot, ball, optimum, goal),
 						800, 70, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
 						"!isRobotInOptimumPosition: " + !isRobotInOptimumPosition(robot, optimum),
