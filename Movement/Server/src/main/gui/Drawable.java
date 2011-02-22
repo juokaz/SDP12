@@ -3,15 +3,13 @@ package main.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-public class Drawable {
+public class Drawable extends BaseEntity {
 
 	public static final int CIRCLE = 0;
 	public static final int LINE = 1;
 	public static final int RECTANGLE = 2;
 	public static final int LABEL = 3;
 	
-	private int xPos;
-	private int yPos;
 	private int drawableWidth;
 	private int drawableHeight;
 	private int drawableType;
@@ -71,13 +69,32 @@ public class Drawable {
 		this.color = color;
 	}
 	
+	public Drawable(int drawableType, int x, int y, Color color, boolean remap) {
+		this(drawableType, x, y, color);
+
+		if (remap) {
+			setXPosRemapped(x);
+			setYPosRemapped(y);
+		}
+	}
+
+	public Drawable(int drawableType, String label, int x, int y, Color color,
+			boolean remap) {
+		this(drawableType, label, x, y, color);
+
+		if (remap) {
+			setXPosRemapped(x);
+			setYPosRemapped(y);
+		}
+	}
+
 	public void draw(Graphics2D g2d) {
 		
 		switch(drawableType) {
 			case CIRCLE: {
 			
 				g2d.setColor(color);
-				g2d.drawOval(xPos, yPos, drawableWidth, drawableHeight);
+				g2d.drawOval((int) xPos, (int) yPos, drawableWidth, drawableHeight);
 				break;
 			
 			}
@@ -85,7 +102,7 @@ public class Drawable {
 			case LABEL: {
 				
 				g2d.setColor(color);
-				g2d.drawString(drawableString, xPos, yPos);
+				g2d.drawString(drawableString, (int) xPos, (int) yPos);
 				break;
 				
 			}
@@ -93,7 +110,7 @@ public class Drawable {
 			case RECTANGLE: {
 				
 				g2d.setColor(color);
-				g2d.drawRect(xPos, yPos, drawableWidth, drawableHeight);
+				g2d.drawRect((int) xPos, (int) yPos, drawableWidth, drawableHeight);
 				break;
 				
 			}
@@ -105,7 +122,7 @@ public class Drawable {
 			case LINE: {
 				
 				g2d.setColor(color);
-				g2d.drawLine(xPos, yPos, drawableWidth, drawableHeight);
+				g2d.drawLine((int) xPos, (int) yPos, drawableWidth, drawableHeight);
 				
 			}
 		}	

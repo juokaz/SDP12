@@ -11,16 +11,10 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.Timer;
 
-public class Ball implements ActionListener {
-
-	private double xPos;
-	private double yPos;
-	private double theta;
+public class Ball extends BaseEntity implements ActionListener {
 	
 	private double xPrevPos;
 	private double yPrevPos;
-	
-	private BufferedImage ballImage;
 	
 	private Timer timer;	
 	private double fraction;
@@ -37,7 +31,7 @@ public class Ball implements ActionListener {
 		
 		try {
 			
-			ballImage = ImageIO.read(Robot.class.getResource(file));
+			image = ImageIO.read(Robot.class.getResource(file));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -161,48 +155,6 @@ public class Ball implements ActionListener {
 	/*
 	 * GETTERS AND SETTERS
 	 */
-	
-	public BufferedImage getImage() {
-		
-		return ballImage;
-		
-	}
-	
-	public double getXPos() {
-		
-		return xPos;
-		
-	}
-
-	public void setXPos(double xPos) {
-		
-		this.xPos = xPos;
-		
-	}
-
-	public double getYPos() {
-		
-		return yPos;
-		
-	}
-
-	public void setYPos(double yPos) {
-		
-		this.yPos = yPos;
-		
-	}
-
-	public void setTheta(double theta) {
-		
-		this.theta = theta;
-		
-	}
-
-	public double getTheta() {
-		
-		return theta;
-		
-	}
 
 	public void setWalls(ArrayList<Wall> walls) {
 		

@@ -38,13 +38,11 @@ public class Simulator extends AbstractProcessor implements Executor {
 				(int) this.ball.getYPos());
 
 		Goal goal = null;
-    	Goal RightGoal = new Goal(730,290);
-    	Goal LeftGoal = new Goal(0,290);
-    	
+		
     	if (this.isGoalLeft()){
-    		goal = LeftGoal;
+    		goal = new Goal(0,155);
     	} else {
-    		goal = RightGoal;
+    		goal = new Goal(550,155);
     	}	
 		
 		Location data = null;
@@ -63,14 +61,14 @@ public class Simulator extends AbstractProcessor implements Executor {
 			}
 
 			// simulate wait
-			data.getOurRobot().setX(robot1.getCenterX());
-			data.getOurRobot().setY(robot1.getCenterY());
+			data.getOurRobot().setX(robot1.getCenterXRemapped());
+			data.getOurRobot().setY(robot1.getCenterYRemapped());
 			data.getOurRobot().setT((float) (robot1.getTheta()));
-			data.getOpponentRobot().setX(robot2.getCenterX());
-			data.getOpponentRobot().setY(robot2.getCenterY());
+			data.getOpponentRobot().setX(robot2.getCenterXRemapped());
+			data.getOpponentRobot().setY(robot2.getCenterYRemapped());
 			data.getOpponentRobot().setT((float) (robot2.getTheta()));
-			data.getBall().setX(this.ball.getXPos());
-			data.getBall().setY(this.ball.getYPos());
+			data.getBall().setX(this.ball.getCenterXRemapped());
+			data.getBall().setY(this.ball.getCenterYRemapped());
 			
 			propogateLocation(data);
 			

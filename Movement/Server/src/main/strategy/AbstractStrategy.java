@@ -34,14 +34,6 @@ public abstract class AbstractStrategy implements Strategy {
 	 */
 	public void setExecutor(Executor executor) {
 		this.executor  = executor;
-		
-		// TODO FIX THIS ASAP!
-		if (executor instanceof main.executor.Simulator) {
-			PITCH_X_MIN = 18;
-			PITCH_Y_MIN = 114;
-			PITCH_X_MAX = 725;
-			PITCH_Y_MAX = 454;
-		}
 	}
 	
 	/**

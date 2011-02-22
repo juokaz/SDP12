@@ -185,7 +185,7 @@ public class Window {
 		panel.add(executor);
 		panel.add(button);
 		
-		aTextArea.setColumns(180);
+		aTextArea.setColumns(100);
 		aTextArea.setRows(5);
 		
 		JPanel panel2 = new JPanel();

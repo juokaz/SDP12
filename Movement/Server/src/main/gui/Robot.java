@@ -15,10 +15,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.Timer;
 
-public class Robot implements ActionListener {
-
-	// Image of robot
-	private BufferedImage robotImage;
+public class Robot extends BaseEntity implements ActionListener {
 
 	private ArrayList<Wall> walls;
 	private Robot opponent;
@@ -27,9 +24,6 @@ public class Robot implements ActionListener {
 	ArrayList<Drawable> drawables;
 
 	// Position and orientation of robot
-	private double xPos;
-	private double yPos;
-	private double theta;
 
 	private double xPrevPos;
 	private double yPrevPos;
@@ -76,7 +70,7 @@ public class Robot implements ActionListener {
 
 		try {
 
-			robotImage = ImageIO.read(Robot.class.getResource(file));
+			image = ImageIO.read(Robot.class.getResource(file));
 
 		} catch (IOException e) {
 
@@ -293,16 +287,6 @@ public class Robot implements ActionListener {
 
 	}
 
-	public double getCenterX() {
-		// return center of the robot on x axis
-		return (2 * this.xPos + this.getWidth()) / 2;
-	}
-
-	public double getCenterY() {
-		// return center of the robot on y axis
-		return (2 * this.yPos + this.getHeight()) / 2;
-	}
-
 	public synchronized boolean isCollided(Shape robotShape) {
 
 		// Area robotArea = new Area(robotShape);
@@ -474,63 +458,9 @@ public class Robot implements ActionListener {
 
 	}
 
-	public BufferedImage getImage() {
-
-		return robotImage;
-
-	}
-
-	public int getHeight() {
-
-		return robotImage.getHeight();
-
-	}
-
-	public int getWidth() {
-
-		return robotImage.getWidth();
-
-	}
-
-	public double getXPos() {
-
-		return xPos;
-
-	}
-
-	public void setXPos(double xPos) {
-
-		this.xPos = xPos;
-
-	}
-
-	public double getYPos() {
-
-		return yPos;
-
-	}
-
-	public void setYPos(double yPos) {
-
-		this.yPos = yPos;
-
-	}
-
-	public double getTheta() {
-
-		return theta;
-
-	}
-
 	public double getThetaDegrees() {
 
 		return Math.toDegrees(theta);
-
-	}
-
-	public void setTheta(double theta) {
-
-		this.theta = theta;
 
 	}
 	

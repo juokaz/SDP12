@@ -383,12 +383,23 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @param label
 	 */
 	protected void drawPoint(Point point, String label) {
+		drawPoint(point, label, true);
+	}
+	
+	/**
+	 * Draw point on screen to show its position
+	 * 
+	 * @param point
+	 * @param label
+	 * @param remap
+	 */
+	protected void drawPoint(Point point, String label, boolean remap) {
 		drawables.add(new Drawable(Drawable.CIRCLE,
-						(int) point.getX(), (int) point.getY(), Color.WHITE));
+						(int) point.getX(), (int) point.getY(), Color.WHITE, remap));
 		if (label != null) {
 			drawables.add(new Drawable(Drawable.LABEL,
 					label,
-					(int) point.getX() + 5, (int) point.getY(), Color.WHITE));
+					(int) point.getX() + 5, (int) point.getY(), Color.WHITE, remap));
 		}
 	}
 	

@@ -61,14 +61,12 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		    	Robot robotB = new Robot(robotBX, robotBY, robotBT);  
 		    	
 		    	Goal goal = null;
-		    	Goal RightGoal = new Goal(550,175);
-		    	Goal LeftGoal = new Goal(0,175);
-		    	
+				
 		    	if (this.isGoalLeft()){
-		    		goal = LeftGoal;
+		    		goal = new Goal(0,155);
 		    	} else {
-		    		goal = RightGoal;
-		    	}
+		    		goal = new Goal(550,155);
+		    	}	
 		    	
 		    	Location loc = null;
 		    	
