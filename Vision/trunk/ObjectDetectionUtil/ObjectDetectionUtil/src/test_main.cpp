@@ -20,19 +20,16 @@
 
 
 // MIN values for yellow robot
-//0, 161, 114, 0
 int ty_min_1	= 0;
 int ty_min_2	= 42;
 int ty_min_3	= 64;
 // MAX values for yellow robot
-//10, 255, 255, 255
 int ty_max_1	= 35;
 int ty_max_2	= 255;
 int ty_max_3	= 255;
 
-// Color threshold for Black Dot
 
-CvScalar hsv_min_TY = cvScalar(ty_min_1, ty_min_2, ty_min_3);//cvScalar(0, 39, 79, 0);//CvScalar hsv_min_D = cvScalar(11, 30, 60, 0);
+CvScalar hsv_min_TY = cvScalar(ty_min_1, ty_min_2, ty_min_3);
 CvScalar hsv_max_TY = cvScalar(ty_max_1, ty_max_2, ty_max_3);
 
 
@@ -291,14 +288,14 @@ void change_ty_min_3(int position){
 void change_ty_max_3(int position){
 	hsv_max_TY.val[2] = (double) position;
 }
+
 int main(int argc, char* argv[])
 {
-	
 
-	
-    cvNamedWindow( "Camera", CV_WINDOW_AUTOSIZE );
-    cvNamedWindow("YellowThreshold",0);
+	cvNamedWindow( "Camera", CV_WINDOW_AUTOSIZE );
+	cvNamedWindow("YellowThreshold",0);
 	cvMoveWindow("YellowThreshold", 400, 600);
+	
 	cvCreateTrackbar( "Yellow_Min_Hue",   "YellowThreshold", &ty_min_1, 255, &change_ty_min_1);
 	cvCreateTrackbar( "Yellow_Max_Hue",   "YellowThreshold", &ty_max_1, 255, &change_ty_max_1);
 	cvCreateTrackbar( "Yellow_Min_Sat",   "YellowThreshold", &ty_min_2, 255, &change_ty_min_2);
@@ -309,5 +306,5 @@ int main(int argc, char* argv[])
 	config conf=get_Config(argc,argv);
 	launch(conf);
 	cvWaitKey(0);
-    return 0;
-   }
+	return 0;
+}

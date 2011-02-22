@@ -19,25 +19,23 @@
 #include "objdetectionml.h"
 #include <sstream>
 
-// Color threshold for Black Dot
 
-CvScalar hsv_min_D = cvScalar(0, 25, 0, 0);//CvScalar hsv_min_D = cvScalar(11, 30, 60, 0);
-CvScalar hsv_max_D = cvScalar(146, 200, 200, 0);//CvScalar hsv_max_D = cvScalar(80, 70, 120, 0);
+// Color threshold for Black Dot
+CvScalar hsv_min_D = cvScalar(0,0,0);
+CvScalar hsv_max_D = cvScalar(255,255,255);
 
 // Color threshold for Red Ball
-
-CvScalar hsv_min_B = cvScalar(0, 161, 114, 0);//CvScalar hsv_min_B = cvScalar(0, 120, 100, 0);
-CvScalar hsv_max_B = cvScalar(10, 255, 255, 255);//CvScalar hsv_max_B = cvScalar(10, 255, 200, 255)
+CvScalar hsv_min_B = cvScalar(0,131,104);
+CvScalar hsv_max_B = cvScalar(10,255,255);
 
 // Color threshold for Yellow T 
-
-CvScalar hsv_min_TY = cvScalar(0, 13, 64, 0);//cvScalar(0, 39, 79, 0);//CvScalar hsv_min_D = cvScalar(11, 30, 60, 0);
-CvScalar hsv_max_TY = cvScalar(3, 255, 255, 0);//CvScalar hsv_max_TY = cvScalar(40, 255, 255, 255);
+CvScalar hsv_min_TY = cvScalar(26,65,179);
+CvScalar hsv_max_TY = cvScalar(40,255,255);
 
 // Color threshold for Blue T
+CvScalar hsv_min_TB = cvScalar(88,94,144);
+CvScalar hsv_max_TB = cvScalar(111,255,255);
 
-CvScalar hsv_min_TB = cvScalar(39, 23, 0, 0);//CvScalar hsv_min_D = cvScalar(11, 30, 60, 0);
-CvScalar hsv_max_TB = cvScalar(78, 255, 255, 0);//CvScalar hsv_max_TB = cvScalar(110, 255, 255, 255);
 
 
 int64 totalTime;
@@ -186,7 +184,7 @@ void launch(config conf)
 					else
 					{
 						std::cout<<"Setup for Background image"<<std::endl;
-						std::getchar();
+						//std::getchar();
 
 						std::cout<<"grabbing frame"<<std::endl;
 						if( !cvGrabFrame( capture ))
@@ -251,17 +249,19 @@ void launch(config conf)
 		std::cout<<"reformat completed"<<std::endl;
 		if(!back)
 			goto after_release;
-		current_frame_pro_TB=objDetection::preprocess_to_single_channel(current_frame,back_img,conf.hsv_min_TB,conf.hsv_max_TB);
+		current_frame_pro_TB=objDetection::preprocess_to_single_channel(current_frame,conf.hsv_min_TB,conf.hsv_max_TB);
 		if(!current_frame_pro_TB)
 		{
 			std::cout<<"Error in transforming image"<<std::endl;
 		}
-		
-		current_frame_pro_TY=objDetection::preprocess_to_single_channel(current_frame,back_img,conf.hsv_min_TY,conf.hsv_max_TY);
+
+		current_frame_pro_TY=objDetection::preprocess_to_single_channel(current_frame,conf.hsv_min_TY,conf.hsv_max_TY);
 		if(!current_frame_pro_TY)
 		{
 			std::cout<<"Error in transforming image"<<std::endl;
 		}
+
+
 		
 		current_frame_pro_B=objDetection::preprocess_to_single_channel(current_frame,conf.hsv_min_B,conf.hsv_max_B);
 		if(!current_frame_pro_B)
@@ -269,11 +269,13 @@ void launch(config conf)
 			std::cout<<"Error in transforming image"<<std::endl;
 		}
 
-		current_frame_pro_D=objDetection::preprocess_to_single_channel(current_frame,back_img,conf.hsv_min_D,conf.hsv_max_D,true,true);
+
+		current_frame_pro_D=objDetection::preprocess_to_single_channel(current_frame,conf.hsv_min_D,conf.hsv_max_D);
 		if(!current_frame_pro_D)
 		{
 			std::cout<<"Error in transforming image"<<std::endl;
 		}
+		
 		
 		std::cout<<"Color transformation completed"<<std::endl;
 		
@@ -669,10 +671,11 @@ config get_Config(int argc, char* argv[])
 	}
 	return res;
 }
+
+
+
 int main(int argc, char* argv[])
 {
-
-
 
 	cvNamedWindow( "Camera", CV_WINDOW_AUTOSIZE );
 
