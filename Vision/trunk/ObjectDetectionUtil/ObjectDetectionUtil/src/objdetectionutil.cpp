@@ -65,7 +65,7 @@ void objDetection::utilities::cb_pop_front(circular_buffer *cb, void *item)
         cb->tail = cb->buffer;
     cb->count--;
 }
-IplImage* objDetection::utilities::cvShowManyImages(char* title, int nArgs, ...) {
+IplImage* objDetection::utilities::cvShowManyImages(const char* title, int nArgs, ...) {
 
     // img - Used for getting the arguments 
     IplImage *img;

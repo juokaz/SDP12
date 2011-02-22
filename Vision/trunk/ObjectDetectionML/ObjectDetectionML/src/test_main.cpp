@@ -29,12 +29,12 @@ CvScalar hsv_min_B = cvScalar(0,131,104);
 CvScalar hsv_max_B = cvScalar(10,255,255);
 
 // Color threshold for Yellow T 
-CvScalar hsv_min_TY = cvScalar(26,65,179);
-CvScalar hsv_max_TY = cvScalar(40,255,255);
+CvScalar hsv_min_TY = cvScalar(0,8,75);
+CvScalar hsv_max_TY = cvScalar(20,255,255);
 
 // Color threshold for Blue T
-CvScalar hsv_min_TB = cvScalar(88,94,144);
-CvScalar hsv_max_TB = cvScalar(111,255,255);
+CvScalar hsv_min_TB = cvScalar(29,14,0);
+CvScalar hsv_max_TB = cvScalar(78,255,255);
 
 
 
@@ -249,13 +249,13 @@ void launch(config conf)
 		std::cout<<"reformat completed"<<std::endl;
 		if(!back)
 			goto after_release;
-		current_frame_pro_TB=objDetection::preprocess_to_single_channel(current_frame,conf.hsv_min_TB,conf.hsv_max_TB);
+		current_frame_pro_TB=objDetection::preprocess_to_single_channel(current_frame,back_img,conf.hsv_min_TB,conf.hsv_max_TB);
 		if(!current_frame_pro_TB)
 		{
 			std::cout<<"Error in transforming image"<<std::endl;
 		}
 
-		current_frame_pro_TY=objDetection::preprocess_to_single_channel(current_frame,conf.hsv_min_TY,conf.hsv_max_TY);
+		current_frame_pro_TY=objDetection::preprocess_to_single_channel(current_frame,back_img,conf.hsv_min_TY,conf.hsv_max_TY);
 		if(!current_frame_pro_TY)
 		{
 			std::cout<<"Error in transforming image"<<std::endl;
@@ -270,7 +270,7 @@ void launch(config conf)
 		}
 
 
-		current_frame_pro_D=objDetection::preprocess_to_single_channel(current_frame,conf.hsv_min_D,conf.hsv_max_D);
+		current_frame_pro_D=objDetection::preprocess_to_single_channel(current_frame,back_img,conf.hsv_min_D,conf.hsv_max_D);
 		if(!current_frame_pro_D)
 		{
 			std::cout<<"Error in transforming image"<<std::endl;
@@ -317,11 +317,6 @@ void launch(config conf)
 			cnt= objDetection::machineLearning::tester_image_major(current_frame_pro_B,MODEL_MAJOR_NAME_B,storage);
 			if(cnt.size()!=0)
 				cnt_B=cnt.at(0);
-			if(!cnt_B)
-			{
-				rect_B.x=-1;
-				rect_B.y=-1;
-			}
 			cnt.clear();
 			cnt= objDetection::machineLearning::tester_image_major(current_frame_pro_TB,MODEL_MAJOR_NAME_TB,storage);
 			if(cnt.size()!=0)
@@ -398,7 +393,7 @@ void launch(config conf)
 							ss<<"-1,-1,-1,";
 						if(cnt_B)
 						{	
-							CvRect rect_B= cvBoundingRect(cnt_B);	
+							rect_B= cvBoundingRect(cnt_B);	
 							ss<<rect_B.x<<","<<rect_B.y<<",";
 						}
 						else
@@ -406,7 +401,7 @@ void launch(config conf)
 						if(cnt_TY)
 							ss<<sel_TY.center.x<<","<<sel_TY.center.y<<","<<sel_TY.angle;
 						else
-							ss<<"-1,-1";
+							ss<<"-1,-1,-1";
 						ss<<std::endl;
 
 						if(conf.outputToText)
@@ -453,7 +448,7 @@ void launch(config conf)
 						if(!cnt_B)
 							continue;
 
-						CvRect rect_B= cvBoundingRect(cnt_B);
+						rect_B= cvBoundingRect(cnt_B);
 						stringstream ss;
 						ss<<sel_TB.center.x<<","<<sel_TB.center.y<<","<<sel_TB.angle<<","<<rect_B.x<<","<<rect_B.y<<","<<sel_TY.center.x<<","<<sel_TY.center.y<<","<<sel_TY.angle<<std::endl;
 						if(conf.outputToText)

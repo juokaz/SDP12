@@ -41,7 +41,7 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,IplImage* f
 	
 	//Remove irrelavant pixels
 	cvInRangeS(sub_frame, hsv_min, hsv_max, thresholded);
-	
+	cvSmooth(thresholded, thresholded, CV_GAUSSIAN, 9, 9);
 	//uncomment for debugging...
 	
 	

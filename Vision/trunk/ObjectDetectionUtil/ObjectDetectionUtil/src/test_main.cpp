@@ -21,10 +21,10 @@
 
 // MIN values for yellow robot
 int ty_min_1	= 0;
-int ty_min_2	= 42;
-int ty_min_3	= 64;
+int ty_min_2	= 8;
+int ty_min_3	= 75;
 // MAX values for yellow robot
-int ty_max_1	= 35;
+int ty_max_1	= 20;
 int ty_max_2	= 255;
 int ty_max_3	= 255;
 

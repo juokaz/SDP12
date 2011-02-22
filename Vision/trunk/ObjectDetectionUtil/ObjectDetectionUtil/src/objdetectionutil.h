@@ -37,7 +37,7 @@ namespace objDetection
 	{
 		CvScalar colorPicker(IplImage* img);
 		void thresholdFinder(const char* traininputbase,CvScalar& min,CvScalar& max,bool hsv_true=true);
-		IplImage* cvShowManyImages(char* title, int nArgs, ...);
+		IplImage* cvShowManyImages(const char* title, int nArgs, ...);
 		void cb_pop_front(circular_buffer *cb, void *item);
 		void cb_push_back(circular_buffer *cb, const void *item);
 		void cb_free(circular_buffer *cb);
