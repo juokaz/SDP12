@@ -153,9 +153,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * if we would go to a ball, can we kick from there or do we need to go to
 	 * the other side?
 	 * 
-	 * TODO: Change this or take into account earlier that robot could be in position 
-	 * where it could get to ball 
-	 * 
 	 * @param robot
 	 * @param ball
 	 * @param optimum
@@ -262,7 +259,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	/**
 	 * Calculates the new X,Y co-ordinates for a point behind the ball.
 	 * Currently does this in relation to the goal at the far end of the pitch
-	 * TODO: Create method that takes into account which goal we are aiming towards.
 	 * 
 	 * @param ballGoalAngle
 	 * @param ball
@@ -271,22 +267,25 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	protected Point calculatePosBehindBall(double ballGoalAngle, Point ball, int gap, Goal goal) {
 		// Need to work out sin and cos distances to get new X and Y positions
 		
-		double xOffset = 0;
-		double yOffset = 0;
+		double xOffset = gap*Math.cos(ballGoalAngle);
+		double yOffset = gap*Math.sin(ballGoalAngle);
+			
 		if (goal.getX() == 0) {
-			 xOffset = gap*Math.cos(ballGoalAngle);
-			 yOffset = gap*Math.sin(ballGoalAngle);
+			return new Point(ball.getX()+xOffset, ball.getY()+yOffset);
 		} else {
-			 xOffset = gap*Math.cos(ballGoalAngle);
-			 yOffset = gap*Math.sin(ballGoalAngle);
-			
+			return new Point(ball.getX()-xOffset, ball.getY()+yOffset);
 		}
-			
-		
-		return new Point(ball.getX()+xOffset, ball.getY()+yOffset);
 	}
 	
-	
+	/**
+	 * TODO:  Not sure if this is needed, need to change all other methods
+	 * to take goal into account though, so will leave until that is done 
+	 * 
+	 * @param ballGoalAngle
+	 * @param ball
+	 * @param gap
+	 * @return
+	 */
 	protected Point calculatePosBehindBall(double ballGoalAngle, Point ball, int gap) {
 		// Need to work out sin and cos distances to get new X and Y positions
 		double xOffset = gap*Math.cos(ballGoalAngle);
