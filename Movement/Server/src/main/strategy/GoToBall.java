@@ -80,11 +80,58 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		else {
 			setIAmDoing("Reaching ball");
 			moveToPoint(robot, ball);
+			positionRobotToFaceGoalBeforeKick(robot, ball, goal);
 		}
 		
 		setDrawables(drawables);
 	}
 	
+	/**
+	 * Finds the correct direction to rotate, in order to face goal. 
+	 *
+	 * @param robot
+	 * @param ball
+	 * @param goal
+	 */
+	private void positionRobotToFaceGoalBeforeKick(Robot robot, Ball ball, Goal goal) {
+		int right = 1;
+		int left = 1;
+		double requiredAngle = goal.calculateGoalAndPointAngle(ball);
+		double requiredAngle_ = 0;
+		double currentAngle = robot.getT();
+		double currentAngle_ = 0;
+		double differenceAngle = 0;
+		
+		while (true){
+		if (currentAngle < 0)
+			currentAngle_ = 360 - Math.abs(currentAngle); //change to 2pi
+		else
+			currentAngle_ = currentAngle;
+		
+		if (requiredAngle < 0)
+			requiredAngle_ = 360 - Math.abs(requiredAngle);
+		else
+			requiredAngle_ = requiredAngle;
+		
+		differenceAngle = requiredAngle_ - currentAngle_;
+		
+		if (differenceAngle < -10){
+			right = 1;
+			left = -1;
+		}
+		else if (differenceAngle > 10) {
+			right = -1;
+			left = 1;
+		}
+		else 
+			break;
+		
+		executor.rotateWheels(left*50, right*50);
+			
+		}
+		
+	}
+
 	/**
 	 * Is it possible for a ball to be reached by going straight?
 	 * Currently this checks to see if there is an obstacle inbetween the robot and
