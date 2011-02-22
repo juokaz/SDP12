@@ -100,11 +100,10 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 */
 	protected boolean isObstacleInFront(Robot robot, Robot opponent, Point optimum) {
 		// angle between lines going through opponent center and edge. opponent width is doubled in order to take into account width of both robots.
-		int theta = (int) Math.abs(Math.toDegrees(Math.atan((2*opponentWidth)/robot.getDistanceBetweenPoints(opponent))));
+		int theta = (int) Math.abs(Math.toDegrees(Math.atan((opponentWidth)/robot.getDistanceBetweenPoints(opponent))));
 		// angle between obstacle and optimum point from robot's point of view
 		int theta2 = (int) Math.toDegrees(Math.abs(Math.abs(opponent.getAngleBetweenPoints(robot)) - Math.abs(optimum.getAngleBetweenPoints(robot))));
-		// TODO take into account if ball is inbetween robots but still closer to opponent
-		if (theta2 < theta && opponent.getDistanceBetweenPoints(optimum) < robot.getDistanceBetweenPoints(optimum)){ //TODO: test with correct value of opponentWidth
+		if (theta2 < theta && robot.getDistanceBetweenPoints(opponent) < robot.getDistanceBetweenPoints(optimum)){
 			return true;
 		} else return false;
 		
