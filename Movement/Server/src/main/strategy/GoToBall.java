@@ -92,44 +92,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @param ball
 	 * @param goal
 	 */
-	private void positionRobotToFaceGoalBeforeKick(Robot robot, Ball ball, Goal goal) {
-		int right = 1;
-		int left = 1;
-		double requiredAngle = goal.calculateGoalAndPointAngle(ball);
-		double requiredAngle_ = 0;
-		double currentAngle = robot.getT();
-		double currentAngle_ = 0;
-		double differenceAngle = 0;
-		
-		while (true){
-		if (currentAngle < 0)
-			currentAngle_ = 360 - Math.abs(currentAngle); //change to 2pi
-		else
-			currentAngle_ = currentAngle;
-		
-		if (requiredAngle < 0)
-			requiredAngle_ = 360 - Math.abs(requiredAngle);
-		else
-			requiredAngle_ = requiredAngle;
-		
-		differenceAngle = requiredAngle_ - currentAngle_;
-		
-		if (differenceAngle < -10){
-			right = 1;
-			left = -1;
-		}
-		else if (differenceAngle > 10) {
-			right = -1;
-			left = 1;
-		}
-		else 
-			break;
-		
-		executor.rotateWheels(left*50, right*50);
-			
-		}
-		
-	}
+	
 
 	/**
 	 * Is it possible for a ball to be reached by going straight?
@@ -164,7 +127,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * much more accurate way of measuring if an obstacle is inbetween the robot 
 	 * and its intended point.
 	 * 
-	 * TODO: Calculate which avoid point is nearer (if both can be reached).
+	 * TODO: Calculate if is too close to the walls
 	 * 
 	 * @param robot
 	 * @param opponent

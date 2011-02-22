@@ -9,6 +9,8 @@ import main.gui.Drawable;
 import main.gui.DrawablesListener;
 import main.Strategy;
 import main.Executor;
+import main.data.Ball;
+import main.data.Goal;
 import main.data.Point;
 import main.data.Robot;
 
@@ -97,6 +99,54 @@ public abstract class AbstractStrategy implements Strategy {
 		drawables.add(new Drawable(Drawable.LABEL, "Distance: " + formatter.format(distance), 50, 30, Color.WHITE));
 		drawables.add(new Drawable(Drawable.LABEL, "dirAngle: " + formatter.format(dirAngle), 50, 50, Color.WHITE));
 		drawables.add(new Drawable(Drawable.LABEL, "robotAngle: " + formatter.format(robot.getTDegrees()), 50, 70, Color.WHITE));
+	}
+	
+	
+	/**
+	 * This method will turn the robot to face the ball.
+	 *  
+	 *  
+	 * @param robot
+	 * @param ball
+	 * @param goal
+	 */
+	protected void positionRobotToFaceGoalBeforeKick(Robot robot, Ball ball, Goal goal) {
+		int right = 1;
+		int left = 1;
+		double requiredAngle = goal.calculateGoalAndPointAngle(ball);
+		double requiredAngle_ = 0;
+		double currentAngle = robot.getT();
+		double currentAngle_ = 0;
+		double differenceAngle = 0;
+		
+		while (true){
+		if (currentAngle < 0)
+			currentAngle_ = 360 - Math.abs(currentAngle); //change to 2pi
+		else
+			currentAngle_ = currentAngle;
+		
+		if (requiredAngle < 0)
+			requiredAngle_ = 360 - Math.abs(requiredAngle);
+		else
+			requiredAngle_ = requiredAngle;
+		
+		differenceAngle = requiredAngle_ - currentAngle_;
+		
+		if (differenceAngle < -10){
+			right = 1;
+			left = -1;
+		}
+		else if (differenceAngle > 10) {
+			right = -1;
+			left = 1;
+		}
+		else 
+			break;
+		
+		executor.rotateWheels(left*50, right*50);
+			
+		}
+		
 	}
 	
 	/**
