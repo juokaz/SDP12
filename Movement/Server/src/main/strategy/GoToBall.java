@@ -80,7 +80,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		else {
 			setIAmDoing("Reaching ball");
 			moveToPoint(robot, ball);
-			positionRobotToFaceGoalBeforeKick(robot, ball, goal);
 		}
 		
 		setDrawables(drawables);

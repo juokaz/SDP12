@@ -64,42 +64,20 @@ public abstract class AbstractStrategy implements Strategy {
 		double dy = robot.getY() - point.getY();
 		double dx = robot.getX() - point.getX();
 		double distance = Math.sqrt(dx*dx + dy*dy);
+
+		dirAngle = Math.toDegrees(point.getAngleBetweenPoints(robot));	
+
+		double angleDifference = robot.getTDegrees() - dirAngle;
 		
-		// find the angle the robot must turn to face the ball
-		// TODO FIX THIS ASAP!
-		if (executor instanceof main.executor.Simulator) {
-			dirAngle = Math.toDegrees(point.getAngleBetweenPoints(robot));
-			
-			// Convert both angles to positive within the range (0, 360)
-			// 	clockwise is positive
-			dirAngle = changeToPositive(dirAngle);
-			robot.setT((float) changeToPositive(robot.getTDegrees()));
-			//robot.setT((float) Math.toDegrees(robot.getT()));
-			
-			double angleDifference = robot.getT() - dirAngle;
-			
-			if((angleDifference < 0 && Math.abs(angleDifference) < 180)
-					|| (angleDifference > 180 && Math.abs(angleDifference) > 180)) {
-				// turn left
-				left=1;
-				right=-1;
-			} else {
-				// turn right
-				left=-1;
-				right=1;
-			}
+		if((angleDifference < 0 && Math.abs(angleDifference) < 180)
+				|| (angleDifference > 180 && Math.abs(angleDifference) > 180)) {
+			// turn left
+			left=1;
+			right=-1;
 		} else {
-			dirAngle = Math.toDegrees(point.getAngleBetweenPoints(robot));
-			
-			if(dirAngle < robot.getTDegrees()) {
-				// turn left
-				left=-1;
-				right=1;
-			} else {
-				// turn right
-				left=1;
-				right=-1;
-			}
+			// turn right
+			left=-1;
+			right=1;
 		}
 		
 		// once the robot is facing in direction of the ball, move towards it at
