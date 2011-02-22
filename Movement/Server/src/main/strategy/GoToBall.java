@@ -48,6 +48,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		}
 		else if (isBallInACorner(ball))
 		{
+			// TODO: execute a better strategy for this area.
 			setIAmDoing("Ball in a corner");
 			// Don't do anything, wait for it move from there
 			executor.stop();
@@ -90,8 +91,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * the optimum point, judging this by the difference in angles between the 
 	 * optimum to Robot angle and the optimum to Opponent angle. 
 	 * 
-	 * TODO: Calculate this for when the ball is between two Y-axis values
-	 * 
 	 * @param robot
 	 * @param opponent
 	 * @param optimum
@@ -113,10 +112,13 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * 
 	 * Currently does this by calculating 2 points either side, seeing if either 
 	 * is obstructed, and then heading to the unobstructed point
+	 * 
 	 * TODO: Test to see if there is a situation where both can be obstructed..
 	 * This is likely in a case when robot is close to the opponent. This needs a 
 	 * much more accurate way of measuring if an obstacle is inbetween the robot 
 	 * and its intended point.
+	 * 
+	 * TODO: Calculate which avoid point is nearer (if both can be reached).
 	 * 
 	 * @param robot
 	 * @param opponent
@@ -127,7 +129,16 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		
 		Point pointA = (calculatePosBehindBall(optimum.getAngleBetweenPoints(opponent) + 45, opponent, gap*2));
 		Point pointB = calculatePosBehindBall(optimum.getAngleBetweenPoints(opponent) - 45, opponent, gap*2);
+		double distancePointA = robot.getDistanceBetweenPoints(pointA) + pointA.getDistanceBetweenPoints(optimum);
+		double distancePointB = robot.getDistanceBetweenPoints(pointB) + pointB.getDistanceBetweenPoints(optimum);
 		
+		if (!isObstacleInFront(robot, opponent, pointA) && !isObstacleInFront(robot, opponent, pointB)) {
+			if (distancePointA < distancePointB) {
+				return pointA;
+			} else {
+				return pointB;
+			}
+		}
 		if (isObstacleInFront(robot, opponent, pointA)) {
 			return pointB;
 		} 
@@ -139,6 +150,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			
 		}
 	}
+	
+	
 	
 	/**
 	 * Is robot is further away from a goal than a ball or in other words
