@@ -67,22 +67,21 @@ public abstract class AbstractStrategy implements Strategy {
 			
 			// Convert both angles to positive within the range (0, 360)
 			// 	clockwise is positive
-			//dirAngle = changeToPositive(dirAngle);
-			//robot.setT((float) changeToPositive(Math.toDegrees(robot.getT())));
-			robot.setT((float) Math.toDegrees(robot.getT()));
+			dirAngle = changeToPositive(dirAngle);
+			robot.setT((float) changeToPositive(Math.toDegrees(robot.getT())));
+			//robot.setT((float) Math.toDegrees(robot.getT()));
 			
-			drawables.add(new Drawable(
-							Drawable.LABEL, (robot.getT() - dirAngle < 0) ? "Negative" : "Positive",
-							50, 90, Color.WHITE));
+			double angleDifference = robot.getT() - dirAngle;
 			
-			if(dirAngle > robot.getT()) {
+			if((angleDifference < 0 && Math.abs(angleDifference) < 180)
+					|| (angleDifference > 180 && Math.abs(angleDifference) > 180)) {
 				// turn left
-				left=-1;
-				right=1;
-			} else {
-				// turn right
 				left=1;
 				right=-1;
+			} else {
+				// turn right
+				left=-1;
+				right=1;
 			}
 		} else {
 			dirAngle = 180 - Math.toDegrees(robot.getAngleBetweenPoints(point));
