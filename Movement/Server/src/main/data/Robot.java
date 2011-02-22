@@ -19,4 +19,8 @@ public class Robot extends Point {
 	public void setT(float t) {
 		T = t;
 	}
+	
+	public double getTDegrees() {
+		return Math.toDegrees(T);
+	}
 }

@@ -73,7 +73,7 @@ public abstract class AbstractStrategy implements Strategy {
 			// Convert both angles to positive within the range (0, 360)
 			// 	clockwise is positive
 			dirAngle = changeToPositive(dirAngle);
-			robot.setT((float) changeToPositive(Math.toDegrees(robot.getT())));
+			robot.setT((float) changeToPositive(robot.getTDegrees()));
 			//robot.setT((float) Math.toDegrees(robot.getT()));
 			
 			double angleDifference = robot.getT() - dirAngle;
@@ -89,9 +89,9 @@ public abstract class AbstractStrategy implements Strategy {
 				right=1;
 			}
 		} else {
-			dirAngle = 180 - Math.toDegrees(robot.getAngleBetweenPoints(point));
+			dirAngle = Math.toDegrees(point.getAngleBetweenPoints(robot));
 			
-			if(dirAngle < robot.getT()) {
+			if(dirAngle < robot.getTDegrees()) {
 				// turn left
 				left=-1;
 				right=1;
@@ -104,7 +104,7 @@ public abstract class AbstractStrategy implements Strategy {
 		
 		// once the robot is facing in direction of the ball, move towards it at
 		// a velocity proportional to the distance between them
-		if(Math.abs(dirAngle - robot.getT()) % 360 < 30) {
+		if(Math.abs(dirAngle - robot.getTDegrees()) % 360 < 30) {
 			left = (int) (1*distance)/35;
 			right = (int) (1*distance)/35;		
 		}
@@ -118,7 +118,7 @@ public abstract class AbstractStrategy implements Strategy {
 		
 		drawables.add(new Drawable(Drawable.LABEL, "Distance: " + formatter.format(distance), 50, 30, Color.WHITE));
 		drawables.add(new Drawable(Drawable.LABEL, "dirAngle: " + formatter.format(dirAngle), 50, 50, Color.WHITE));
-		drawables.add(new Drawable(Drawable.LABEL, "robotAngle: " + formatter.format(robot.getT()), 50, 70, Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL, "robotAngle: " + formatter.format(robot.getTDegrees()), 50, 70, Color.WHITE));
 	}
 	
 	/**

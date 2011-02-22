@@ -22,6 +22,8 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		
 		String line = null;
 		
+		int i = 0;
+		
 	    while (true) {
 	    	
 	    	// stop this from running
@@ -41,6 +43,9 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		    	if (Runner.DEBUG) {
 		    		System.out.println ("[Stdout] " + line);
 		    	}
+		    	
+		    	if (i++ % 5 != 0)
+		    		continue;
 		    	
 		    	String[] lines = line.split(SEPARATOR);
 		    	int robotAX = (int) Float.parseFloat(lines[0]);
