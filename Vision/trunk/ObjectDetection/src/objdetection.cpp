@@ -121,7 +121,7 @@ CvBox2D objDetection::DotCloseObjectDetection(IplImage* robot_frame,IplImage* do
 	// See how long it took to process
 	long long diff = (etime-stime).total_milliseconds();
 	time_total+ = diff;
-	std::cout<<"time: "<<diff<<std::endl;
+	//std::cout<<"time: "<<diff<<std::endl;
 #endif
 
 	CvBox2D res;
@@ -290,7 +290,7 @@ CvBox2D objDetection::orientation_centerMoment(CvContour* cntr,IplImage* img)
 	//cvDrawContours(img,(CvSeq*)cntr,cvScalar(150,150,150),cvScalar(150,150,150),0,5);
 	//cvDrawCircle(img,cvPointFrom32f(center),14,cvScalar(100,0,100),5);
 	//cvDrawCircle(img,cvPointFrom32f(cenMoment),14,cvScalar(0,200,200),3);
-	std::cout<<"Moment"<<cenMoment.x<<","<<cenMoment.y<<"- circle"<<center.x<<","<<center.y<<std::endl;
+	//std::cout<<"Moment"<<cenMoment.x<<","<<cenMoment.y<<"- circle"<<center.x<<","<<center.y<<std::endl;
 	//cvDrawLine(img,cvPoint(x,y),cvPointFrom32f(result.center),cvScalar(200,0,255),10);
 	result.center=center;
 	result.angle = atan2(result.center.y-cenMoment.y, result.center.x-cenMoment.x);
@@ -344,18 +344,18 @@ CvBox2D objDetection::orientation_plate(CvContour* cntr, std::vector<CvContour*>
 		plate_rect.angle-=180;
 	//For different cases of T location angle is changed.
 	cvEllipseBox(img,plate_rect,cvScalar(255,255,0));
-	std::cout<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
+	//std::cout<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
 
 
 	if((robot_rect.center.x>plate_rect.center.x)&&(robot_rect.center.y>plate_rect.center.y)&&(plate_rect.angle>90))
 	{
 		plate_rect.angle-=180;
-		std::cout<<"Modified2:"<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
+		//std::cout<<"Modified2:"<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
 	}
 	if((robot_rect.center.x<plate_rect.center.x)&&(robot_rect.center.y>plate_rect.center.y)&&(plate_rect.angle<90))
 	{
 		plate_rect.angle-=180;
-		std::cout<<"Modified3:"<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
+		//std::cout<<"Modified3:"<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
 	}
 	//Normalize angles again!
 	NORMALIZE(plate_rect.angle);

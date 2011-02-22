@@ -94,9 +94,9 @@ void showResuts(IplImage*& frame,IplImage*& thresh1,IplImage*& thresh2,IplImage*
 		cvShowImage("Camera",disp);
 		
 	}
-	std::cout.setf(ios::fixed,ios::floatfield);
+	//std::cout.setf(ios::fixed,ios::floatfield);
 	std::cout.precision(1);
-	std::cout<<"fps: "<<fps<<" - mean fps: "<<meanfps<<std::endl;
+	//std::cout<<"fps: "<<fps<<" - mean fps: "<<meanfps<<std::endl;
 	cvReleaseImage(&disp);
 	cvReleaseImage(&frame_c);
 	cvReleaseImage(&thresh1_c);
@@ -186,14 +186,14 @@ void launch(config conf)
 						std::cout<<"Setup for Background image"<<std::endl;
 						//std::getchar();
 
-						std::cout<<"grabbing frame"<<std::endl;
+						//std::cout<<"grabbing frame"<<std::endl;
 						if( !cvGrabFrame( capture ))
 						{
 							std::cout<<"Camera Stopped working, Closing"<<std::endl;
 							break;
 						}
 						frame = cvRetrieveFrame( capture );
-						std::cout<<"frame grabbed"<<std::endl;
+						//std::cout<<"frame grabbed"<<std::endl;
 					}
 				}
 				else
@@ -227,7 +227,7 @@ void launch(config conf)
 		}
 		
 		
-		std::cout<<"reformat"<<std::endl;
+		//std::cout<<"reformat"<<std::endl;
 		int w=conf.windowOfInterest.Width;
 		int h=conf.windowOfInterest.Height; 
 		CvSize curSize=cvSize(frame->width,frame->height);
@@ -238,7 +238,7 @@ void launch(config conf)
 		IplImage* current_frame_pro_TY;
 		IplImage* current_frame_pro_B;
 		IplImage* current_frame_pro_D;
-		std::cout<<curSize.width<<" "<<curSize.height<<std::endl;
+		//std::cout<<curSize.width<<" "<<curSize.height<<std::endl;
 		cvCopy(frame,buffer_frame);
 		cvSetImageROI(buffer_frame,cvRect(conf.windowOfInterest.X,conf.windowOfInterest.Y,w,h));
 		cvCopy(buffer_frame,current_frame);
@@ -246,7 +246,7 @@ void launch(config conf)
 
 		cvReleaseImage(&buffer_frame);
 		
-		std::cout<<"reformat completed"<<std::endl;
+		//std::cout<<"reformat completed"<<std::endl;
 		if(!back)
 			goto after_release;
 		current_frame_pro_TB=objDetection::preprocess_to_single_channel(current_frame,back_img,conf.hsv_min_TB,conf.hsv_max_TB);
@@ -277,7 +277,7 @@ void launch(config conf)
 		}
 		
 		
-		std::cout<<"Color transformation completed"<<std::endl;
+		//std::cout<<"Color transformation completed"<<std::endl;
 		
 
 
@@ -327,7 +327,7 @@ void launch(config conf)
 				cnt_TY=cnt.at(0);
 
 
-			std::cout<<"Prediction completed"<<std::endl;
+			//std::cout<<"Prediction completed"<<std::endl;
 
 			if(conf.predict_major)
 			{
@@ -358,7 +358,7 @@ void launch(config conf)
 					sel_TY.center.y=-1;
 					sel_TY.angle=-1;
 				}
-				std::cout<<"Orientation Calc completed"<<std::endl;
+				//std::cout<<"Orientation Calc completed"<<std::endl;
 				if(conf.show)
 				{
 
@@ -385,7 +385,7 @@ void launch(config conf)
 				{
 					try
 					{
-						std::cout<<"outputToConsole"<<std::endl;
+						//std::cout<<"outputToConsole"<<std::endl;
 						stringstream ss;
 						if(cnt_TB)
 							ss<<sel_TB.center.x<<","<<sel_TB.center.y<<","<<sel_TB.angle<<",";
