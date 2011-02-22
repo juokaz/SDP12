@@ -61,7 +61,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		}
 		else if (isBallBehindRobot(robot, ball, optimum, goal))
 		{
-			setIAmDoing("Ball behing robot - going to Behind");
+			setIAmDoing("Ball behind robot - going to Behind");
 			Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum, goal);
 			drawPoint(point, "Behind");
 			moveToPoint(robot, point);
