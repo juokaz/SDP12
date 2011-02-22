@@ -162,8 +162,8 @@ void launch(config conf)
 	}
 	if(conf.camera)
 	{
-	objDetection::utilities::cb_init(&TY_Buffer,5,sizeof(float));
-	objDetection::utilities::cb_init(&TB_Buffer,5,sizeof(float));
+	objDetection::utilities::cb_init(&TY_Buffer,15,sizeof(float));
+	objDetection::utilities::cb_init(&TB_Buffer,15,sizeof(float));
 	}
 	while(true)
 	{
