@@ -103,7 +103,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		int theta = (int) Math.abs(Math.toDegrees(Math.atan((2*opponentWidth)/robot.getDistanceBetweenPoints(opponent))));
 		// angle between obstacle and optimum point from robot's point of view
 		int theta2 = (int) Math.toDegrees(Math.abs(Math.abs(opponent.getAngleBetweenPoints(robot)) - Math.abs(optimum.getAngleBetweenPoints(robot))));
-		
+		// TODO take into account if ball is inbetween robots but still closer to opponent
 		if (theta2 < theta && opponent.getDistanceBetweenPoints(optimum) < robot.getDistanceBetweenPoints(optimum)){ //TODO: test with correct value of opponentWidth
 			return true;
 		} else return false;
@@ -162,9 +162,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isBallBehindRobot(Robot robot, Ball ball, Point optimum) {
-		//TODO
 		Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum);
-		if (robot.isInPoint(point, 5)) {
+		if (robot.isInPoint(point)) {
 			return false;
 		}
 		
@@ -209,7 +208,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected Point getOptimumPoint(Ball ball, Goal goal) {
-		return calculatePosBehindBall(goal.calculateGoalAndPointAngle(ball), ball, gap);
+		return calculatePosBehindBall(goal.calculateGoalAndPointAngle(ball), ball, gap, goal);
 	}
 	
 	/**
@@ -269,10 +268,30 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @param ball
 	 * @param gap
 	 */
+	protected Point calculatePosBehindBall(double ballGoalAngle, Point ball, int gap, Goal goal) {
+		// Need to work out sin and cos distances to get new X and Y positions
+		
+		double xOffset = 0;
+		double yOffset = 0;
+		if (goal.getX() == 0) {
+			 xOffset = gap*Math.cos(ballGoalAngle);
+			 yOffset = gap*Math.sin(ballGoalAngle);
+		} else {
+			 xOffset = gap*Math.cos(ballGoalAngle);
+			 yOffset = gap*Math.sin(ballGoalAngle);
+			
+		}
+			
+		
+		return new Point(ball.getX()+xOffset, ball.getY()+yOffset);
+	}
+	
+	
 	protected Point calculatePosBehindBall(double ballGoalAngle, Point ball, int gap) {
 		// Need to work out sin and cos distances to get new X and Y positions
 		double xOffset = gap*Math.cos(ballGoalAngle);
 		double yOffset = gap*Math.sin(ballGoalAngle);
+		
 		
 		return new Point(ball.getX()+xOffset, ball.getY()+yOffset);
 	}
