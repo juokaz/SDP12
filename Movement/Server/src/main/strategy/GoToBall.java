@@ -21,7 +21,7 @@ import main.gui.Drawable;
 public class GoToBall extends AbstractStrategy implements Strategy {
 
 	// Gap is the distance behind ball for the point we want to move to.
-	private int gap = 50;
+	private int gap = 70;
 	private int opponentWidth;
 	boolean goingToAvoid = false;
 	
@@ -29,7 +29,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	public void updateLocation(Location data) {
 		Ball ball = data.getBall();
 		Robot robot = data.getOurRobot();
-		Robot opponent = data.getOpponentRobot();
+		Robot opponent = /*new Robot(-1,-1,-1);*/data.getOpponentRobot();
 		Goal goal = data.getGoal();
 		Point optimum = getOptimumPoint(ball, goal);
 		opponentWidth = 50; // TODO: calculate width of the opponent taking into account its angle (?)
@@ -81,7 +81,9 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		{
 			setIAmDoing("Kick");
 			moveToPoint(robot, goal);
-			executor.kick();
+			if (Math.abs(robot.getTDegrees()) < 45 ){
+				executor.kick();
+			}
 		}
 		else {
 			setIAmDoing("Reaching ball");

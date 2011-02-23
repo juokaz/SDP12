@@ -25,11 +25,11 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 	 * @throws NumberFormatException
 	 * @throws IOException
 	 */
-	protected void process(InputStream stream) throws NumberFormatException, IOException {
+	protected void process(InputStream stream,InputStream standard) throws NumberFormatException, IOException {
 		
 	    // clean up if any output in std out
 	    BufferedReader brCleanUp = new BufferedReader (new InputStreamReader (stream));
-		
+	    BufferedReader backup = new BufferedReader (new InputStreamReader (standard));
 		String line = null;
 		
 		int i = 0;
@@ -50,11 +50,14 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		    		return;
 		    	}
 		    	
+		    	//if (Runner.DEBUG) {
+		    	//	System.out.println ("[Stderr] " + line);
+		    	//}
+		    	if(backup.ready()){
 		    	if (Runner.DEBUG) {
-		    		System.out.println ("[Stdout] " + line);
-		    	}
-		    	
-		    	if (i++ % 5 != 0)
+		    		System.out.println ("[Stdout] " + backup.readLine());
+		    	}}
+		    	if (i++ % 4 != 0)
 		    		continue;
 		    	
 		    	String[] lines = line.split(SEPARATOR);

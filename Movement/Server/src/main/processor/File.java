@@ -45,7 +45,7 @@ public class File extends VisionStreamProcessor implements Processor {
 			InputStream stdout = new DataInputStream(bis);
 		    
 			// start processing data, method in VisionStreamProcessor
-			process(stdout);
+			//process(stdout);
 		    
 		} catch (IOException e) {
 			System.out.println("Processor error: " + e.getMessage());

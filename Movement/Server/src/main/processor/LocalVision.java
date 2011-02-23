@@ -44,9 +44,10 @@ public class LocalVision extends VisionStreamProcessor implements Processor {
 		    InputStream in = process.getErrorStream();
 		    
 			// start processing data, method in VisionStreamProcessor
-			process(in);
-		} catch (IOException e) {
-			System.out.println("Processor error: " + e.getMessage());
+			process(in,process.getInputStream());
+		} catch (Exception e) {
+			System.out.println("Processor error: " + e.getMessage()+" Restarting:");
+			run(our_robot,left_goal);
 		}
 	}
 	
