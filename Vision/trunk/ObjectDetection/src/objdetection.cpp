@@ -175,9 +175,14 @@ CvBox2D objDetection::orientation_hueMoment(CvContour* cntr,IplImage* img)
 	float mu02=moments.m02/moments.m00 - y*y;
 	float mu11=moments.m11/moments.m00 - x*y;
 	//float angle=atan(2*mu11/(mu20-mu02))/2;
-
+	float angle = atan2(2*mu11,mu20-mu02)/2;	
 	//float angle= atan2(mu11, mu02);
-	float angle= atan2(mu20, mu11);	
+	//float angle= atan2(mu20, mu11);	
+
+	if (res1.angle > PI/2 || res1.angle < -PI/2)
+	{
+		angle = angle + PI;
+	}
 
 	result.angle=angle;
 
@@ -291,8 +296,6 @@ CvBox2D objDetection::orientation_centerMoment(CvContour* cntr,IplImage* img)
 	result.center=center;
 	result.angle = atan2(result.center.y-cenMoment.y, result.center.x-cenMoment.x);
 	
-	//if(result.angle<0)
-	//	result.angle+=360;
 
 	return result;
 
