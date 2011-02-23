@@ -114,7 +114,7 @@ public abstract class AbstractStrategy implements Strategy {
 		left = Math.min(left, 4);
 		right = Math.min(right, 4);
 		
-		executor.rotateWheels(left*30, right*30);
+		executor.rotateWheels(left*70, right*70);
 		
 		NumberFormat formatter = new DecimalFormat("#0.00");
 		

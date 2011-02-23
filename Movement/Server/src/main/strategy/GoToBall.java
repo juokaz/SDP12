@@ -21,10 +21,12 @@ import main.gui.Drawable;
 public class GoToBall extends AbstractStrategy implements Strategy {
 
 	// Gap is the distance behind ball for the point we want to move to.
+	private int optimalGap = 30;
 	private int gap = 30;
 
 	private int opponentWidth;
 	boolean goingToAvoid = false;
+	boolean goingToBehind = false;
 	
 	@Override
 	public void updateLocation(Location data) {
@@ -66,10 +68,13 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			drawPoint(point, "Avoid");
 			moveToPoint(robot, point);
 		}
-		else if (isBallBehindRobot(robot, ball, optimum, goal))
+		else if (isBallBehindRobot(robot, ball, optimum, goal) || goingToBehind)
 		{
+			goingToBehind = true;
 			setIAmDoing("Ball behind robot - going to Behind");
 			Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum, goal);
+			if (robot.isInPoint(point))
+				goingToBehind = false;
 			drawPoint(point, "Behind");
 			moveToPoint(robot, point);
 		}
@@ -82,9 +87,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		{
 			setIAmDoing("Kick");
 			moveToPoint(robot, goal);
-			if (Math.abs(robot.getTDegrees()) < 45 ){
-				executor.kick();
-			}
+			executor.kick();
 		}
 		else {
 			setIAmDoing("Reaching ball");
@@ -196,17 +199,19 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	
 	
 	protected Point getPointToFaceBallFromCorrectSide(Robot robot, Ball ball, Point optimum, Goal goal) {		
+		int behindGap = 100;
+		double angle = Math.PI/8;
 		// If robot is not very close to the ball	
 		if (robot.getDistanceBetweenPoints(ball) > 20) {
 			// Checks to see which side of the ball the robot is on
 			if (goal.getX() == 0) {
 				if (robot.getY() > optimum.getY()) {				
 					
-					return calculatePosBehindBall(optimum.getAngleBetweenPoints(ball) + Math.PI/4, ball, gap*2);
+					return calculatePosBehindBall(optimum.getAngleBetweenPoints(ball) + angle, ball, behindGap);
 
 				} else {	
 
-					return calculatePosBehindBall( optimum.getAngleBetweenPoints(ball) - Math.PI/4 , ball, gap*2);
+					return calculatePosBehindBall( optimum.getAngleBetweenPoints(ball) - angle , ball, behindGap);
 
 				}
 			
@@ -214,11 +219,11 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 				// Checks to see which side of the ball the robot is on
 				if (robot.getY() < optimum.getY()) {				
 
-					return calculatePosBehindBall(optimum.getAngleBetweenPoints(ball) + Math.PI/4, ball, gap*2);
+					return calculatePosBehindBall(optimum.getAngleBetweenPoints(ball) + angle, ball, behindGap);
 
 				} else {	
 
-					return calculatePosBehindBall( optimum.getAngleBetweenPoints(ball) - Math.PI/4 , ball, gap*2);
+					return calculatePosBehindBall( optimum.getAngleBetweenPoints(ball) - angle , ball, behindGap);
 
 				
 				}
@@ -236,7 +241,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected Point getOptimumPoint(Ball ball, Goal goal) {
-		return calculatePosBehindBall(goal.calculateGoalAndPointAngle(ball), ball, gap, goal);
+		return calculatePosBehindBall(goal.calculateGoalAndPointAngle(ball), ball, optimalGap, goal);
 	}
 	
 	/**
