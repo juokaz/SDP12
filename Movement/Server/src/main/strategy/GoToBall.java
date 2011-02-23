@@ -84,10 +84,14 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			setIAmDoing("Not in optimum - going to Optimum");
 			moveToPoint(robot, optimum);
 		}
+		else if (isBallReached(robot, ball) && !isRobotCloseToGoal(robot, goal))
+		{
+			setIAmDoing("Moving to Goal");
+			moveToPoint(robot, goal, true);
+		}
 		else if (isBallReached(robot, ball))
 		{
 			setIAmDoing("Kick");
-			moveToPoint(robot, goal);
 			executor.kick();
 		}
 		else {
@@ -333,6 +337,19 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	}
 	
 	/**
+	 * Is robot close enough to a goal
+	 * 
+	 * @param robot
+	 * @param goal
+	 * @return
+	 */
+	protected boolean isRobotCloseToGoal(Robot robot, Goal goal) {
+		int threshold = 100;
+		
+		return robot.getDistanceBetweenPoints(goal) < threshold;
+	}
+	
+	/**
 	 * Add drawables
 	 * 
 	 * @param robot
@@ -386,6 +403,9 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		drawables.add(new Drawable(Drawable.LABEL,
 				"Distance between optimum and opponent: " + formatter.format(opponent.getDistanceBetweenPoints(optimum)),
 				800, 250, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Distance between robot and goal: " + formatter.format(goal.getDistanceBetweenPoints(robot)),
+				800, 270, Color.BLACK));
 		
 	}
 	

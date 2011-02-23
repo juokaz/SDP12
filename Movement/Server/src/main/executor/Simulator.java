@@ -83,10 +83,11 @@ public class Simulator extends AbstractProcessor implements Executor {
 
 	@Override
 	public void rotateWheels(final int leftWheelSpeed, final int rightWheelSpeed) {
+		// TODO FIX THIS
 		if (isOurRobotFirst()) {
-			robot1.move(leftWheelSpeed, rightWheelSpeed);
+			robot1.move(rightWheelSpeed, leftWheelSpeed);
 		} else {
-			robot2.move(leftWheelSpeed, rightWheelSpeed);
+			robot2.move(rightWheelSpeed, leftWheelSpeed);
 		}
 	}
 

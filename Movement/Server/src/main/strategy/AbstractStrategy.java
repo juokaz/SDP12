@@ -59,7 +59,6 @@ public abstract class AbstractStrategy implements Strategy {
 		this.listener = listener;
 	}
 	
-	
 	/**
 	 * Move robot from robotX and robotY to a Point position in a pitch
 	 * 
@@ -69,6 +68,20 @@ public abstract class AbstractStrategy implements Strategy {
 	 * @param point
 	 */
 	protected void moveToPoint(Robot robot, Point point) {
+		moveToPoint(robot, point, false);
+	}
+	
+	
+	/**
+	 * Move robot from robotX and robotY to a Point position in a pitch
+	 * 
+	 * Point can be a Ball, Pitch or other Robot
+	 * 
+	 * @param robot
+	 * @param point
+	 * @param dribble_mode
+	 */
+	protected void moveToPoint(Robot robot, Point point, boolean dribble_mode) {
 		
 		double dirAngle = 0;
 		int left=1;
@@ -108,9 +121,17 @@ public abstract class AbstractStrategy implements Strategy {
 			right = (int) (1*distance)/35;	
 			rotateState = "straight";
 		}
+		
+		// max speed factor
+		int max = 4;
 
-		left = Math.min(left, 4);
-		right = Math.min(right, 4);
+		if (dribble_mode) {
+			max = 1;
+		}
+		
+		// Limits Max speed to X*70
+		left = Math.min(left, max);
+		right = Math.min(right, max);
 		
 		executor.rotateWheels(left*70, right*70);
 		
@@ -119,40 +140,6 @@ public abstract class AbstractStrategy implements Strategy {
 		drawables.add(new Drawable(Drawable.LABEL, "Distance: " + formatter.format(distance), 50, 30, Color.WHITE));
 		drawables.add(new Drawable(Drawable.LABEL, "dirAngle: " + formatter.format(dirAngle), 50, 50, Color.WHITE));
 		drawables.add(new Drawable(Drawable.LABEL, "robotAngle: " + formatter.format(robot.getTDegrees()), 50, 70, Color.WHITE));
-	}
-	
-	/**
-	 * This method should *just* turn a robot to face the point it wants to move towards.
-	 * 
-	 * TODO: FINISH!! check angles being calculated are correct. - Not implemented yet
-	 * 
-	 * @param robot
-	 * @param point
-	 */
-	protected void turnRobotToFacePoint(Robot robot, Point point) {
-		//Get angle between the two points
-		double angle = point.getAngleBetweenPoints(robot);
-		double angleDifference = robot.getT() - angle;
-		int left = 1;
-		int right = 1;
-		
-		if((angleDifference < 0 && Math.abs(angleDifference) > Math.PI)
-				|| (angleDifference > 180 && Math.abs(angleDifference) < Math.PI)) {
-			// turn left
-			left=1;
-			right=-1;	
-		} else {
-			// turn right
-			left=-1;
-			right=1;
-		}
-		
-		if (Math.abs(angleDifference - robot.getTDegrees()) % 360 < 10) {
-			left = 0;
-			right = 0;
-		}
-		
-		executor.rotateWheels(left*50, right*50);
 	}
 	
 	/**
