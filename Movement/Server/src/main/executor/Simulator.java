@@ -118,4 +118,10 @@ public class Simulator extends AbstractProcessor implements Executor {
 			robot2.move(0, 0);
 		}
 	}
+
+	@Override
+	public void celebrate() {
+		// TODO Auto-generated method stub
+		
+	}
 }

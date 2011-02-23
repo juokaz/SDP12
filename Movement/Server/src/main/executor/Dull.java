@@ -23,4 +23,10 @@ public class Dull implements Executor {
 	@Override
 	public void exit() {
 	}
+
+	@Override
+	public void celebrate() {
+		// TODO Auto-generated method stub
+		
+	}
 }

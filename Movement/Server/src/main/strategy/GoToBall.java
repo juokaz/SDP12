@@ -49,6 +49,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		{
 			setIAmDoing("Ball out of pitch");
 			// We have scored (hopefully)
+			executor.celebrate();
 			executor.stop();
 		}
 		else if (isBallInACorner(ball))

@@ -33,6 +33,11 @@ public interface Executor {
 	public void stop();
 	
 	/**
+	 * Celebrate
+	 */
+	public void celebrate();
+	
+	/**
 	 * Send exit command to executor
 	 */
 	public void exit();	

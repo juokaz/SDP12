@@ -26,6 +26,8 @@ public class roboto {
 	
 	private static final int STOP = 4;
 	
+	private static final int CELEBRATE = 5;
+	
 	/**
 	 * Main program
 	 * @param args
@@ -100,6 +102,9 @@ public class roboto {
 						} catch (InterruptedException e) {
 							drawMessage("Error executing kick");
 						}
+						break;
+					case CELEBRATE:
+						Tune.Tune();
 						break;
 					case STOP:
 						Motor.A.stop();

@@ -48,6 +48,11 @@ public class Bluetooth implements Executor {
 	private static final String STOP = "4";
 	
 	/**
+	 * Celebration command
+	 */
+	private static final String CELEBRATE = "5";
+	
+	/**
 	 * Separator for commands
 	 */
 	private static final String SPACE = " ";
@@ -89,6 +94,12 @@ public class Bluetooth implements Executor {
 	public void rotate(int T) {
 		if(!closed)
 		server.sendCommand(ROTATE + SPACE + Integer.toString(T));
+	}
+	
+	@Override
+	public void celebrate() {
+		if(!closed)
+		server.sendCommand(CELEBRATE);
 	}
 	
 	@Override
