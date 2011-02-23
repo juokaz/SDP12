@@ -461,9 +461,14 @@ void launch(config conf)
 					try
 					{
 						if(!cnt_B)
-							continue;
-
+						{
+						rect_B.x=-1;
+						rect_B.y=-1;
+						}
+						else
+						{
 						rect_B= cvBoundingRect(cnt_B);
+						}
 						stringstream ss;
 						ss<<sel_TB.center.x<<","<<sel_TB.center.y<<","<<sel_TB.angle<<","<<rect_B.x<<","<<rect_B.y<<","<<sel_TY.center.x<<","<<sel_TY.center.y<<","<<sel_TY.angle<<std::endl;
 						if(conf.outputToText)
