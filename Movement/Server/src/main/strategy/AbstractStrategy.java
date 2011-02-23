@@ -95,6 +95,7 @@ public abstract class AbstractStrategy implements Strategy {
 		
 		// once the robot is facing in direction of the ball, move towards it at
 		// a velocity proportional to the distance between them
+		// TODO: Check threshold is acceptable for real robot. 
 		if(Math.abs(dirAngle - robot.getTDegrees()) % 360 < 30) {
 			left = (int) (50*distance)/35;
 			right = (int) (50*distance)/35;		
@@ -110,6 +111,40 @@ public abstract class AbstractStrategy implements Strategy {
 		drawables.add(new Drawable(Drawable.LABEL, "Distance: " + formatter.format(distance), 50, 30, Color.WHITE));
 		drawables.add(new Drawable(Drawable.LABEL, "dirAngle: " + formatter.format(dirAngle), 50, 50, Color.WHITE));
 		drawables.add(new Drawable(Drawable.LABEL, "robotAngle: " + formatter.format(robot.getTDegrees()), 50, 70, Color.WHITE));
+	}
+	
+	/**
+	 * This method should *just* turn a robot to face the point it wants to move towards.
+	 * 
+	 * TODO: FINISH!! check angles being calculated are correct. - Not implemented yet
+	 * 
+	 * @param robot
+	 * @param point
+	 */
+	protected void turnRobotToFacePoint(Robot robot, Point point) {
+		//Get angle between the two points
+		double angle = point.getAngleBetweenPoints(robot);
+		double angleDifference = robot.getT() - angle;
+		int left = 1;
+		int right = 1;
+		
+		if((angleDifference < 0 && Math.abs(angleDifference) > Math.PI)
+				|| (angleDifference > 180 && Math.abs(angleDifference) < Math.PI)) {
+			// turn left
+			left=1;
+			right=-1;	
+		} else {
+			// turn right
+			left=-1;
+			right=1;
+		}
+		
+		if (Math.abs(angleDifference - robot.getTDegrees()) % 360 < 10) {
+			left = 0;
+			right = 0;
+		}
+		
+		executor.rotateWheels(left*50, right*50);
 	}
 	
 	

@@ -92,14 +92,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		setDrawables(drawables);
 	}
 	
-	/**
-	 * Finds the correct direction to rotate, in order to face goal. 
-	 *
-	 * @param robot
-	 * @param ball
-	 * @param goal
-	 */
-	
 
 	/**
 	 * Is it possible for a ball to be reached by going straight?
@@ -155,6 +147,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 				return pointB;
 			}
 		}
+		
 		if (isObstacleInFront(robot, opponent, pointA)) {
 			return pointB;
 		} 
@@ -163,7 +156,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			return pointA;
 		} else {
 			return pointA;
-			
 		}
 	}
 	

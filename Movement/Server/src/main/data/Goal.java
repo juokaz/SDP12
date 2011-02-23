@@ -21,7 +21,7 @@ public class Goal extends Point {
 	
 	/**
 	 * Calculates an angle between a point and goal
-	 * 
+	 * TODO: check this to make sure that it takes proper orientation out.
 	 * @param point
 	 * @return
 	 */
