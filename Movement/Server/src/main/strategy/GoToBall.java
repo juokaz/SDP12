@@ -23,6 +23,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	// Gap is the distance behind ball for the point we want to move to.
 	private int gap = 50;
 	private int opponentWidth;
+	boolean goingToAvoid = false;
 	
 	@Override
 	public void updateLocation(Location data) {
@@ -53,10 +54,13 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			// Don't do anything, wait for it move from there
 			executor.stop();
 		}
-		else if (isObstacleInFront(robot, opponent, optimum))
-		{
+		else if (isObstacleInFront(robot, opponent, optimum) || goingToAvoid)
+		{			
+			goingToAvoid = true;
 			setIAmDoing("Obstacle in front - going to Avoid");
 			Point point = getPointToAvoidObstacle(robot, opponent, optimum);
+			if (robot.isInPoint(point)) 
+				goingToAvoid = false;
 			drawPoint(point, "Avoid");
 			moveToPoint(robot, point);
 		}
@@ -108,9 +112,9 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 */
 	protected boolean isObstacleInFront(Robot robot, Robot opponent, Point optimum) {
 		// angle between lines going through opponent center and edge. opponent width is doubled in order to take into account width of both robots.
-		int theta = (int) Math.abs(Math.toDegrees(Math.atan((opponentWidth)/robot.getDistanceBetweenPoints(opponent))));
+		int theta = (int) Math.abs(Math.toDegrees(Math.atan2((opponentWidth),robot.getDistanceBetweenPoints(opponent))));
 		// angle between obstacle and optimum point from robot's point of view
-		int theta2 = (int) Math.toDegrees(Math.abs(Math.abs(opponent.getAngleBetweenPoints(robot)) - Math.abs(optimum.getAngleBetweenPoints(robot))));
+		int theta2 = (int) Math.toDegrees(Math.abs(opponent.getAngleBetweenPoints(robot) - optimum.getAngleBetweenPoints(robot)));
 		if (theta2 < theta && robot.getDistanceBetweenPoints(opponent) < robot.getDistanceBetweenPoints(optimum)){
 			return true;
 		} else return false;
@@ -201,17 +205,17 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			if (goal.getX() == 0) {
 				if (robot.getY() > optimum.getY()) {				
 					
-					return calculatePosBehindBall(optimum.getAngleBetweenPoints(ball) + 45, ball, gap);
+					return calculatePosBehindBall(optimum.getAngleBetweenPoints(ball) + Math.PI/2, ball, gap);
 				} else {	
-					return calculatePosBehindBall( optimum.getAngleBetweenPoints(ball) - 45 , ball, gap);
+					return calculatePosBehindBall( optimum.getAngleBetweenPoints(ball) - Math.PI/2 , ball, gap);
 				}
 			
 		} else {
 				// Checks to see which side of the ball the robot is on
 				if (robot.getY() < optimum.getY()) {				
-					return calculatePosBehindBall(optimum.getAngleBetweenPoints(ball) + 45, ball, gap);
+					return calculatePosBehindBall(optimum.getAngleBetweenPoints(ball) + Math.PI/2, ball, gap);
 				} else {	
-					return calculatePosBehindBall( optimum.getAngleBetweenPoints(ball) - 45 , ball, gap);
+					return calculatePosBehindBall( optimum.getAngleBetweenPoints(ball) - Math.PI/2 , ball, gap);
 				
 				}
 		}
