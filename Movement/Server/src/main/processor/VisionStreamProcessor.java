@@ -43,7 +43,7 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 	    	}
 	    	
 	    	while ((line = brCleanUp.readLine ()) != null) {
-	    		
+	    		try {
 		    	// stop this from running
 		    	if (stopped) {
 		    		System.out.println("Stopping processor");
@@ -95,6 +95,9 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		    	}
 		    	
 		    	propogateLocation(loc);
+	    		} catch(Exception e){
+	    			continue;
+	    		}
 	    	}
 	    }
 	}

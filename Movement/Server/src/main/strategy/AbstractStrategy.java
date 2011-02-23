@@ -24,7 +24,8 @@ public abstract class AbstractStrategy implements Strategy {
 	protected int PITCH_Y_MIN = 0;
 	protected int PITCH_X_MAX = 550; // TODO check those
 	protected int PITCH_Y_MAX = 350; // TODO check those
-	protected String ROTATING="";
+	protected String rotateState = "straight";
+	
 	/**
 	 * Executor which is going to execute these commands
 	 */
@@ -83,34 +84,31 @@ public abstract class AbstractStrategy implements Strategy {
 		dirAngle = Math.toDegrees(point.getAngleBetweenPoints(robot));	
 
 		double angleDifference = robot.getTDegrees() - dirAngle;
-		if(angleDifference<0)
-			angleDifference+=360;
-		//if(((angleDifference < 0 && Math.abs(angleDifference) < 180)
-			//	|| (angleDifference > 180 && Math.abs(angleDifference) > 180))
-			//	&& !ROTATING.equals("right")) {
-			// turn left
-		//if(AngleDiff<30||AngleDiff>330)
-			left = 1;//Math.min(3, (int) (rotatingPower *Math.abs(angleDifference) / 360));
-			right = -1;//Math.min(3, (int)(rotatingPower * Math.abs(angleDifference) / 360));
-			System.out.println("Rotation says:"+left+","+right);
-		//	ROTATING = "left";
-		//} else {
-			// turn right
-		//	left = (int) (rotatingPower *Math.abs(angleDifference) / 180);
-		//	right = (int)(-rotatingPower * Math.abs(angleDifference) / 180);
-		//	ROTATING = "right";
-		//}
 		
+		if (rotateState.equals("left")){
+			left = -1;
+			right = 1;
+		}
+		if (rotateState.equals("right")){
+			left = 1;
+			right = -1;
+		}
+		if (rotateState.equals("straight")){
+			if((angleDifference < 0 && Math.abs(angleDifference) < 180)
+					|| (angleDifference > 180 && Math.abs(angleDifference) > 180)) 
+				rotateState = "left";
+			else
+				rotateState = "right";	
+		}
 		
 		// once the robot is facing in direction of the ball, move towards it at
 		// a velocity proportional to the distance between them
-
-				
+	
 		// TODO: Check threshold is acceptable for real robot. 
 		if(Math.abs(dirAngle - robot.getTDegrees()) % 360 < 30) {
-			left = (int) (50*distance)/35;
-			right = (int) (50*distance)/35;		
-			System.out.println("moving straight");
+			left = (int) (1*distance)/35;
+			right = (int) (1*distance)/35;	
+			rotateState = "straight";
 		}
 
 		left = Math.min(left, 4);
