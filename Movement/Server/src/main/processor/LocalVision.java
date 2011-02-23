@@ -1,6 +1,5 @@
 package main.processor;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import main.Processor;
@@ -40,13 +39,17 @@ public class LocalVision extends VisionStreamProcessor implements Processor {
 			// execute Vision program
 			process = Runtime.getRuntime().exec(command);
 
-		    // Get the input stream and read from it
+		    // Get the error stream and read from it
 		    InputStream in = process.getErrorStream();
 		    
+		    // Get the input stream and read from it
+		    InputStream debug = process.getInputStream();
+		    
 			// start processing data, method in VisionStreamProcessor
-			process(in,process.getInputStream());
+			process(in, debug);
 		} catch (Exception e) {
 			System.out.println("Processor error: " + e.getMessage()+" Restarting:");
+			// TODO what if it fails not because of crashing?
 			run(our_robot,left_goal);
 		}
 	}

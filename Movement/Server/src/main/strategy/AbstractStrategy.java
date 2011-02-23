@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import main.gui.Drawable;
 import main.gui.DrawablesListener;
-import main.Runner;
 import main.Strategy;
 import main.Executor;
 import main.data.Ball;
@@ -22,8 +21,8 @@ public abstract class AbstractStrategy implements Strategy {
 	 */
 	protected int PITCH_X_MIN = 0;
 	protected int PITCH_Y_MIN = 0;
-	protected int PITCH_X_MAX = 550; // TODO check those
-	protected int PITCH_Y_MAX = 350; // TODO check those
+	protected int PITCH_X_MAX = 550;
+	protected int PITCH_Y_MAX = 350;
 	protected String rotateState = "straight";
 	
 	/**
@@ -74,7 +73,6 @@ public abstract class AbstractStrategy implements Strategy {
 		double dirAngle = 0;
 		int left=1;
 		int right=1;
-		double rotatingPower = 5;
 
 		// find the distance between the robot and the ball
 		double dy = robot.getY() - point.getY();

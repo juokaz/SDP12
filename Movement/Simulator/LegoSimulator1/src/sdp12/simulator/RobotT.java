@@ -41,12 +41,10 @@ public class RobotT implements ActionListener {
 	private Timer timer;
 	private int animationDuration = 1000;
 	private long animationStartTime;
-	private int distance = DEFAULT_DISTANCE;
 	private double startX;
 	private double startY;
 	private double startTheta;
 	private double endTheta;
-	private double speed;
 	private double leftWheelSpeed;
 	private double rightWheelSpeed;
 	private int operation;

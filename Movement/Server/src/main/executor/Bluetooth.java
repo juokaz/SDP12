@@ -153,7 +153,6 @@ public class Bluetooth implements Executor {
 			NXTInfo[] nxtInfo = new NXTInfo[1];
 
 			// Robot address info
-			// TODO: find out what is protocol (1 here)
 			nxtInfo[0] = new NXTInfo(1, name,address);
 
 			System.out.println("Connecting to " + nxtInfo[0].name);
@@ -216,8 +215,7 @@ public class Bluetooth implements Executor {
 				// close connection
 				nxtComm.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("Error in closing: " + e.getMessage());
 			}
 		}
 	}

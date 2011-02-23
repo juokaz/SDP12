@@ -83,17 +83,10 @@ public class Pitch extends JComponent implements ActionListener {
 			}
 
 			@Override
-			public void keyReleased(KeyEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void keyReleased(KeyEvent arg0) {}
 
 			@Override
-			public void keyTyped(KeyEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
+			public void keyTyped(KeyEvent arg0) {}
 		});
 		
 		addMouseListener(new MouseInputAdapter() {

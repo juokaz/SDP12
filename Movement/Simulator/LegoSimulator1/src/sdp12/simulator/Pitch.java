@@ -14,11 +14,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
 
+@SuppressWarnings("serial")
 public class Pitch extends JComponent implements ActionListener, KeyListener {
 
 	// List of robots
@@ -31,8 +31,6 @@ public class Pitch extends JComponent implements ActionListener, KeyListener {
 	// Pitch background
 	BufferedImage pitchBackground;
 	BufferedImage dbImage;
-	
-	private JButton bEnableRobot1, bDisableRobot1;
 	
 	// Timer 
 	Timer time;
@@ -238,16 +236,10 @@ public class Pitch extends JComponent implements ActionListener, KeyListener {
 	}
 
 	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyReleased(KeyEvent arg0) { }
 
 	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyTyped(KeyEvent arg0) {}
 	
 	public int getPitchWidth() {
 		
