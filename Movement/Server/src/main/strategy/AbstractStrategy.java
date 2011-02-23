@@ -21,8 +21,8 @@ public abstract class AbstractStrategy implements Strategy {
 	 */
 	protected int PITCH_X_MIN = 0;
 	protected int PITCH_Y_MIN = 0;
-	protected int PITCH_X_MAX = 550;
-	protected int PITCH_Y_MAX = 350;
+	protected int PITCH_X_MAX = 540;
+	protected int PITCH_Y_MAX = 290;
 	protected String rotateState = "straight";
 	
 	/**
@@ -153,52 +153,6 @@ public abstract class AbstractStrategy implements Strategy {
 		}
 		
 		executor.rotateWheels(left*50, right*50);
-	}
-	
-	
-	/**
-	 * This method will turn the robot to face the ball.
-	 *  
-	 *  
-	 * @param robot
-	 * @param ball
-	 * @param goal
-	 */
-	protected void positionRobotToFaceGoalBeforeKick(Robot robot, Ball ball, Goal goal) {
-		int right = 1;
-		int left = 1;
-		double requiredAngle = goal.calculateGoalAndPointAngle(ball);
-		double requiredAngle_ = 0;
-		double currentAngle = robot.getT();
-		double currentAngle_ = 0;
-		double differenceAngle = 0;
-		
-		while (true){
-			if (currentAngle < 0)
-				currentAngle_ = 360 - Math.abs(currentAngle); //change to 2pi
-			else
-				currentAngle_ = currentAngle;
-			
-			if (requiredAngle < 0)
-				requiredAngle_ = 360 - Math.abs(requiredAngle);
-			else
-				requiredAngle_ = requiredAngle;
-			
-			differenceAngle = requiredAngle_ - currentAngle_;
-			
-			if (differenceAngle < -10){
-				right = 1;
-				left = -1;
-			}
-			else if (differenceAngle > 10) {
-				right = -1;
-				left = 1;
-			}
-			else 
-				break;
-			
-			executor.rotateWheels(left*50, right*50);	
-		}
 	}
 	
 	/**
