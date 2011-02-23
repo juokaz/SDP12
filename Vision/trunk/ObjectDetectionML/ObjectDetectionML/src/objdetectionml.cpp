@@ -214,23 +214,12 @@ void objDetection::machineLearning::train_bind(std::vector<CvContour*> selectedd
 
 std::vector<CvBox2D> objDetection::machineLearning::tester_image_minor(IplImage* image,const char* filename,CvContour* sel,CvMemStorage* storage,IplImage* orig)
 {
-	std::vector<CvBox2D> results;
-	cvCreateMemStorage(0);
+	
+	
 	std::vector<ContourTuple> selected_tuples;
 	std::vector<ContourTuple> rejected_tuples;
 	std::vector<CvContour*> cnt_dot= objDetection::getContours(image,storage);
-	std::vector<CvContour*> cnt_sel;
-	cnt_sel.push_back(sel);
-	if(cnt_dot.size()==0)
-		return results;
-	CvMat* predictClass=cvCreateMat(cnt_dot.size(),1,CV_32FC1);
-	CvMat* predictData=cvCreateMat(cnt_dot.size(),3,CV_32FC1);
-	train_bind(cnt_dot,std::vector<CvContour*>(),cnt_sel,std::vector<CvContour*>(),selected_tuples,rejected_tuples);
-	objDetection::machineLearning::setDataSetFeatures_DDistance2(selected_tuples,rejected_tuples,predictData,0);
-	objDetection::machineLearning::setDataSetFeatures_Compactness(cnt_dot,std::vector<CvContour*>(),predictData,1);
-	objDetection::machineLearning::setDataSetFeatures_Area(cnt_dot,std::vector<CvContour*>(),predictData,2);
-	//objDetection::machineLearning::setDataSetFeatures_HuMoments(cnt_dot,std::vector<CvContour*>(),predictData,3,10);
-	CvSVM svm;
+	std::vector<CvBox2D> results;
 	bool noSVM=false;
 	ifstream test(filename);
 	if(!test)
@@ -243,6 +232,19 @@ std::vector<CvBox2D> objDetection::machineLearning::tester_image_minor(IplImage*
 		results.push_back(objDetection::getorientation_with_dot(sel,cnt_dot));
 		return results;
 	}
+	std::vector<CvContour*> cnt_sel;
+	cnt_sel.push_back(sel);
+	if(cnt_dot.size()==0)
+		return results;
+	CvMat* predictClass=cvCreateMat(cnt_dot.size(),1,CV_32FC1);
+	CvMat* predictData=cvCreateMat(cnt_dot.size(),3,CV_32FC1);
+	train_bind(cnt_dot,std::vector<CvContour*>(),cnt_sel,std::vector<CvContour*>(),selected_tuples,rejected_tuples);
+	objDetection::machineLearning::setDataSetFeatures_DDistance2(selected_tuples,rejected_tuples,predictData,0);
+	objDetection::machineLearning::setDataSetFeatures_Compactness(cnt_dot,std::vector<CvContour*>(),predictData,1);
+	objDetection::machineLearning::setDataSetFeatures_Area(cnt_dot,std::vector<CvContour*>(),predictData,2);
+	//objDetection::machineLearning::setDataSetFeatures_HuMoments(cnt_dot,std::vector<CvContour*>(),predictData,3,10);
+	CvSVM svm;
+	
 	svm.load(filename);
 	int selI=-1;
 	float min_dist=10000000;

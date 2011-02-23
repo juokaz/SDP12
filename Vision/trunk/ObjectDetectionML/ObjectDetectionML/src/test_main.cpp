@@ -21,8 +21,8 @@
 
 
 // Color threshold for Black Dot
-CvScalar hsv_min_D = cvScalar(0,0,0);
-CvScalar hsv_max_D = cvScalar(255,255,255);
+CvScalar hsv_min_D = cvScalar(0,5,15);
+CvScalar hsv_max_D = cvScalar(61,255,255);
 
 // Color threshold for Red Ball
 CvScalar hsv_min_B = cvScalar(0,131,104);
@@ -162,7 +162,7 @@ void launch(config conf)
 	}
 	if(conf.camera)
 	{
-	objDetection::utilities::cb_init(&TY_Buffer,15,sizeof(float));
+	objDetection::utilities::cb_init(&TY_Buffer,5,sizeof(float));
 	objDetection::utilities::cb_init(&TB_Buffer,15,sizeof(float));
 	}
 	while(true)
@@ -246,7 +246,7 @@ void launch(config conf)
 
 		cvReleaseImage(&buffer_frame);
 		
-		//std::cout<<"reformat completed"<<std::endl;
+		std::cout<<"reformat completed"<<std::endl;
 		if(!back)
 			goto after_release;
 		current_frame_pro_TB=objDetection::preprocess_to_single_channel(current_frame,back_img,conf.hsv_min_TB,conf.hsv_max_TB);
@@ -277,7 +277,7 @@ void launch(config conf)
 		}
 		
 		
-		//std::cout<<"Color transformation completed"<<std::endl;
+		std::cout<<"Color transformation completed"<<std::endl;
 		
 
 
@@ -335,7 +335,7 @@ void launch(config conf)
 				CvBox2D sel_D;
 				if(cnt_TB!=NULL)
 				{
-					sel_TB=objDetection::orientation_centerMoment(cnt_TB,current_frame);//,cnt_D,current_frame);
+					sel_TB=objDetection::orientation_hueMoment(cnt_TB,current_frame);//,cnt_D,current_frame);
 					objDetection::utilities::cb_push_back(&TB_Buffer,(void*)&sel_TB.angle);
 					sel_TB.angle=objDetection::utilities::average_cb_buffer(&TB_Buffer);
 				}
@@ -348,7 +348,7 @@ void launch(config conf)
 				
 				if(cnt_TY!=NULL)
 				{
-					sel_TY=objDetection::orientation_centerMoment(cnt_TY,current_frame);//,cnt_D,current_frame);
+					sel_TY=objDetection::orientation_hueMoment(cnt_TY,current_frame);//,cnt_D,current_frame);
 					objDetection::utilities::cb_push_back(&TY_Buffer,(void*)&sel_TY.angle);
 					sel_TY.angle=objDetection::utilities::average_cb_buffer(&TY_Buffer);
 				}
@@ -364,8 +364,9 @@ void launch(config conf)
 
 					try
 					{
-						//cvDrawContours(current_frame,(CvSeq*)(cnt_TB),cvScalar(0,0,0),cvScalar(0,0,0),0,2,8);
-						//cvDrawContours(current_frame,(CvSeq*)(cnt_TY),cvScalar(0,0,0),cvScalar(0,0,0),0,2,8);
+						//std::cout<<"Draw Contours"<<std::endl;
+						cvDrawContours(current_frame,(CvSeq*)(cnt_TB),cvScalar(0,0,255),cvScalar(0,0,255),0,2,8);
+						cvDrawContours(current_frame,(CvSeq*)(cnt_TY),cvScalar(0,0,255),cvScalar(0,0,255),0,2,8);
 						cvDrawContours(current_frame,(CvSeq*)(cnt_B),cvScalar(0,0,0),cvScalar(0,0,0),0,2,8);
 						//std::vector<CvContour*> cnt_dot=objDetection::getContours(current_frame_pro_D,storage);
 
@@ -418,26 +419,40 @@ void launch(config conf)
 			}
 			if(conf.predict_minor)
 			{
-
-				
+				cvShowImage("Second Object",current_frame_pro_D);
+				std::cout<<"Starting Predict Minor"<<std::endl;
 				if(cnt_TB!=NULL)
 				{
 					std::vector<CvBox2D> TB= objDetection::machineLearning::tester_image_minor(current_frame_pro_D,MODEL_MINOR_NAME_TB,cnt_TB,storage,current_frame);
 					if(TB.size()>0)
+					{
 						sel_TB=TB.at(0);
+						objDetection::utilities::cb_push_back(&TB_Buffer,(void*)&sel_TB.angle);
+						sel_TB.angle=objDetection::utilities::average_cb_buffer(&TB_Buffer);
+					}
 				}
 				if(cnt_TY!=NULL)
 				{
 					std::vector<CvBox2D> TY= objDetection::machineLearning::tester_image_minor(current_frame_pro_D,MODEL_MINOR_NAME_TY,cnt_TY,storage,current_frame);
 					if(TY.size()>0)
+					{
 						sel_TY=TY.at(0);
+						objDetection::utilities::cb_push_back(&TY_Buffer,(void*)&sel_TY.angle);
+						sel_TY.angle=objDetection::utilities::average_cb_buffer(&TY_Buffer);
+					}
 				}
 				if(conf.show)
 				{
 					if(cnt_TB!=NULL)
+					{
 						objDetection::drawOrientation(current_frame,sel_TB);
+						
+					}
 					if(cnt_TY!=NULL)
+					{
 						objDetection::drawOrientation(current_frame,sel_TY);
+						
+					}
 					cvDrawContours(current_frame,(CvSeq*)(cnt_B),cvScalar(0,0,0),cvScalar(0,0,0),0,2,8);
 
 				}

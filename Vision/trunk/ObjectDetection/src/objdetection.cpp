@@ -1,6 +1,7 @@
 // ObjectDetection.cpp : Defines the entry point for the console application.
 //
 #include "objdetection.h"
+//#include "objdetection1.cpp"
 #define PI 3.14159265
 #define ANGLE_TO_RAD(X) X* PI/180
 #define RAD_TO_ANGLE(X) X* 180/PI
@@ -41,7 +42,7 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,IplImage* f
 	
 	//Remove irrelavant pixels
 	cvInRangeS(sub_frame, hsv_min, hsv_max, thresholded);
-	cvSmooth(thresholded, thresholded, CV_GAUSSIAN, 7, 7);
+//	cvSmooth(thresholded, thresholded, CV_GAUSSIAN, 5, 5);
 	//uncomment for debugging...
 	
 	
@@ -166,26 +167,20 @@ CvBox2D objDetection::orientation_hueMoment(CvContour* cntr,IplImage* img)
 	float x= (moments.m10/moments.m00);
 	float y= (moments.m01/moments.m00);
 	CvPoint2D32f cenMoment;
+
 	result.center.x=x;
 	result.center.y=y;
+
 	float mu20=moments.m20/moments.m00 - x*x;
 	float mu02=moments.m02/moments.m00 - y*y;
 	float mu11=moments.m11/moments.m00 - x*y;
-	float angle=-1*(1.0/2*atan(2*mu11/(mu20-mu02)))*180/PI;
+	//float angle=atan(2*mu11/(mu20-mu02))/2;
 
-	if (res1.angle>(90)&&(res1.angle<=(180)))
-	{
-		angle=90+angle;
-	}else
-	if (res1.angle<(270)&&(res1.angle>=(180))&&angle>0)
-	{
-		angle=180+angle;
-	}else
-	if (res1.angle<(270)&&(res1.angle>=(180))&&angle<0)
-	{
-		angle=180-angle;
-	}
+	//float angle= atan2(mu11, mu02);
+	float angle= atan2(mu20, mu11);	
+
 	result.angle=angle;
+
 	//uncomment for debugging...
 
 	//cvDrawContours(img,(CvSeq*)cntr,cvScalar(150,150,150),cvScalar(150,150,150),0,5);
@@ -193,8 +188,6 @@ CvBox2D objDetection::orientation_hueMoment(CvContour* cntr,IplImage* img)
 	//cvDrawCircle(img,cvPointFrom32f(cenMoment),14,cvScalar(0,200,200),3);
 	//std::cout<<"Moment"<<cenMoment.x<<","<<cenMoment.y<<"- circle"<<center.x<<","<<center.y<<std::endl;
 	//cvDrawLine(img,cvPoint(x,y),cvPointFrom32f(result.center),cvScalar(200,0,255),10);
-	
-	//result.angle= -1*atan2(result.center.y-cenMoment.y, result.center.x-cenMoment.x)*180/PI;
 
 
 	return result;
@@ -227,11 +220,14 @@ std::vector<CvContour*> objDetection::getContours(IplImage* frame,CvMemStorage* 
 CvBox2D objDetection::getorientation_with_dot(CvContour* robot_contour,std::vector<CvContour*> dot_contour)
 {
 	//std::cout<<"Computing Orientation"<<std::endl;
-	CvContour*	dot		=findClosest(robot_contour,dot_contour);
-	CvBox2D		dotm_bbox	=cvMinAreaRect2(dot);
-	CvBox2D		res		=cvMinAreaRect2(robot_contour);
+	CvContour* dot=findClosest(robot_contour,dot_contour);
+	CvPoint2D32f center;
+	float r=0;
+	cvMinEnclosingCircle(dot,&center,&r);
+	//CvBox2D dotm_bbox =cvMinAreaRect2(dot);
+	CvBox2D	res =cvMinAreaRect2(robot_contour);
 	//the correct calculation to draw orientation from dot to T.
-	res.angle=(float)RAD_TO_ANGLE((float)atan2((dotm_bbox.center.y-res.center.y),(dotm_bbox.center.x-res.center.x)));
+	res.angle=((float)atan2((res.center.y-center.y),(res.center.x-center.x)));
 	//std::cout<<"End of Computing Orientation"<<std::endl;
 	return res;
 }
@@ -392,7 +388,7 @@ void objDetection::drawOrientation(IplImage* frame, CvBox2D box,CvScalar color)
 	//cvEllipseBox(frame,box,color,2);
 	if(frame)
 	{
-		cvDrawLine(frame,point1,point2,cvScalar(139,131,120),4);
+		cvDrawLine(frame,point1,point2,cvScalar(0,0,0),4);
 		cvCircle(frame,pointc,10,color,2);
 	}
 }

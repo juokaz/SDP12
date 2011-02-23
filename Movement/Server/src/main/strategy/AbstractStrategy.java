@@ -58,6 +58,7 @@ public abstract class AbstractStrategy implements Strategy {
 		this.listener = listener;
 	}
 	
+	
 	/**
 	 * Move robot from robotX and robotY to a Point position in a pitch
 	 * 
