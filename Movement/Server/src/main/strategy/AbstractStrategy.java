@@ -89,15 +89,15 @@ public abstract class AbstractStrategy implements Strategy {
 			right=-1;
 		} else {
 			// turn right
-			left=-1;
-			right=1;
+			left=1;
+			right=-1;
 		}
 		
 		// once the robot is facing in direction of the ball, move towards it at
 		// a velocity proportional to the distance between them
 		if(Math.abs(dirAngle - robot.getTDegrees()) % 360 < 30) {
-			left = (int) (1*distance)/35;
-			right = (int) (1*distance)/35;		
+			left = (int) (50*distance)/35;
+			right = (int) (50*distance)/35;		
 		}
 
 		left = Math.min(left, 4);

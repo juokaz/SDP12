@@ -40,8 +40,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		drawPoint(goal, "Goal");
 		drawPoint(optimum, "Optimum");		
 
-		moveToPoint(robot, ball);
-		/**
+		
 		// This state machine covers the basic stages robot can be in 
 		if (isBallOutOfPitch(ball))
 		{
@@ -89,7 +88,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			moveToPoint(robot, ball);
 		}
 		
-		 */
+		 
 		setDrawables(drawables);
 	}
 	

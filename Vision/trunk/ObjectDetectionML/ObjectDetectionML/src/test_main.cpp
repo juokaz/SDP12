@@ -246,7 +246,7 @@ void launch(config conf)
 
 		cvReleaseImage(&buffer_frame);
 		
-		std::cout<<"reformat completed"<<std::endl;
+		//std::cout<<"reformat completed"<<std::endl;
 		if(!back)
 			goto after_release;
 		current_frame_pro_TB=objDetection::preprocess_to_single_channel(current_frame,back_img,conf.hsv_min_TB,conf.hsv_max_TB);
@@ -277,7 +277,7 @@ void launch(config conf)
 		}
 		
 		
-		std::cout<<"Color transformation completed"<<std::endl;
+		//std::cout<<"Color transformation completed"<<std::endl;
 		
 
 
@@ -420,7 +420,7 @@ void launch(config conf)
 			if(conf.predict_minor)
 			{
 				cvShowImage("Second Object",current_frame_pro_D);
-				std::cout<<"Starting Predict Minor"<<std::endl;
+				//std::cout<<"Starting Predict Minor"<<std::endl;
 				if(cnt_TB!=NULL)
 				{
 					std::vector<CvBox2D> TB= objDetection::machineLearning::tester_image_minor(current_frame_pro_D,MODEL_MINOR_NAME_TB,cnt_TB,storage,current_frame);

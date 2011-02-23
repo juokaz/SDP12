@@ -174,7 +174,7 @@ public class Runner {
 
 		// TODO refactor this
 		if (type.equals("Local process")) {
-			processor = new main.processor.LocalVision("../../Vision/trunk/ObjectDetectionML/ObjectDetectionML/src/build/your_project c predict_major outputToConsole show");
+			processor = new main.processor.LocalVision("../../Vision/trunk/ObjectDetectionML/ObjectDetectionML/src/build/your_project c predict_minor outputToConsole show");
 		} else if (type.equals("Simulator")) {
 			processor = new main.executor.Simulator(window.getPitch());
 		} else {
