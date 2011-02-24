@@ -9,10 +9,10 @@ SDP Group 12}
 \maketitle
 \begin{flushleft}
 
-This report, the third in the series, will document the changes made to the robot since Milestone 2, team communication, and strategy code additions. Milestone 2 was not a success, as the robot failed to move to the ball on the pitch properly. The main issue was that the method being used to move the robot, the potential fields algorithm, was very difficult to implement and was not working properly. The main goal for Milestone 3 was to produce a strategy which could move could move to the ball, as well as avoiding obstacles, and score a goal, alongside making the suggested improvements from Individual Report 2 to the robot.\linebreak
+This report, the third in the series, will document the changes made to the robot since Milestone 2, team communication, and strategy code additions. Milestone 2 was not a success, as the robot failed to move to the ball on the pitch properly. The main issue was that the method being used to move the robot, the potential fields algorithm, was very difficult to implement and was not working properly. The main goal for Milestone 3 was to produce a strategy which could move to the ball, as well as avoiding obstacles, and score a goal, alongside making the suggested improvements from Individual Report 2 to the robot.\linebreak
 
 
-Jouzas and I created the base for the new strategy, creating a GoToBall strategy class with a number of situation states being checked, and running appropriate methods when flags were brought up, such as if there is an obstacle in-between the robot and the ball. Using simple 'if-then-else' statements and simple methods allowed us to create a useful strategy capable of coping with numerous situations. We benefited from being able to test these methods in the simulator.\linebreak
+Jouzas and I created the base for the new strategy, creating a GoToBall strategy class with a number of situation states being checked, and running appropriate methods when flags were brought up, such as if there is an obstacle in-between the robot and the ball. Using simple "if-then-else" statements and simple methods allowed us to create a useful strategy capable of coping with numerous situations. We benefited from being able to test these methods in the simulator.\linebreak
 
 The strategy revolved around an optimum point, a defined distance from the ball at the same angle as the ball-to-goal angle, which was calculated as the primary point the robot would move to, allowing our robot to turn and shoot directly at the goal once this position was reached.\\
 
@@ -23,7 +23,7 @@ Constant cleaning of the code meant functions were often moved to higher classes
 
 Construction issues including straight line ability and structure strength were dealt with by reconstructing the robot to locate the wheels at the rear of the robot, and making the structure generally more secure in the process. The kicker motor was repositioned, making the kicker longer, which allowed the kicker to create more momentum to kick the ball. \linebreak
 
-Communication was improved between team members, through email, useful code and svn commenting, and team members working closely. Integration was improved as a by-product of this. \linebreak
+Communication was improved between team members through email, useful code and svn commenting, and team members working closely. Integration was improved as a by-product of this. \linebreak
 
 Overall, the team managed to complete milestone 3, though the strategy needs refining to deal with the current situations more effectively, and additional strategic methods are needed to cope with other situations such as defending a penalty kick, and for when the opponent is in possession of the ball, alongside fully implementing the touch sensors on the robot and into the strategy.
 
