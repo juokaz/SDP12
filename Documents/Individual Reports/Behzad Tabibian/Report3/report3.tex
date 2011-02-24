@@ -428,18 +428,18 @@
 \vspace{-3 mm}
 \section{Introduction}
 
-This is the third report of the series describing author's performance in System Design Project. In previous report a discussion was made about an algorithm for path planning. For this milestone author was mainly involved with improving this algorithm and testing it on the robot. Also, several improvements were made to vision stack.
+This is the third report of the series describing author's performance in System Design Project. In the previous report a discussion was made about an algorithm for path planning. For this milestone, the author was mainly involved with improving this algorithm and testing it on the robot. Also, several improvements were made to the vision stack.
 
 \vspace{-3 mm}
 \section{Path Planning}
-Potential Field algorithm which was developed and tested using an Matlab simulator,later it was also tested on the robot. Testing the algorithm on the robot was not successful mainly due to two problems:
+A Potential Field algorithm was developed and tested using a Matlab simulator, and was tested on the robot after passing these tests. Testing the algorithm on the robot was unsuccessful mainly due to two problems:
 \begin{enumerate}
-\item Different coordination systems were used for Matlab simulator and Vision sub-system. 
-\item Converting the produced vector for left and right wheels velocity did not produce the same results as in simulations. This was due to mechanical constraints of robot.  
+\item Different coordination systems were used in the Matlab simulator and the Vision sub-system. 
+\item Converting the produced vector for left and right wheel velocity did not produce the same results as in simulations. This was due to the mechanical constraints of the robot.  
 \end{enumerate} 
 Even though the work on this algorithm continues, it was decided to first implement a simple follow-the-carrot algorithm. After initial success, this algorithm is now under improvements in order to avoid obstacles.
 
-One another improvement in Potential Field algorithm was to take into account the robot heading while calculating repulsive force of an obstacle. Using this algorithm, if robot is not headed directly toward an obstacle, it will be less influenced by an obstacle, Figure \ref{fig:pfs}.This Algorithm is known as Extended Potential Field in the literature\cite{paper:OKhatib}.
+Another improvement in the Potential Field algorithm was to take into account the robot heading while calculating repulsive force of an obstacle. Using this algorithm, if robot is not headed directly toward an obstacle, it will be less influenced by an obstacle, Figure \ref{fig:pfs}.This Algorithm is known as Extended Potential Field in the literature\cite{paper:OKhatib}.
 
 \begin{figure}[htp]
 
@@ -455,13 +455,13 @@ One another improvement in Potential Field algorithm was to take into account th
 
 \vspace{-3 mm}
 \section{Vision Subsystem}
-Another module which author was involved with was Vision subsystem. As discussed in previous reports, calculating robot orientation is a challenge in presence of noise. Since last milestone a number of new algorithms were implemented and tested:
+Another module which author was involved with was Vision subsystem. As discussed in previous reports, calculating robot orientation is challenging in the presence of noise. Since the last milestone a number of new algorithms were implemented and tested:
 \begin{enumerate}
-\item Instead of finding the dark spot,which proved to be hard because of other false-positives produced by robot parts, the green plate was used to calculate both robot position and orientation. This method also failed because it was hard to find good thresholds to isolate green plate from other regions.
+\item Instead of finding the dark spot, which proved difficult because of other false-positives produced by robot parts, the green plate was used to calculate both robot position and orientation. This method also failed because it was hard to find good thresholds to isolate the green plate from other regions.
 \item One of the main sources of noise in calculating orientation was to use two objects. Two improvements were made to compute both position and orientation:
 \begin{itemize}
-\item Instead of using the camera frame directly, first a preprocessing is performed on the image, this includes subtracting an already taken background image,converting colour space and smoothing the result.
-\item A simple method using center of mass of the object and center of the minimum enclosing circle is developed to compute orientation, Figure \ref{fig:orientation}. 
+\item Instead of using the camera frame directly, preprocessing is performed on the image, including subtracting an already taken background image, converting colour space and smoothing the result.
+\item A simple method using the centre of mass of the object and the centre of the minimum enclosing circle was developed to compute orientation, Figure \ref{fig:orientation}. 
 \end{itemize} 
 \item effectiveness of using center of mass inspired the author to use second order central moments to compute the orientation. This is still an ongoing effort.
 \end{enumerate}
