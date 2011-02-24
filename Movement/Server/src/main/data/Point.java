@@ -39,6 +39,26 @@ public class Point {
 	}
 	
 	/**
+	 * Finds out if there is an obstacle inbetween two points
+	 * 
+	 * @param robot
+	 * @param ball
+	 * @param optimum
+	 * @return
+	 */
+	public boolean isObstacleInFront(Point pointA, Point possibleObstacle, Point destination, int obstacleWidth) {
+		// angle between lines going through opponent center and edge. opponent width is doubled in order to take into account width of both robots.
+		int theta = (int) Math.abs(Math.toDegrees(Math.atan2((obstacleWidth),pointA.getDistanceBetweenPoints(possibleObstacle))));
+		// angle between obstacle and optimum point from robot's point of view
+		int theta2 = (int) Math.toDegrees(Math.abs(possibleObstacle.getAngleBetweenPoints(pointA) - destination.getAngleBetweenPoints(pointA)));
+		if (theta2 < theta && pointA.getDistanceBetweenPoints(possibleObstacle) < pointA.getDistanceBetweenPoints(destination)){
+			return true;
+		} else return false;
+	}
+
+
+	
+	/**
 	 * Is this point in area of destination point 
 	 * 
 	 * @param point

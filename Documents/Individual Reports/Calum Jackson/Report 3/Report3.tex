@@ -12,17 +12,20 @@ SDP Group 12}
 This report, the third in the series, will document the changes made to the robot since Milestone 2, team communication, and strategy code additions. Milestone 2 was not a success, as the robot failed to move to the ball on the pitch properly. The main issue was that the method being used to move the robot, the potential fields algorithm, was very difficult to implement and was not working properly. The main goal for Milestone 3 was to produce a strategy which could move could move to the ball, as well as avoiding obstacles, and score a goal, alongside making the suggested improvements from Individual Report 2 to the robot.\linebreak
 
 
-Jouzas and I created the base for the new strategy, creating a Strategy class with a number of situation states being checked, and running appropriate methods when flags were brought up, such as if there is an obstacle in-between the robot and the ball. Using simple 'if-then-else' statements and simple methods allowed us to create a useful strategy capable of coping with numerous situations. We benefited from being able to test these methods in the simulator.\\
+Jouzas and I created the base for the new strategy, creating a GoToBall strategy class with a number of situation states being checked, and running appropriate methods when flags were brought up, such as if there is an obstacle in-between the robot and the ball. Using simple 'if-then-else' statements and simple methods allowed us to create a useful strategy capable of coping with numerous situations. We benefited from being able to test these methods in the simulator.\linebreak
 
-An optimum point, a defined distance from the ball at the same angle as the ball-to-goal angle, was calculated as the primary point the robot would move to, allowing our robot to turn and shoot directly at the goal once this position was reached.
+The strategy revolved around an optimum point, a defined distance from the ball at the same angle as the ball-to-goal angle, which was calculated as the primary point the robot would move to, allowing our robot to turn and shoot directly at the goal once this position was reached.\\
 
-To deal with cases such as if an obstacle was in our robots path, new destination points were created, usually a defined distance at a $90^{\circ}$ angle to the obstacle, allowing our robot to traverse around an obstacle with ease. Areas of this strategy still need fine tuning, such as making sure the robot doesn't choose a new destination point which will cause it to crash into the walls, alongside the addition of touch sensors to prevent the robot crashing into obstacles if the code fails. \linebreak
+To deal with cases such as if an obstacle was in our robots path, new destination points were created, usually at a defined distance at a $90^{\circ}$ angle to the obstacle, allowing our robot to traverse around an obstacle with ease.  Areas of this strategy still need fine tuning, such as making sure the robot doesn't choose a new destination point which causes it to crash into the walls, alongside the addition of touch sensors to the robot to prevent the robot crashing into obstacles if the code fails. \linebreak
 
-Issues involving straight line ability and structure strength were dealt with by reconstructing the robot to locate the wheels at the rear of the robot, and making the structure generally more secure in the process. The kicker motor was repositioned, making the kicker longer, which will allow it to create more momentum to kick the ball. A touch sensor has been added at each side at the front of the robot, to provide feedback if the robot crashes into a wall or another robot. \\
-
-Communication was improved between team members, through email, useful code and svn commenting, and team members working closely. 
+Constant cleaning of the code meant functions were often moved to higher classes, making their functionality available over a wider range. By commenting usefully and writing TODO's as soon as some required functionality was noticed meant tasks were not forgotten and other members knew where they could contribute. \linebreak
 
 
+Construction issues including straight line ability and structure strength were dealt with by reconstructing the robot to locate the wheels at the rear of the robot, and making the structure generally more secure in the process. The kicker motor was repositioned, making the kicker longer, which allowed the kicker to create more momentum to kick the ball. \linebreak
+
+Communication was improved between team members, through email, useful code and svn commenting, and team members working closely. Integration was improved as a by-product of this. \linebreak
+
+Overall, the team managed to complete milestone 3, though the strategy needs refining to deal with the current situations more effectively, and additional strategic methods are needed to cope with other situations such as defending a penalty kick, and for when the opponent is in possession of the ball, alongside fully implementing the touch sensors on the robot and into the strategy.
 
 
 
