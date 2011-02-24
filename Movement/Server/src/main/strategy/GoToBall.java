@@ -210,11 +210,11 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		if (robot.getDistanceBetweenPoints(ball) > 20) {
 			// Checks to see which side of the ball the robot is on
 			if (goal.getX() == 0) {
-				if (robot.getY() > optimum.getY()) {				
-					
+				if (robot.getY() > optimum.getY()) {
+				
 					return calculatePosBehindBall(optimum.getAngleBetweenPoints(ball) + angle, ball, behindGap);
 
-				} else {	
+				} else {
 
 					return calculatePosBehindBall( optimum.getAngleBetweenPoints(ball) - angle , ball, behindGap);
 
@@ -222,11 +222,11 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			
 		} else {
 				// Checks to see which side of the ball the robot is on
-				if (robot.getY() < optimum.getY()) {				
+				if (robot.getY() < optimum.getY()) {
 
 					return calculatePosBehindBall(optimum.getAngleBetweenPoints(ball) + angle, ball, behindGap);
 
-				} else {	
+				} else {
 
 					return calculatePosBehindBall( optimum.getAngleBetweenPoints(ball) - angle , ball, behindGap);
 

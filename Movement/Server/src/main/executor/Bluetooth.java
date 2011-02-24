@@ -119,15 +119,16 @@ public class Bluetooth implements Executor {
 	 * A class containing logic how to talk to a robot
 	 */
 	private class Server {
-		/**
-		 * Output stream from a bluetooth connection
-		 */
-		private DataOutputStream dos;
 		
 		/**
 		 * Input stream from a bluetooth connection
 		 */
 		private DataInputStream dis;
+		
+		/**
+		 * Output stream from a bluetooth connection
+		 */
+		private DataOutputStream dos;
 		
 		/**
 		 * Connection instance 
@@ -177,8 +178,8 @@ public class Bluetooth implements Executor {
 			InputStream is = nxtComm.getInputStream();
 			OutputStream os = nxtComm.getOutputStream();
 
-			dos = new DataOutputStream(os);
 			dis = new DataInputStream(is);
+			dos = new DataOutputStream(os);
 		}
 		
 		/**
@@ -190,7 +191,7 @@ public class Bluetooth implements Executor {
 			try {
 				System.out.println("Sending: " + orders);
 				
-				// split string to array of ints as this is a communication protocl
+				// split string to array of ints as this is a communication protocol
 				for (int i = 0; i<orders.split(SPACE).length;i++) {
 					dos.writeInt(Integer.parseInt(orders.split(" ")[i]));
 				}
@@ -201,7 +202,7 @@ public class Bluetooth implements Executor {
 			catch (IOException ioe) {
 				System.out.println("IO Exception sending orders:");
 				System.out.println(ioe.getMessage());
-			}			
+			}
 		}
 		
 		/**

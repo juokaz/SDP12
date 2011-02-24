@@ -92,7 +92,7 @@ public abstract class AbstractStrategy implements Strategy {
 		double dx = robot.getX() - point.getX();
 		double distance = Math.sqrt(dx*dx + dy*dy);
 
-		dirAngle = Math.toDegrees(point.getAngleBetweenPoints(robot));	
+		dirAngle = Math.toDegrees(point.getAngleBetweenPoints(robot));
 
 		double angleDifference = robot.getTDegrees() - dirAngle;
 		

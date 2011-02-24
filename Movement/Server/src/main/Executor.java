@@ -40,5 +40,5 @@ public interface Executor {
 	/**
 	 * Send exit command to executor
 	 */
-	public void exit();	
+	public void exit();
 }

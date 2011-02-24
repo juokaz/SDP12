@@ -45,14 +45,14 @@ public class roboto {
 		Pilot pilot = new TachoPilot(15.2f, 8.27f, Motor.A, Motor.C, true); //parameters in mm
 		
 		mainLoop:
-			while (true) {	
-				try {	
+			while (true) {
+				try {
 					
 					while(input.available() == 0) {
 						// no input available
 					}
 					
-					int command = input.readInt();	
+					int command = input.readInt();
 					
 					switch (command) {
 					case EXIT:
@@ -113,7 +113,7 @@ public class roboto {
 						break;
 					default:
 						// No command input
-						break;		
+						break;
 					}
 				} catch (Exception e1) {
 					drawMessage("Error " + e1.getMessage());

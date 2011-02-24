@@ -28,7 +28,7 @@ public class Goal extends Point {
 	public double calculateGoalAndPointAngle(Point point) {
 		double angle = getAngleBetweenPoints(point);
 		
-		if (getX() == 0) {	
+		if (getX() == 0) {
 			if (angle < 0) {
 				angle = (Math.PI - angle);
 			} else {

@@ -197,7 +197,7 @@ public class Runner {
 			// TODO use config for settings
 			strategy = new main.strategy.PFStrategy(15.2, 8.27);
 		} else if (type.equals("Take penalty")) {
-			strategy = new main.strategy.TakePenalty();	
+			strategy = new main.strategy.TakePenalty();
 		} else if (type.equals("Basic")) {
 			strategy = new main.strategy.BasicStrategy();
 		} else if (type.equals("GoToBall")){

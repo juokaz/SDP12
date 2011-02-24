@@ -95,7 +95,7 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 		// Need to work out sin and cos distances to get new X and Y positions
 		double xOffset = gap*Math.cos(ballGoalAngle);
 		double yOffset = gap*Math.sin(ballGoalAngle);
-			
+		
 		// Sets the position for the robot to move to
 		dirPoint.setX(ball.getX()+xOffset);
 		dirPoint.setY(ball.getY()+yOffset);
