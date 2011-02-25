@@ -27,7 +27,10 @@ public class Vector extends Point {
 	}
 
 	public double normalAngle() {
-		return Math.atan2(getY(), getX());
+		if (Math.atan2(getY(), getX())>=0)
+			return Math.atan2(getY(), getX());
+		else
+			return 2*Math.PI+Math.atan2(getY(), getX());
 	}
 
 	public double size() {

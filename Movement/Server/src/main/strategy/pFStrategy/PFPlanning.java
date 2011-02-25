@@ -52,41 +52,37 @@ public class PFPlanning {
 		this.opponentAlphaPower = alpha;
 	}
 
-	// under development! this function will add small obstacles around the goal
-	// position to
-	// force robot to approach target position from specific orientation.
-	private List<Object> getSorroundinObj(Point center, double len) {
 
-		// Point p1=new Point(center.getX()-len/2,
-		// center.getY()-thresh/2-len/2);
-		// Point p2=new Point(center.getX()+len/2,
-		// center.getY()+thresh/2-len/2);
-		// RectObject a=new RectObject(p1, p2, default_power, Double.MAX_VALUE);
-		PointObject a;// =new PointObject(center.getX()-len/2, center.getY(),
-		// default_power, Double.MAX_VALUE);
-		List<Object> res = new ArrayList<Object>();
-		// res.add(a);
-		a = new PointObject(center.getX(), center.getY() - 1 * len / 3,
-				default_power * 10, Double.MAX_VALUE);
-		res.add(a);
-		a = new PointObject(center.getX() - len / 2, center.getY(),
-				default_power, Double.MAX_VALUE);
-		res.add(a);
-		// a=new PointObject(center.getX()+len/2, center.getY(), default_power,
-		// Double.MAX_VALUE);
-		// res.add(a);
-		a = new PointObject(center.getX() + len / 2, center.getY(),
-				default_power, Double.MAX_VALUE);
-		res.add(a);
-		// p1=new Point(center.getX()-thresh/2-len/2, center.getY()-len/2);
-		// p2=new Point(center.getX()+thresh/2-len/2, center.getY()+len/2);
-		// a=new RectObject(p1, p2, default_power, Double.MAX_VALUE);
-		// res.add(a);
-		// p1=new Point(center.getX()+thresh/2+len/2, center.getY()-len/2);
-		// p2=new Point(center.getX()+thresh/2+len/2, center.getY()+len/2);
-		// a=new RectObject(p1, p2, default_power, Double.MAX_VALUE);
-		// res.add(a);
-		return res;
+	private void init(Pos robot, Pos opponent, Point ball,
+			boolean orig)
+	{
+		PointObject opponentObj = new PointObject(opponent.getLocation(),
+				opponentPower, opponentInf, opponentAlphaPower);
+		PointObject ballObj = new PointObject(ball, ballPower, Double.MAX_VALUE);
+		this.robot = robot;
+		this.opponent = opponentObj;
+		this.ball = ballObj;
+		
+	}
+	public VelocityVec update(Pos robot, Pos opponent,Point goal, Point ball,
+			boolean orig){
+		init(robot,opponent,ball,orig);
+		Vector vgoal=new Vector(goal);
+		Vector vball=new Vector(ball);
+		Vector vres=vgoal.subtract(vball);
+		Vector threshold=new Vector(20,20);
+		Vector finalres=vres.subtract(threshold);
+		PointObject obj=new PointObject(finalres, 10000, this.opponentInf);
+		List<Object> complList =  new ArrayList<Object>(objects);
+		complList.add((Object) this.opponent);
+		complList.add(obj);
+		Vector res = GoTo(complList, this.ball, robot.getLocation());
+		System.out.println("Result Vector: " + res.toString());
+		if (orig)
+			return (VelocityVec) res;
+		else
+			return getVelocity(res, robot);
+
 
 	}
 
@@ -101,16 +97,12 @@ public class PFPlanning {
 	// orig: return original vector, if unset return vector is left,right wheels
 	// velocity, if
 	// if set it will return the basic velocity vector created by PFPlanner.
-	public VelocityVec update(Pos robot, Pos opponent, Point ball, boolean srr,
+	public VelocityVec update(Pos robot, Pos opponent, Point ball,
 			boolean orig) {
 
-		PointObject opponentObj = new PointObject(opponent.getLocation(),
-				opponentPower, opponentInf, opponentAlphaPower);
-		PointObject ballObj = new PointObject(ball, ballPower, Double.MAX_VALUE);
-		this.robot = robot;
-		this.opponent = opponentObj;
-		this.ball = ballObj;
-		List<Object> complList = updateLocal(srr);
+		init(robot,opponent,ball,orig);
+		List<Object> complList =  new ArrayList<Object>(objects);
+		complList.add((Object) this.opponent);
 		Vector res = GoTo(complList, this.ball, robot.getLocation());
 		System.out.println("Result Vector: " + res.toString());
 		if (orig)
@@ -118,19 +110,6 @@ public class PFPlanning {
 		else
 			return getVelocity(res, robot);
 
-	}
-
-	// Finalizes the list of obstacles in the arena, if srr is set it will try
-	// to add extra objects around goal
-	// position to force robot to approach the target from specific orienation.
-	private List<Object> updateLocal(boolean srr) {
-		List<Object> compl = new ArrayList<Object>(objects);
-		compl.add((Object) this.opponent);
-		if (srr) {
-			compl.addAll(getSorroundinObj(ball, 5));
-		}
-
-		return compl;
 	}
 
 	// Adds static object in the arena to list of static obstacles.
@@ -219,7 +198,7 @@ public class PFPlanning {
 		if(Runner.DEBUG)
 			System.out.println("Current T: "+current.getAngle()+", dist_alpha="+dist_alpha);
 		double Vlin = Math.cos(dist_alpha) * size;
-		double Vang = dist_alpha;//*size/200;// Math.sin(dist_alpha)*size;
+		double Vang = dist_alpha*Math.min(2,1/size);//*size/200;// Math.sin(dist_alpha)*size;
 		if(Runner.DEBUG)
 			System.out.println(Vlin + " " + Vang);
 		return CvtVelocity(Vlin, Vang, config.getr());

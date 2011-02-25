@@ -78,7 +78,7 @@ public class Test_Program {
 					+ (current.getLocation().getY() - ball.getY())
 					* (current.getLocation().getY() - ball.getY()));
 			while (true) {
-				VelocityVec res = planner.update(current, opponent, ball, srr,
+				VelocityVec res = planner.update(current, opponent, ball,
 						false);
 				if(res.getLeft()==0&&res.getRight()==0)
 					break;
@@ -126,10 +126,10 @@ public class Test_Program {
 					else
 						b = robot.getLocation();
 					if (opponent != null)
-						vec = planner.update(robot, opponent, b, srr, true);
+						vec = planner.update(robot, opponent, b, true);
 					else
 						vec = planner.update(robot,
-								new Pos(new Point(0, 0), 0), b, srr, true);
+								new Pos(new Point(0, 0), 0), b, true);
 					writer.write(String.valueOf(x) + "," + String.valueOf(y)
 							+ "," + String.valueOf(vec.getX()) + ","
 							+ String.valueOf(vec.getY()) + "\n");

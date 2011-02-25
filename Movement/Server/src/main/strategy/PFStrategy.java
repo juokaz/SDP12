@@ -1,8 +1,18 @@
 package main.strategy;
 
+import java.awt.Color;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+
 import main.Runner;
 import main.Strategy;
+import main.data.Ball;
+import main.data.Goal;
 import main.data.Location;
+
+import main.data.Robot;
+import main.gui.Drawable;
 
 import main.strategy.pFStrategy.*;
 
@@ -13,7 +23,7 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 
 	public PFStrategy(double b, double r) {
 		RobotConf conf = new RobotConf(b, r);
-		planner = new PFPlanning(conf, 0, 200, 0.018, 250000.0);
+		planner = new PFPlanning(conf, 10000000, 100, 0.018, 250000.0);
 		current = new VelocityVec(0, 0);
 
 	}
@@ -23,12 +33,14 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 
 
 		Pos current = new Pos(new Point(data.getOurRobot().getX(), data
-				.getOurRobot().getY()),Math.toRadians(data.getOurRobot().getT()));
-		Pos opponent = new Pos(new Point(data.getOurRobot().getX(), data
-				.getOurRobot().getY()), Math.toRadians(data.getOurRobot().getT()));
+				.getOurRobot().getY()),data.getOurRobot().getT());
+		
+		Pos opponent = new Pos(new Point(data.getOpponentRobot().getX(), data
+				.getOpponentRobot().getY()), data.getOpponentRobot().getT());
 		Point ball = new Point(data.getBall().getX(), data.getBall().getY());
+		Point goal=new Point(data.getGoal().getX(),data.getGoal().getY());
 		// getting new velocity vectors
-		VelocityVec vector = planner.update(current, opponent, ball, false,
+		VelocityVec vector = planner.update(current, opponent,goal, ball,
 				false);
 		
 		// Converting Radians/sec to Degrees/sec
@@ -69,5 +81,6 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 		executor.rotateWheels(left,right);
 
 	}
+
 
 }
