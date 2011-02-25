@@ -24,6 +24,7 @@ public abstract class AbstractStrategy implements Strategy {
 	protected int PITCH_X_MAX = 540;
 	protected int PITCH_Y_MAX = 290;
 	protected String rotateState = "straight";
+	protected String rotationState = "straight";
 	
 	/**
 	 * Executor which is going to execute these commands
@@ -86,6 +87,7 @@ public abstract class AbstractStrategy implements Strategy {
 		double dirAngle = 0;
 		int left=1;
 		int right=1;
+		
 
 		// find the distance between the robot and the ball
 		double dy = robot.getY() - point.getY();
@@ -99,6 +101,7 @@ public abstract class AbstractStrategy implements Strategy {
 		if (rotateState.equals("left")){
 			left = -1;
 			right = 1;
+			rotationState = "left";
 		}
 		if (rotateState.equals("right")){
 			left = 1;
@@ -111,6 +114,7 @@ public abstract class AbstractStrategy implements Strategy {
 			else
 				rotateState = "right";	
 		}
+		
 		
 		// once the robot is facing in direction of the ball, move towards it at
 		// a velocity proportional to the distance between them
