@@ -73,7 +73,7 @@ public class Point {
 	 * Is this point in area of threshold of destination point 
 	 * 
 	 * @param point
-	 * @param treshold
+	 * @param threshold
 	 * @return
 	 */
 	public boolean isInPoint(Point point, int threshold) {

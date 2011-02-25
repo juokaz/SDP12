@@ -23,6 +23,9 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	// Gap is the distance behind ball for the point we want to move to.
 	private int optimalGap = 30;
 	private int gap = 30;
+	
+	//Thresholds
+	private int wallThreshold = 30;
 
 	private int opponentWidth;
 	boolean goingToAvoid = false;
@@ -349,6 +352,19 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		int threshold = 100;
 		
 		return robot.getDistanceBetweenPoints(goal) < threshold;
+	}
+	
+	/**
+	 * Is point close to walls
+	 * 
+	 * @param point
+	 * @return
+	 */
+	protected boolean isWallClose(Point point){
+		double x = point.getX();
+		double y = point.getY();
+		return (PITCH_X_MIN + wallThreshold >= x || PITCH_Y_MIN + wallThreshold >= y ||
+				PITCH_Y_MAX - wallThreshold <= y || PITCH_X_MAX - wallThreshold <= x);
 	}
 	
 	/**
