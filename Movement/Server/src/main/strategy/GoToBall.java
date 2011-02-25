@@ -21,7 +21,7 @@ import main.gui.Drawable;
 public class GoToBall extends AbstractStrategy implements Strategy {
 
 	// Gap is the distance behind ball for the point we want to move to.
-	private int optimalGap = 30;
+	private int optimalGap = 50;
 	private int gap = 30;
 	
 	//Thresholds
@@ -63,7 +63,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			// Don't do anything, wait for it move from there
 			executor.stop();
 		}
-		else if (isObstacleInFront(robot, opponent, optimum) || goingToAvoid)
+		else if (robot.isObstacleInFront(opponent, optimum, opponentWidth) || goingToAvoid)
 		{			
 			goingToAvoid = true;
 			setIAmDoing("Obstacle in front - going to Avoid");
@@ -107,28 +107,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		setDrawables(drawables);
 	}
 	
-
-	/**
-	 * Is it possible for a ball to be reached by going straight?
-	 * Currently this checks to see if there is an obstacle inbetween the robot and
-	 * the optimum point, judging this by the difference in angles between the 
-	 * optimum to Robot angle and the optimum to Opponent angle. 
-	 * 
-	 * @param robot
-	 * @param opponent
-	 * @param optimum
-	 * @return
-	 */
-	protected boolean isObstacleInFront(Robot robot, Robot opponent, Point optimum) {
-		// angle between lines going through opponent center and edge. opponent width is doubled in order to take into account width of both robots.
-		int theta = (int) Math.abs(Math.toDegrees(Math.atan2((opponentWidth),robot.getDistanceBetweenPoints(opponent))));
-		// angle between obstacle and optimum point from robot's point of view
-		int theta2 = (int) Math.toDegrees(Math.abs(opponent.getAngleBetweenPoints(robot) - optimum.getAngleBetweenPoints(robot)));
-		if (theta2 < theta && robot.getDistanceBetweenPoints(opponent) < robot.getDistanceBetweenPoints(optimum)){
-			return true;
-		} else return false;
-	}
-
 	/**
 	 * Get a point which would make robot to avoid obstacle and go to a point
 	 * which will have straight path to a ball
@@ -155,7 +133,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		double distancePointA = robot.getDistanceBetweenPoints(pointA) + pointA.getDistanceBetweenPoints(optimum);
 		double distancePointB = robot.getDistanceBetweenPoints(pointB) + pointB.getDistanceBetweenPoints(optimum);
 		
-		if (!isObstacleInFront(robot, opponent, pointA) && !isObstacleInFront(robot, opponent, pointB)) {
+		if (!robot.isObstacleInFront(opponent, optimum, opponentWidth) && !robot.isObstacleInFront(opponent, optimum, opponentWidth)) {
 			if (distancePointA < distancePointB) {
 				return pointA;
 			} else {
@@ -163,10 +141,10 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			}
 		}
 		
-		if (isObstacleInFront(robot, opponent, pointA)) {
+		if (robot.isObstacleInFront(opponent, pointA, opponentWidth)) {
 			return pointB;
 		} 
-		else if (isObstacleInFront(robot, opponent, pointB)) 
+		else if (robot.isObstacleInFront(opponent, pointB, opponentWidth)) 
 		{	
 			return pointA;
 		} else {
@@ -211,7 +189,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		double angle = Math.PI/8;
 		
 		// checks to see if ball is inbetween behind point (robot too close to ball)
-		if (robot.isObstacleInFront(robot, ball, optimum, ballWidth)) {
+		if (robot.isObstacleInFront(ball, optimum, ballWidth)) {
 			// Checks to see which side of the ball the robot is on
 			if (goal.getX() == 0) {
 				if (robot.getY() > optimum.getY()) {
@@ -387,7 +365,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 						"isBallInACorner: " + isBallInACorner(ball),
 						800, 30, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
-						"isObstacleInFront: " + isObstacleInFront(robot, opponent, optimum),
+						"isObstacleInFront: " + robot.isObstacleInFront(opponent, optimum, opponentWidth),
 						800, 50, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
 						"isBallBehindRobot: " + isBallBehindRobot(robot, ball, optimum, goal),

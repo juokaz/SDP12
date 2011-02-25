@@ -46,12 +46,12 @@ public class Point {
 	 * @param optimum
 	 * @return
 	 */
-	public boolean isObstacleInFront(Point pointA, Point possibleObstacle, Point destination, int obstacleWidth) {
+	public boolean isObstacleInFront(Point possibleObstacle, Point destination, int obstacleWidth) {
 		// angle between lines going through opponent center and edge. opponent width is doubled in order to take into account width of both robots.
-		int theta = (int) Math.abs(Math.toDegrees(Math.atan2((obstacleWidth),pointA.getDistanceBetweenPoints(possibleObstacle))));
+		int theta = (int) Math.abs(Math.toDegrees(Math.atan2((obstacleWidth), getDistanceBetweenPoints(possibleObstacle))));
 		// angle between obstacle and optimum point from robot's point of view
-		int theta2 = (int) Math.toDegrees(Math.abs(possibleObstacle.getAngleBetweenPoints(pointA) - destination.getAngleBetweenPoints(pointA)));
-		if (theta2 < theta && pointA.getDistanceBetweenPoints(possibleObstacle) < pointA.getDistanceBetweenPoints(destination)){
+		int theta2 = (int) Math.toDegrees(Math.abs(possibleObstacle.getAngleBetweenPoints(this) - destination.getAngleBetweenPoints(this)));
+		if (theta2 < theta && getDistanceBetweenPoints(possibleObstacle) < getDistanceBetweenPoints(destination)){
 			return true;
 		} else return false;
 	}
