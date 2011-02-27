@@ -10,6 +10,7 @@ import main.gui.DrawablesListener;
 import main.Strategy;
 import main.Executor;
 import main.data.Ball;
+import main.data.CircularBuffer;
 import main.data.Goal;
 import main.data.Point;
 import main.data.Robot;
@@ -35,6 +36,7 @@ public abstract class AbstractStrategy implements Strategy {
 	 * Drawables to display on GUI
 	 */
 	protected ArrayList<Drawable> drawables;
+	protected CircularBuffer ballBuffer = new CircularBuffer(10);
 	
 	/**
 	 * Listener accepting drawables

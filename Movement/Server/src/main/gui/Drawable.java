@@ -107,6 +107,30 @@ public class Drawable extends BaseEntity {
 		}
 	}
 	
+
+	/**
+	 * Drawable instance 
+	 * 
+	 * @param drawableType
+	 * @param xPos
+	 * @param yPos
+	 * @param drawableWidth
+	 * @param drawableHeight
+	 * @param color
+	 * @param remap
+	 */
+	public Drawable(int drawableType, int xPos, int yPos,
+			int drawableWidth, int drawableHeight, Color color, boolean remap) {
+		this(drawableType, xPos, yPos, drawableWidth, drawableHeight, color);
+		
+		if (remap) {
+			setXPosRemapped(xPos);
+			setYPosRemapped(yPos);
+			this.drawableWidth = (int) remapXPos(drawableWidth);
+			this.drawableHeight = (int) remapYPos(drawableHeight); 
+		}
+	}
+	
 	/**
 	 * Drawable instance
 	 * 

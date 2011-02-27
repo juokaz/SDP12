@@ -40,12 +40,15 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		Point optimum = getOptimumPoint(ball, goal);
 		// TODO: calculate width of the opponent taking into account its angle (?)
 		opponentWidth = 60; 
+		ballBuffer.addPoint(ball);
 		
 		// statistics
 		addDrawables(robot, opponent, ball, optimum, goal);
-		drawPoint(opponent, null);
+		drawPoint(opponent, "Opponent");
+		drawPoint(robot, "Robot");
 		drawPoint(goal, "Goal");
-		drawPoint(optimum, "Optimum");		
+		drawPoint(optimum, "Optimum");	
+		drawPoint(ball, "Ball");
 
 		
 		// This state machine covers the basic stages robot can be in 
@@ -155,7 +158,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	
 	
 	/**
-	 * Is robot is further away from a goal than a ball or in other words
+	 * If robot is further away from the goal than he ball or in other words
 	 * if we would go to a ball, can we kick from there or do we need to go to
 	 * the other side?
 	 * 
@@ -403,6 +406,35 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 				"Distance between robot and goal: " + formatter.format(goal.getDistanceBetweenPoints(robot)),
 				800, 270, Color.BLACK));
 		
+		// Prediction test code
+		Predictor predictor = new Predictor();
+		for(int i = 0; i < ballBuffer.getBufferLength(); i++)
+			drawPoint(ballBuffer.getPointAt(i), "");
+		double[] parameters = new double[4];
+		predictor.fitLine(parameters, ballBuffer.getXBuffer(), ballBuffer.getYBuffer(),
+							null, null, ballBuffer.getBufferLength());
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Ball Intercept: " + parameters[0], 800, 270, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Ball Slope: " + parameters[1], 800, 290, Color.BLACK));
+		if(Math.abs(ballBuffer.getXPosAt(ballBuffer.getCurrentPosition())) -
+				Math.abs(ballBuffer.getYPosAt(ballBuffer.getLastPosition())) < 0)
+		//	parameters[1] = parameters[1] - Math.PI;
+		drawables.add(new Drawable(Drawable.LINE,
+				(int) ball.getX(), (int) (parameters[1]*ball.getX() + parameters[0]),
+				(int) ball.getX()+100, (int) (parameters[1]*(ball.getX()+100) + parameters[0]),
+				Color.CYAN, true));
+		else
+			drawables.add(new Drawable(Drawable.LINE,
+					(int) ball.getX(), (int) (parameters[1]*ball.getX() + parameters[0]),
+					(int) ball.getX()-100, (int) (parameters[1]*(ball.getX()-100) + parameters[0]),
+					Color.CYAN, true));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Current: " + ballBuffer.getCurrentPosition(), 800, 310, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Last: " + ballBuffer.getLastPosition(), 800, 330, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Last: " + (ballBuffer.getLastPosition() == ballBuffer.getCurrentPosition()), 800, 350, Color.BLACK));
 	}
 	
 	/**

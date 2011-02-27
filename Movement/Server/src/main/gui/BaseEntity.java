@@ -30,7 +30,7 @@ public class BaseEntity {
 	 * @return
 	 */
 	public double getCenterX() {
-		return (2 * this.xPos + this.getWidth()) / 2;
+		return (this.xPos + this.getWidth()/2);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class BaseEntity {
 	 * @return
 	 */
 	public double getCenterY() {
-		return (2 * this.yPos + this.getHeight()) / 2;
+		return (this.yPos + this.getHeight()/2);
 	}
 	public double getCenterXRemapped() {
 		return getCenterX()/xRatio - xOffset;
@@ -52,6 +52,12 @@ public class BaseEntity {
 	}
 	public void setYPosRemapped(double yPos) {
 		this.yPos = yPos*yRatio + yOffset;
+	}
+	public double remapXPos(double xPos) {
+		return xPos*xRatio + xOffset;
+	}
+	public double remapYPos(double yPos) {
+		return yPos*yRatio + yOffset;
 	}
 	public double getXPosRemapped() {
 		return xPos/xRatio - xOffset;
