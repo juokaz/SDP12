@@ -11,7 +11,7 @@ public class PFPlanning {
 	PointObject ball;
 	double default_power = 5;
 	RobotConf config;
-	double Stopdistance = 30;
+	double Stopdistance = 5;
 	List<Object> objects;
 	// power for opponent.
 	double opponentPower;
@@ -104,6 +104,12 @@ public class PFPlanning {
 		List<Object> complList =  new ArrayList<Object>(objects);
 		complList.add((Object) this.opponent);
 		Vector res = GoTo(complList, this.ball, robot.getLocation());
+		Vector vball=new Vector(ball);
+		Vector vrobot=new Vector(robot.getLocation());
+		if(vball.subtract(vrobot).size()<Stopdistance)
+		{
+			res=new Vector(0,0);
+		}
 		System.out.println("Result Vector: " + res.toString());
 		if (orig)
 			return (VelocityVec) res;
@@ -199,12 +205,13 @@ public class PFPlanning {
 			System.out.println("Current T: "+current.getAngle()+", dist_alpha="+dist_alpha);
 		double Vlin = Math.cos(dist_alpha) * size;
 		double angSize=1/size;
-		double threshold=0.03;
-		if(angSize>0.03)
-			angSize=0.03;
-		if(angSize<-0.03)
-			angSize=-0.03;
-		double Vang = dist_alpha*angSize;//*size/200;// Math.sin(dist_alpha)*size;
+	
+		double Vang = dist_alpha;//*angSize;
+		double threshold=0.3;
+		if(Vang>threshold)
+			Vang=threshold;
+		if(Vang<-1*threshold)
+			Vang=-1*threshold;
 		if(Runner.DEBUG)
 			System.out.println(Vlin + " " + Vang);
 		return CvtVelocity(Vlin, Vang, config.getr());
