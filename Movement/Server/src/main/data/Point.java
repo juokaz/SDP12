@@ -6,6 +6,11 @@ package main.data;
  * A piece of data containing X and Y
  */
 public class Point {
+	
+	protected int PITCH_X_MIN = 0;
+	protected int PITCH_Y_MIN = 0;
+	protected int PITCH_X_MAX = 540;
+	protected int PITCH_Y_MAX = 290;
 
 	protected double X;
 	protected double Y;
@@ -29,13 +34,26 @@ public class Point {
 	}
 	
 	/**
-	 * Finds the distance between two points, using dirPoint as the point to move to
+	 * Finds the angle between two points, using dirPoint as the point to move to
 	 * 
 	 * @param dirPoint
 	 * @return
 	 */
 	public double getAngleBetweenPoints(Point dirPoint) {
 		return Math.atan2(getY()-dirPoint.getY(), getX()-dirPoint.getX());
+	}
+	
+	//TODO: Decide which method we are using. Above version is currently used, but
+	// method below makes more sense to use. 
+	
+	/**
+	 * Finds the angle between 2 points, giving the angle from the point 
+	 * which calls this method.
+	 * @param point
+	 * @return
+	 */
+	public double angleBetweenPoints(Point point) {
+		return Math.atan2((point.getY() - getY()), (point.getX() - getX()));
 	}
 	
 	/**
@@ -67,6 +85,16 @@ public class Point {
 	public boolean isInPoint(Point point) {
 		// TODO check 40
 		return isInPoint(point, 40);
+	}
+	
+	/**
+	 * Is point out of pitch
+	 * @param ball
+	 * @return
+	 */
+	public boolean isPointOutOfPitch() {
+		return getX() < PITCH_X_MIN || getX() > PITCH_X_MAX ||
+			   getY() < PITCH_Y_MIN || getY() > PITCH_Y_MAX;
 	}
 	
 	/**
