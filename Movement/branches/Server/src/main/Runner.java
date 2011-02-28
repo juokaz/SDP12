@@ -5,6 +5,7 @@ import javax.swing.*;
 import main.executor.Simulator;
 import main.gui.DrawablesListener;
 import main.gui.GuiListener;
+import main.processor.SimulatorProcessor;
 import main.strategy.ProcessorListener;
 
 public class Runner {
@@ -151,7 +152,7 @@ public class Runner {
 		window.setButton("Stop", true);
 		// Inform window about running process
 		// TODO handle this better
-		if (!(this.processor instanceof Simulator)) {
+		if (!(this.processor instanceof SimulatorProcessor)) {
 			this.processor.addListener(new GuiListener(window.getPitch()));
 		}
 		this.strategy.setDrawablesListener(new DrawablesListener(window.getPitch()));
@@ -176,7 +177,7 @@ public class Runner {
 		if (type.equals("Local process")) {
 			processor = new main.processor.LocalVision("../../Vision/trunk/ObjectDetectionML/ObjectDetectionML/src/build/your_project c predict_major outputToConsole show");
 		} else if (type.equals("Simulator")) {
-			processor = new main.executor.Simulator(window.getPitch());
+			processor = new main.processor.SimulatorProcessor(window.getPitch());
 		} else {
 			processor = new main.processor.File("data/Outputlocs.txt");
 		}
@@ -221,11 +222,8 @@ public class Runner {
 			executor = new main.executor.Bluetooth("Roboto", "00:16:53:0b:b5:a3");
 		} else if (type.equals("Dull")) {
 			executor = new main.executor.Dull();
-		} else {
-			if (!(this.processor instanceof Executor)) {
-				throw new Exception ("Simulator needs Simulator processor");
-			}
-			executor = (Executor) this.processor;
+		} else if (type.equals("Simulator")) {
+			executor = new main.executor.Simulator(window.getPitch());
 		}
 	}
 

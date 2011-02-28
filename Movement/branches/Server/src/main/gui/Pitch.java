@@ -207,6 +207,15 @@ public class Pitch extends JComponent implements ActionListener {
 		return ball;
 	}
 	
+	public void flipRobots() {
+		System.out.println("robot1 xPos: " + robot1.getXPos());
+		Robot robotTemp = robot1;
+		robot1 = robot2;
+		robot2 = robotTemp;
+		robotTemp = null;
+		System.out.println("robot1 xPos: " + robot1.getXPos());
+	}
+	
 	public BufferedImage getPitchImage() {
 		
 		return pitchBackground;
