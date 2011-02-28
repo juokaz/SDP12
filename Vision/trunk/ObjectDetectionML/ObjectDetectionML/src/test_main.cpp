@@ -29,11 +29,11 @@ CvScalar hsv_min_B = cvScalar(0,131,104);
 CvScalar hsv_max_B = cvScalar(10,255,255);
 
 // Color threshold for Yellow T 
-CvScalar hsv_min_TY = cvScalar(0,2,7);
-CvScalar hsv_max_TY = cvScalar(7,255,255);
+CvScalar hsv_min_TY = cvScalar(0,8,69);
+CvScalar hsv_max_TY = cvScalar(8,242,157);
 
 // Color threshold for Blue T
-CvScalar hsv_min_TB = cvScalar(29,14,0);
+CvScalar hsv_min_TB = cvScalar(31,6,0);
 CvScalar hsv_max_TB = cvScalar(78,255,255);
 
 
@@ -162,8 +162,8 @@ void launch(config conf)
 	}
 	if(conf.camera)
 	{
-	objDetection::utilities::cb_init(&TY_Buffer,5,sizeof(float));
-	objDetection::utilities::cb_init(&TB_Buffer,5,sizeof(float));
+	objDetection::utilities::cb_init(&TY_Buffer,1,sizeof(float));
+	objDetection::utilities::cb_init(&TB_Buffer,1,sizeof(float));
 	}
 	while(true)
 	{
