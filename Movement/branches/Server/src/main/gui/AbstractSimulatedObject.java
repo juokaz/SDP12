@@ -45,6 +45,7 @@ public abstract class AbstractSimulatedObject {
 	/*
 	 * Remapping constants
 	 */
+	// TODO Correct these values
 	protected final double xOffset = 10;
 	protected final double xRatio = 1.3;
 	protected final double yOffset = 120;

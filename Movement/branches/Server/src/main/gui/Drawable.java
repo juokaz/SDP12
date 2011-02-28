@@ -163,7 +163,14 @@ public class Drawable extends BaseEntity {
 		switch(drawableType) {
 			case CIRCLE: {
 				g2d.setColor(color);
-				g2d.drawOval((int) xPos, (int) yPos, drawableWidth, drawableHeight);
+				/* 
+				 * Subtract half the width and half the height
+				 *	from the x and y positions because Swing does not
+				 *	use the x and y positions as the centre of the oval
+				 *	but the top left corner of the bounding rectangle
+				 */
+				g2d.drawOval((int) (xPos - drawableWidth/2), (int) (yPos - drawableHeight/2),
+								drawableWidth, drawableHeight);
 				break;
 			}
 				

@@ -66,13 +66,13 @@ public class Simulator extends JComponent implements KeyListener, ActionListener
 		initializeWalls();
 		setFocusable(true);
 		addKeyListener(this);
-		timer = new Timer(10, this);
+		timer = new Timer(15, this);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
 		// Remove drawables with old positions
-		drawables.clear();
+		//drawables.clear();
 		
 		// Update the simulator and advance objects
 		simulatorUpdate();
@@ -91,9 +91,6 @@ public class Simulator extends JComponent implements KeyListener, ActionListener
 			collisionDetector.checkCollisions();
 		}
 		
-		drawPoint(ball, null);
-		drawPoint(robot1.getKicker(), null);
-		
 //		ArrayList<Line2D> r1lines = ball.getShapeSides();
 //		for(Line2D line : r1lines)
 //		drawables.add(new Drawable(Drawable.LINE,
@@ -107,6 +104,9 @@ public class Simulator extends JComponent implements KeyListener, ActionListener
 	 */
 	private void simulatorRender() {
 		g2d = getImageGraphics();
+		g2d.setColor(Color.LIGHT_GRAY);
+		g2d.fillRect(0, 0, pitch.getWidth() + 350, pitch.getHeight());
+		
 		setGraphicsSettings(g2d);
 		
 		g2d.drawImage(pitch.getImage(), 0, 0, null);
@@ -135,7 +135,7 @@ public class Simulator extends JComponent implements KeyListener, ActionListener
 	 */
 	private Graphics2D getImageGraphics() {
 		if(backBufferImage == null) {
-			backBufferImage = createImage(pitch.getWidth(), pitch.getHeight());
+			backBufferImage = createImage(pitch.getWidth() + 350, pitch.getHeight());
 			if(backBufferImage == null) {
 				System.out.println("backBufferImage is null");
 				return null;
@@ -152,7 +152,7 @@ public class Simulator extends JComponent implements KeyListener, ActionListener
 	 * 
 	 * @param g2d
 	 */
-	public void drawDrawables(Graphics2D g2d) {
+	public synchronized void drawDrawables(Graphics2D g2d) {
 		if(drawables != null) {
 			for(Drawable drawable : drawables) {
 				drawable.draw(g2d);
@@ -220,9 +220,9 @@ public class Simulator extends JComponent implements KeyListener, ActionListener
 	}
 	
 	@Override
-	public void keyPressed(KeyEvent arg0) {
+	public void keyPressed(KeyEvent keyEvent) {
 		// TODO Auto-generated method stub
-		if(arg0.getKeyCode() == KeyEvent.VK_SPACE) {
+		if(keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
 			robot1.kick();
 			robot2.kick();
 		}
@@ -242,6 +242,12 @@ public class Simulator extends JComponent implements KeyListener, ActionListener
 	
 	public void start() {
 		timer.start();
+	}
+	
+	public synchronized void addDrawables(ArrayList<Drawable> drawables) {
+		for(Drawable drawable : drawables) {
+			this.drawables.add(drawable);
+		}
 	}
 	
 	/*
