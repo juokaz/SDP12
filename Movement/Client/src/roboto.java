@@ -58,9 +58,10 @@ public class roboto {
 					
 					if (touchLeft.isPressed() || touchRight.isPressed()){
 						Motor.A.setSpeed(200);
-						Motor.B.setSpeed(200);
+						Motor.C.setSpeed(200);
 						Motor.A.forward();
-						Motor.B.forward();
+						Motor.C.forward();
+						Thread.sleep(400);
 					} 
 					
 					while(input.available() == 0) {

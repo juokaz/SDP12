@@ -74,7 +74,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			
 			//TODO set a strategy for this area
 		}
-		else if (robot.isObstacleInFront(opponent, optimum, opponentWidth) || goingToAvoid)
+		else if (robot.isObstacleInFront(opponent, optimum, opponentWidth))
 		{			
 			goingToAvoid = true;
 			setIAmDoing("Obstacle in front - going to Avoid");
@@ -84,7 +84,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			drawPoint(point, "Avoid");
 			moveToPoint(robot, point);
 		}
-		else if (isBallBehindRobot(robot, ball, optimum, goal) || goingToBehind)
+		else if (isBallBehindRobot(robot, ball, optimum, goal))
 		{
 			goingToBehind = true;
 			setIAmDoing("Ball behind robot - going to Behind");
