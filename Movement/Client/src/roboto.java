@@ -4,6 +4,8 @@ import lejos.robotics.navigation.TachoPilot;
 
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
+import lejos.nxt.SensorPort;
+import lejos.nxt.TouchSensor;
 import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
 
@@ -28,11 +30,16 @@ public class roboto {
 	
 	private static final int CELEBRATE = 5;
 	
+
+	
 	/**
 	 * Main program
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		TouchSensor touchRight = new TouchSensor(SensorPort.S1);
+		TouchSensor touchLeft = new TouchSensor(SensorPort.S2);
 		
 		drawMessage("Connecting...");
 
@@ -47,12 +54,18 @@ public class roboto {
 		mainLoop:
 			while (true) {
 				try {
+					int command = input.readInt();
+					
+					if (touchLeft.isPressed() || touchRight.isPressed()){
+						Motor.A.setSpeed(200);
+						Motor.B.setSpeed(200);
+						Motor.A.forward();
+						Motor.B.forward();
+					} 
 					
 					while(input.available() == 0) {
 						// no input available
 					}
-					
-					int command = input.readInt();
 					
 					switch (command) {
 					case EXIT:
@@ -115,6 +128,7 @@ public class roboto {
 						// No command input
 						break;
 					}
+			
 				} catch (Exception e1) {
 					drawMessage("Error " + e1.getMessage());
 				}
