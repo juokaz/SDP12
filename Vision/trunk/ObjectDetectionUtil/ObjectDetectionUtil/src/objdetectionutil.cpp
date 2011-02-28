@@ -20,7 +20,7 @@ float objDetection::utilities::average_cb_buffer(circular_buffer *cb)
 {
 	void* item=cb->tail;
 	int count=cb->count;
-	float value;
+	float value=0;
 	float sum=0;
 	while(true)
 	{
@@ -28,7 +28,7 @@ float objDetection::utilities::average_cb_buffer(circular_buffer *cb)
         break;
     memcpy(&value, item, cb->sz);
 	sum+=value;
-    item = (char*)cb->tail + cb->sz;
+    item = (char*)item + cb->sz;
     if(item == cb->buffer_end)
         item = cb->buffer;
     count--;

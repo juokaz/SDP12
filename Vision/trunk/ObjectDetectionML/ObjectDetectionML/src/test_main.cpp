@@ -29,8 +29,8 @@ CvScalar hsv_min_B = cvScalar(0,131,104);
 CvScalar hsv_max_B = cvScalar(10,255,255);
 
 // Color threshold for Yellow T 
-CvScalar hsv_min_TY = cvScalar(0,8,75);
-CvScalar hsv_max_TY = cvScalar(20,255,255);
+CvScalar hsv_min_TY = cvScalar(0,2,7);
+CvScalar hsv_max_TY = cvScalar(7,255,255);
 
 // Color threshold for Blue T
 CvScalar hsv_min_TB = cvScalar(29,14,0);
@@ -336,6 +336,7 @@ void launch(config conf)
 				if(cnt_TB!=NULL)
 				{
 					sel_TB=objDetection::orientation_hueMoment(cnt_TB,current_frame);//,cnt_D,current_frame);
+					//float averageValue=objDetection::utilities::average_cb_buffer(&TB_Buffer);
 					objDetection::utilities::cb_push_back(&TB_Buffer,(void*)&sel_TB.angle);
 					sel_TB.angle=objDetection::utilities::average_cb_buffer(&TB_Buffer);
 				}
