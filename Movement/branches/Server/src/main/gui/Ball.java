@@ -93,8 +93,17 @@ public class Ball extends AbstractSimulatedObject implements ActionListener, Col
 
 	@Override
 	public void collisionDetected(Collision collision) {
-		System.out.println("collision " + collision.getCollidedObjectType() + " " + collision.getSideAngle());
-		kick(collision.getSideAngle()+2*Math.PI);
+		System.out.println("collision " + collision.getCollidedObjectType() + " " + changeToPositive(collision.getSideAngle()));
+		kick(changeToPositive(collision.getSideAngle()));
 	}
 	
+	public double changeToPositive(double angle) {
+		angle = angle % 2*Math.PI;
+		
+		if(angle < 0) {
+			angle = 2*Math.PI - Math.abs(angle);
+		}
+		
+		return angle;
+	}
 }

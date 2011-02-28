@@ -180,6 +180,9 @@ public class Robot extends AbstractSimulatedObject implements CollisionListener 
 			// No particular reason to use these values, just looks alright
 			//moveFade(-5, -5);
 		}
+		if(collision.getCollidedObjectType() == "Ball") {
+			System.out.println(collision.getCollidedObjectType());
+		}
 	}
 	
 	private void setOperation(int operation) {

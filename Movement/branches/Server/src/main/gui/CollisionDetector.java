@@ -5,12 +5,27 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class CollisionDetector {
+	/**
+	 * ArrayList that holds registered collision listeners
+	 */
 	ArrayList<CollisionListener> collisionListeners;
 	
+	/**
+	 * The constructor initializes the ArrayList 
+	 * 	that hold the listeners registered for 
+	 * 	collision detection
+	 */
 	public CollisionDetector() {
 		collisionListeners = new ArrayList<CollisionListener>();
 	}
 	
+	/**
+	 * Check for each listener whether it contains 
+	 * 	the corners of any of the other listeners
+	 * 	and send both of them a collision packet
+	 * 	with the relevant information about 
+	 * 	the collision
+	 */
 	public void checkCollisions() {
 //		if(collisionListeners == null) {
 //			return;
@@ -27,9 +42,22 @@ public class CollisionDetector {
 					if(currentListener.getShape().contains(corner)) {
 						Line2D sideOfCollision = 
 							getSideCollidedWith(currentListener.getShapeSides(), corner);
-						Collision collision = new Collision(otherListener, sideOfCollision);
 						
-						currentListener.collisionDetected(collision);
+						/*
+						 * Send collision packet to the object
+						 * 	whose side touches the corner of the
+						 * 	other object 
+						 */
+						Collision collisionCurrent = new Collision(otherListener, sideOfCollision);
+						currentListener.collisionDetected(collisionCurrent);
+						
+						/*
+						 * Send collision packet to the object
+						 *  whose corner touches the side of the
+						 *  other object
+						 */
+						Collision collisionOther = new Collision(currentListener, sideOfCollision);
+						otherListener.collisionDetected(collisionOther);
 					}
 				}
 			}

@@ -3,6 +3,7 @@ package main.gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -105,10 +106,10 @@ public class Simulator extends JComponent implements ActionListener {
 	 */
 	private void simulatorRender() {
 		g2d = getImageGraphics();
+		setGraphicsSettings(g2d);
+		
 		g2d.setColor(Color.LIGHT_GRAY);
 		g2d.fillRect(0, 0, pitch.getWidth() + 350, pitch.getHeight());
-		
-		setGraphicsSettings(g2d);
 		
 		g2d.drawImage(pitch.getImage(), 0, 0, null);
 		ball.draw(g2d);
@@ -259,6 +260,9 @@ public class Simulator extends JComponent implements ActionListener {
 		});
 	}
 	
+	/**
+	 * The simulator starts executing when the timer starts
+	 */
 	public void start() {
 		timer.start();
 	}
