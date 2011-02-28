@@ -5,14 +5,14 @@ public class Predictor {
 	 * This code is from here:
 	 * http://www.particle.kth.se/~lindsey/JavaCourse/Book/Part1/Physics/Chapter08/lsqFits.html
 	 */
-	public void fitLine(double [] parameters, double [] x, double [] y,
-            double [] sigma_x, double [] sigma_y, int num_points){
+	public void fitLine(double[] parameters, double[] x, double[] y,
+            double[] sigma_x, double[] sigma_y, int num_points) {
 
 		double s=0.0,sx=0.0,sy=0.0,sxx=0.0,sxy=0.0, del;
 		
 		// Null sigma_y implies a constant error which drops
 		// out of the divisions of the sums.
-		if (sigma_y != null){
+		if(sigma_y != null){
 			for (int i=0; i < num_points; i++) {
 			
 				   s   += 1.0/ (sigma_y[i]*sigma_y[i]);
