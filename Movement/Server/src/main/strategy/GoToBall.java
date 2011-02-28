@@ -43,8 +43,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		Point optimum = getOptimumPoint(ball, goal);
 		// TODO: calculate width of the opponent taking into account its angle (?)
 		opponentWidth = 60; 
-	//	ballBuffer.addPoint(ball);
-		
+		//	ballBuffer.addPoint(ball);
+
 		// statistics
 		addDrawables(robot, opponent, ball, optimum, goal);
 		drawPoint(opponent, "Opponent");
@@ -92,6 +92,9 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			if (robot.isInPoint(point)) 
 				goingToBehind = false;
 			drawPoint(point, "Behind");
+			if (robot.isObstacleInFront(opponent, point, opponentWidth)) {
+				point = getPointToAvoidObstacle(robot, opponent, point);
+			}
 			moveToPoint(robot, point);
 		}
 		else if (!isRobotInOptimumPosition(robot, optimum))
@@ -117,7 +120,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		 
 		setDrawables(drawables);
 	}
-	
+
+
 	/**
 	 * Get a point which would make robot to avoid obstacle and go to a point
 	 * which will have straight path to a ball
@@ -512,6 +516,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @param remap
 	 */
 	protected void drawPoint(Point point, String label, boolean remap) {
+		if(drawables==null)
+			drawables=new ArrayList<Drawable>();
 		drawables.add(new Drawable(Drawable.CIRCLE,
 						(int) point.getX(), (int) point.getY(), Color.WHITE, remap));
 		if (label != null) {
@@ -527,5 +533,9 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	
 	public int getGap() {
 		return gap;
+	}
+	
+	protected int getOptimalGap() {
+		return optimalGap;
 	}
 }

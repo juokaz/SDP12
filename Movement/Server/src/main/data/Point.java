@@ -68,7 +68,7 @@ public class Point {
 		// angle between lines going through opponent center and edge. opponent width is doubled in order to take into account width of both robots.
 		int theta = (int) Math.abs(Math.toDegrees(Math.atan2((obstacleWidth), getDistanceBetweenPoints(possibleObstacle))));
 		// angle between obstacle and optimum point from robot's point of view
-		int theta2 = (int) Math.toDegrees(Math.abs(possibleObstacle.getAngleBetweenPoints(this) - destination.getAngleBetweenPoints(this)));
+		int theta2 = (int) Math.toDegrees(Math.abs(getAngleBetweenPoints(possibleObstacle) - getAngleBetweenPoints(destination)));
 		if (theta2 < theta && getDistanceBetweenPoints(possibleObstacle) < getDistanceBetweenPoints(destination)){
 			return true;
 		} else return false;

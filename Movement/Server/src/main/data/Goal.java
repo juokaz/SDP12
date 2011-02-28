@@ -18,26 +18,6 @@ public class Goal extends Point {
 	public Goal(double X, double Y) {
 		super(X, Y);
 	}
-	
-	/**
-	 * Calculates an angle between a point and goal
-	 * TODO: check this to make sure that it takes proper orientation out.
-	 * @param point
-	 * @return
-	 */
-	public double calculateGoalAndPointAngle(Point point) {
-		double angle = getAngleBetweenPoints(point);
-		
-		if (getX() == 0) {
-			if (angle < 0) {
-				angle = (Math.PI - angle);
-			} else {
-				angle = (-Math.PI - angle);
-			}
-		}
-		
-		return -angle;
-	}	
 
 	public int getLeftPost() {
 		return leftPost;

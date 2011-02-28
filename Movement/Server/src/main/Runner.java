@@ -54,7 +54,7 @@ public class Runner {
 	 * Available strategies
 	 * TODO make this automatic
 	 */
-	public final String[] strategies = {"GoToBall", "PFS", "Take penalty", "Basic"};
+	public final String[] strategies = {"GoToBall", "PFS", "Take penalty", "Basic", "GetBallFromWall"};
 	/**
 	 * Available executors
 	 * TODO make this automatic
@@ -202,7 +202,9 @@ public class Runner {
 			strategy = new main.strategy.BasicStrategy();
 		} else if (type.equals("GoToBall")){
 			strategy = new main.strategy.GoToBall();
-		}		
+		} else if (type.equals("GetBallFromWall")){
+			strategy = new main.strategy.GetBallFromWall();
+		}
 	}
 
 	/**
