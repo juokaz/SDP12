@@ -10,13 +10,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.JComponent;
 import javax.swing.Timer;
+import javax.swing.event.MouseInputAdapter;
 
 @SuppressWarnings("serial")
-public class Simulator extends JComponent implements KeyListener, ActionListener {
+public class Simulator extends JComponent implements ActionListener {
 	// Objects for the simulator
 	private Ball ball;
 	private Pitch pitch;
@@ -64,7 +66,7 @@ public class Simulator extends JComponent implements KeyListener, ActionListener
 		collisionsEnabled = true;
 		initializeWalls();
 		setFocusable(true);
-		addKeyListener(this);
+		addListeners();
 		timer = new Timer(15, this);
 	}
 	
@@ -218,28 +220,43 @@ public class Simulator extends JComponent implements KeyListener, ActionListener
 		robotTemp = null;
 	}
 	
-	@Override
-	public void keyPressed(KeyEvent keyEvent) {
-		// TODO Auto-generated method stub
-		if(keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
-			robot1.kick();
-			robot2.kick();
-		}
-		if(keyEvent.getKeyCode() == KeyEvent.VK_R) {
-			getRobot1().toggleCommandReceiving();
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
+	/**
+	 * Add listeners for keyboard and mouse shortcuts
+	 */
+	private void addListeners() {
+		addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent keyEvent) {
+				if(keyEvent.getKeyCode() == KeyEvent.VK_R) {
+					getRobot1().toggleCommandReceiving();
+				} else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
+					getRobot1().kick();
+				}
+			}
 		
-	}
+			@Override
+			public void keyReleased(KeyEvent arg0) {}
 
-	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
+			@Override
+			public void keyTyped(KeyEvent arg0) {}
+		});
+				
+		addMouseListener(new MouseInputAdapter() {
+			public void mousePressed(MouseEvent e) {
+				int x = e.getX();
+				int y = e.getY();
+				
+				if (e.getButton() == MouseEvent.BUTTON1) {
+					getBall().setXPos(x);
+					getBall().setYPos(y);
+				} else if(e.getButton() == MouseEvent.BUTTON3) {
+					getRobot1().setXPos(x);
+					getRobot1().setYPos(y);
+					getRobot1().getKicker().updateLocation(
+							getRobot1().getXPos(), getRobot1().getYPos(), getRobot1().getTheta());
+				}
+			}
+		});
 	}
 	
 	public void start() {

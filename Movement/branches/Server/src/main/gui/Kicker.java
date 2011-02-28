@@ -24,7 +24,6 @@ public class Kicker extends AbstractSimulatedObject
 	private Rectangle kicker;
 	
 	public Kicker(double xPos, double yPos, double theta, int robotWidth, int robotHeight) {
-		
 		setHeight(robotHeight);
 		setWidth(robotWidth);
 		
@@ -48,27 +47,20 @@ public class Kicker extends AbstractSimulatedObject
 		
 		timer = new Timer(DEFAULT_TIMER_DELAY, this);
 		timer.setInitialDelay(0);
-		
 	}
 	
 	public void updateLocation(double xPos, double yPos, double theta) {
-		
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.theta = theta;
-		
 	}
 	
 	public void kick() {
-		
 		animationStartTime = System.currentTimeMillis();
 		timer.start();
-		System.out.println("kick");
-		
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		
 		long currentTime = System.currentTimeMillis();
 		long totalTime = currentTime - animationStartTime;
 		
@@ -77,22 +69,10 @@ public class Kicker extends AbstractSimulatedObject
 		fraction = 1 - Math.abs(1 - 2*fraction);
 		
 		if(totalTime > animationDuration) {
-			
 			timer.stop();
-			
 		}
 	}
 	
-//	public void checkCollisions() {
-//		
-//		if(getShape().intersects(ball.getRectangle())) {
-//			
-//			ball.kick(getTheta());
-//			
-//		}
-//		
-//	}
-//	
 	@Override
 	public void draw(Graphics2D g2d) {
 		g2d.draw(getShape());
@@ -100,14 +80,12 @@ public class Kicker extends AbstractSimulatedObject
 	
 	@Override
 	public Shape getShape() {
-		
 		AffineTransform xform = new AffineTransform();
 		xform.rotate(getTheta(), getXPos(), getYPos());
 		xform.translate(getXPos() + getWidth()/2 - getWidth()/10 + fraction*kickerPartShown, 
 						getYPos() - getHeight()/4);
 		
 		return xform.createTransformedShape(kicker);
-		
 	}
 
 	@Override
@@ -118,7 +96,5 @@ public class Kicker extends AbstractSimulatedObject
 	@Override
 	public void collisionDetected(Collision collision) {
 		// TODO Handle collisions
-		
 	}
-	
 }

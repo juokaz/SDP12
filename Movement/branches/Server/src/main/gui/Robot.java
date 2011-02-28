@@ -178,7 +178,7 @@ public class Robot extends AbstractSimulatedObject implements CollisionListener 
 		//System.out.println(getType() + " colliding with " + collision.getCollidedObjectType());
 		if(collision.getCollidedObjectType() == TYPE) {
 			// No particular reason to use these values, just looks alright
-			moveFade(-5, -5);
+			//moveFade(-5, -5);
 		}
 	}
 	
