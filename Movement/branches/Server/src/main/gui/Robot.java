@@ -65,6 +65,10 @@ public class Robot extends AbstractSimulatedObject implements CollisionListener 
 		// Set the current positions as previous in case of collision
 		setPreviousPositions();
 		
+		if(!isEnabled) {
+			return;
+		}
+		
 		if(operation == OPERATION_MOVE_FADE) {
 			erodeWheelsSpeed(EROSION_RATE);
 		}
@@ -137,6 +141,17 @@ public class Robot extends AbstractSimulatedObject implements CollisionListener 
 	private void moveFade(double leftWheelSpeed, double rightWheelSpeed) {
 		setWheelsSpeed(leftWheelSpeed, rightWheelSpeed);
 		setOperation(OPERATION_MOVE_FADE);
+	}
+	
+	/**
+	 * Enable and disable the robot
+	 */
+	public void toggleCommandReceiving() {
+		if(isEnabled) {
+			isEnabled = false;
+		} else {
+			isEnabled = true;
+		}
 	}
 	
 	public void kick() {

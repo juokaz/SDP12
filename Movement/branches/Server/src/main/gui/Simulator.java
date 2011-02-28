@@ -3,7 +3,6 @@ package main.gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -225,6 +224,9 @@ public class Simulator extends JComponent implements KeyListener, ActionListener
 		if(keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
 			robot1.kick();
 			robot2.kick();
+		}
+		if(keyEvent.getKeyCode() == KeyEvent.VK_R) {
+			getRobot1().toggleCommandReceiving();
 		}
 	}
 
