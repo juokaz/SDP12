@@ -1,20 +1,14 @@
 package main.gui;
 
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.Timer;
 
-public class Ball extends BaseEntity implements ActionListener {
-	
-	private double xPrevPos;
-	private double yPrevPos;
-	
+public class Ball extends AbstractSimulatedObject implements ActionListener, CollisionListener {
+	private final String TYPE = "Ball";
+
 	private Timer timer;	
 	private double fraction;
 	private long animationStartTime;
@@ -24,16 +18,15 @@ public class Ball extends BaseEntity implements ActionListener {
 	public static final int DEFAULT_DISTANCE = 2;
 	public static final int DEFAULT_TIMER_DELAY = 15;
 	
-	private ArrayList<Wall> walls;
-	
+	/**
+	 * Constructor for ball - set position and load image
+	 * 
+	 * @param file
+	 * @param xPos
+	 * @param yPos
+	 */
 	public Ball(String file, double xPos, double yPos) {
-		
-		try {
-			
-			image = ImageIO.read(Robot.class.getResource(file));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		loadAndSetImage(file);
 		
 		setXPos(xPos);
 		setYPos(yPos);
@@ -50,71 +43,33 @@ public class Ball extends BaseEntity implements ActionListener {
 				getImage().getWidth(),
 				getImage().getHeight()
 				);
+		
 	}
 	
 	public void kick(double theta) {
+		
 		setTheta(theta);
 		animationStartTime = System.currentTimeMillis();
-		timer.start();	
+		timer.start();
+		
 	}
 	
 	public void moveBall() {
-		setPreviousPositions();
-		
 		double x = getXPos() + (distance - (fraction)*distance)*Math.cos(getTheta());
 		double y = getYPos() + (distance - (fraction)*distance)*Math.sin(getTheta());
 		
 		setXPos(x);
 		setYPos(y);
 		
-		resolveCollisions();
-		
 		if(getXPos() + getImage().getWidth()*2 < 0 || getYPos() + getImage().getHeight()*2 < 0) {
-			timer.stop();	
+			
+			timer.stop();
+			
 		}
-	}
-
-	public void resolveCollisions() {
-
-		for (Wall wall : walls) {
-
-			if (wall.getWallRectangle().intersects(getRectangle())) {
-
-				if (wall.getName() == Wall.BOTTOM_WALL
-						|| wall.getName() == Wall.TOP_WALL) {
-
-					setTheta(getTheta() - 2 * getTheta());
-					usePreviousPositions();
-
-				}
-
-				if (wall.getName() == Wall.LOWER_LEFT_WALL
-						|| wall.getName() == Wall.UPPER_LEFT_WALL
-						|| wall.getName() == Wall.LOWER_RIGHT_WALL
-						|| wall.getName() == Wall.UPPER_RIGHT_WALL) {
-
-					setTheta(Math.toRadians(180) - getTheta());
-					usePreviousPositions();
-
-				}
-
-			}
-
-		}
-
-	}
-	
-	public void setPreviousPositions() {
-		xPrevPos = xPos;
-		yPrevPos = yPos;
-	}
-	
-	public void usePreviousPositions() {
-		xPos = xPrevPos;
-		yPos = yPrevPos;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		
 		long currentTime = System.currentTimeMillis();
 		long totalTime = currentTime - animationStartTime;
 		
@@ -128,25 +83,18 @@ public class Ball extends BaseEntity implements ActionListener {
 		}
 		
 		moveBall();
+		
+	}
+
+	@Override
+	public String getType() {
+		return TYPE;
+	}
+
+	@Override
+	public void collisionDetected(Collision collision) {
+		System.out.println("collision " + collision.getCollidedObjectType() + " " + collision.getSideAngle());
+		kick(collision.getSideAngle()+2*Math.PI);
 	}
 	
-	public void draw(Graphics2D g2d) {
-		g2d.drawImage(getImage(), null, (int) getXPos(), (int) getYPos());
-	}
-	
-	/*
-	 * GETTERS AND SETTERS
-	 */
-
-	public void setWalls(ArrayList<Wall> walls) {
-		this.walls = walls;
-	}
-
-	public ArrayList<Wall> getWalls() {
-		return walls;
-	}
-
-	public Timer getTimer() {
-		return timer;
-	}
 }

@@ -9,17 +9,10 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.Timer;
 
-import main.gui.Ball;
+public class Kicker extends AbstractSimulatedObject
+						implements ActionListener, CollisionListener {
+	private final String TYPE = "Kicker";
 
-public class Kicker implements ActionListener {
-
-	private double xPos;
-	private double yPos;
-	private double theta;
-	
-	private int holderRobotHeight;
-	private int holderRobotWidth;
-	
 	private double kickerPartShown;
 	private double fraction;
 	private long animationStartTime;
@@ -28,30 +21,34 @@ public class Kicker implements ActionListener {
 	
 	public static final int DEFAULT_TIMER_DELAY = 15;
 	
-	private boolean disabled = true;
-	
 	private Rectangle kicker;
-	Ball ball;
 	
-	public Kicker(double xPos, double yPos, double theta, int robotHeight, int robotWidth) {
+	public Kicker(double xPos, double yPos, double theta, int robotWidth, int robotHeight) {
 		
-		setHolderRobotHeight(robotHeight);
-		setHolderRobotWidth(robotWidth);
+		setHeight(robotHeight);
+		setWidth(robotWidth);
 		
-		kickerPartShown = getHolderRobotWidth()/10;
+		kickerPartShown = getWidth()/10;
 		
-		kicker = new Rectangle(0, 0, getHolderRobotWidth()/10, getHolderRobotHeight()/2);
+		/*
+		 * TODO
+		 * WARNING - not true at the moment, should be fixed
+		 * |-y
+		 * *** x  
+		 * 0**--- 0 marks the origin (0,0); * asterisks show where 
+		 * *** x							the kicker rectangle lies
+		 * | y
+		 * 
+		 * This is needed to make the (x,y) position
+		 * 	the centre of the kicker's rectangle
+		 */
+		kicker = new Rectangle(0, 0, getWidth()/10, getHeight()/2);
 		
 		updateLocation(xPos, yPos, theta);
 		
 		timer = new Timer(DEFAULT_TIMER_DELAY, this);
 		timer.setInitialDelay(0);
 		
-	}
-	
-	public void setBall(Ball ball) {
-		
-		this.ball = ball;
 	}
 	
 	public void updateLocation(double xPos, double yPos, double theta) {
@@ -66,6 +63,7 @@ public class Kicker implements ActionListener {
 		
 		animationStartTime = System.currentTimeMillis();
 		timer.start();
+		System.out.println("kick");
 		
 	}
 	
@@ -83,87 +81,44 @@ public class Kicker implements ActionListener {
 			timer.stop();
 			
 		}
-		
-		checkCollisions();
-		
 	}
 	
-	public void checkCollisions() {
-		
-		if(getShape().intersects(ball.getRectangle())) {
-			
-			ball.kick(getTheta());
-			
-		}
-		
-	}
-	
+//	public void checkCollisions() {
+//		
+//		if(getShape().intersects(ball.getRectangle())) {
+//			
+//			ball.kick(getTheta());
+//			
+//		}
+//		
+//	}
+//	
+	@Override
 	public void draw(Graphics2D g2d) {
-		
-		if (!disabled) {
-			g2d.draw(getShape());
-		}
+		g2d.draw(getShape());
 	}
 	
+	@Override
 	public Shape getShape() {
 		
 		AffineTransform xform = new AffineTransform();
-		xform.rotate(getTheta(), getXPos() + getHolderRobotWidth()/2,
-						getYPos() + getHolderRobotHeight()/2);
-		xform.translate(getXPos() + getHolderRobotWidth() - getHolderRobotWidth()/10
-									+ fraction*kickerPartShown, 
-						getYPos() + getHolderRobotHeight()/2 - getHolderRobotHeight()/4);
+		xform.rotate(getTheta(), getXPos(), getYPos());
+		xform.translate(getXPos() + getWidth()/2 - getWidth()/10 + fraction*kickerPartShown, 
+						getYPos() - getHeight()/4);
 		
 		return xform.createTransformedShape(kicker);
 		
 	}
-	
-	public void enable() {
-		disabled = false;
-	}
-	
-	public void disable() {
-		disabled = true;
-	}
-	
-	public double getXPos() {
-		return xPos;
+
+	@Override
+	public String getType() {
+		return TYPE;
 	}
 
-	public void setXPos(double xPos) {
-		this.xPos = xPos;
-	}
-
-	public double getYPos() {
-		return yPos;
-	}
-
-	public void setYPos(double yPos) {
-		this.yPos = yPos;
-	}
-
-	public double getTheta() {
-		return theta;
-	}
-
-	public void setTheta(double theta) {
-		this.theta = theta;
-	}
-
-	public void setHolderRobotHeight(int holderRobotHeight) {
-		this.holderRobotHeight = holderRobotHeight;
-	}
-
-	public int getHolderRobotHeight() {
-		return holderRobotHeight;
-	}
-
-	public void setHolderRobotWidth(int holderRobotWidth) {
-		this.holderRobotWidth = holderRobotWidth;
-	}
-
-	public int getHolderRobotWidth() {
-		return holderRobotWidth;
+	@Override
+	public void collisionDetected(Collision collision) {
+		// TODO Handle collisions
+		
 	}
 	
 }

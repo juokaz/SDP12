@@ -5,21 +5,18 @@ import main.data.Ball;
 import main.data.Goal;
 import main.data.Location;
 import main.data.Robot;
-import main.gui.Pitch;
 
 public class SimulatorProcessor extends AbstractProcessor implements Processor {
 	main.gui.Robot robot1;
 	main.gui.Robot robot2;
 	main.gui.Ball ball;
-	main.gui.Pitch pitch;
+	main.gui.Simulator simulator;
 	
-	public SimulatorProcessor(Pitch simulator) {
+	public SimulatorProcessor(main.gui.Simulator simulator) {
 		this.robot1 = simulator.getRobot1();
-		this.robot1.getKicker().enable();
 		this.robot2 = simulator.getRobot2();
-		this.robot2.getKicker().enable();
 		this.ball = simulator.getBall();
-		this.pitch = simulator;
+		this.simulator = simulator;
 	}
 	
 	@Override
@@ -55,7 +52,7 @@ public class SimulatorProcessor extends AbstractProcessor implements Processor {
 		 * 					to robot1 and not check which robot is which
 		 */
 		if (!isOurRobotFirst()) {
-			pitch.flipRobots();
+			simulator.flipRobots();
 		}
 		
 		while (true) {
@@ -66,14 +63,14 @@ public class SimulatorProcessor extends AbstractProcessor implements Processor {
 			}
 
 			// simulate wait
-			data.getOurRobot().setX(robot1.getCenterXRemapped());
-			data.getOurRobot().setY(robot1.getCenterYRemapped());
+			data.getOurRobot().setX(robot1.getXPosRemapped());
+			data.getOurRobot().setY(robot1.getYPosRemapped());
 			data.getOurRobot().setT((float) (robot1.getTheta()));
-			data.getOpponentRobot().setX(robot2.getCenterXRemapped());
-			data.getOpponentRobot().setY(robot2.getCenterYRemapped());
+			data.getOpponentRobot().setX(robot2.getXPosRemapped());
+			data.getOpponentRobot().setY(robot2.getYPosRemapped());
 			data.getOpponentRobot().setT((float) (robot2.getTheta()));
-			data.getBall().setX(this.ball.getCenterXRemapped());
-			data.getBall().setY(this.ball.getCenterYRemapped());
+			data.getBall().setX(this.ball.getXPosRemapped());
+			data.getBall().setY(this.ball.getYPosRemapped());
 			
 			propogateLocation(data);
 			

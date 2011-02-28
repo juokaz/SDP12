@@ -6,17 +6,17 @@ import main.processor.Listener;
 public class GuiListener implements Listener {
 	
 	/**
-	 * Pitch to update on
+	 * simulator to update on
 	 */
-	protected Pitch pitch;
+	protected Simulator simulator;
 
 	/**
 	 * Gui listener
 	 * 
-	 * @param pitch
+	 * @param simulator
 	 */
-	public GuiListener(Pitch pitch) {
-		this.pitch = pitch;
+	public GuiListener(Simulator simulator) {
+		this.simulator = simulator;
 	}
 	
 	/**
@@ -25,13 +25,13 @@ public class GuiListener implements Listener {
 	 * @param data
 	 */
 	public void updateLocation(Location location) {
-		pitch.getRobot1().setXPosRemapped(location.getOurRobot().getX());
-		pitch.getRobot1().setYPosRemapped(location.getOurRobot().getY());
-		pitch.getRobot1().setTheta(location.getOurRobot().getT());
-		pitch.getRobot2().setXPosRemapped(location.getOpponentRobot().getX());
-		pitch.getRobot2().setYPosRemapped(location.getOpponentRobot().getY());
-		pitch.getRobot2().setTheta(location.getOpponentRobot().getT());
-		pitch.getBall().setXPosRemapped(location.getBall().getX());
-		pitch.getBall().setYPosRemapped(location.getBall().getY());
+		simulator.getRobot1().setXPosRemapped(location.getOurRobot().getX());
+		simulator.getRobot1().setYPosRemapped(location.getOurRobot().getY());
+		simulator.getRobot1().setTheta(location.getOurRobot().getT());
+		simulator.getRobot2().setXPosRemapped(location.getOpponentRobot().getX());
+		simulator.getRobot2().setYPosRemapped(location.getOpponentRobot().getY());
+		simulator.getRobot2().setTheta(location.getOpponentRobot().getT());
+		simulator.getBall().setXPosRemapped(location.getBall().getX());
+		simulator.getBall().setYPosRemapped(location.getBall().getY());
 	}
 }

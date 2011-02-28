@@ -2,7 +2,6 @@ package main;
 
 import javax.swing.*;
 
-import main.executor.Simulator;
 import main.gui.DrawablesListener;
 import main.gui.GuiListener;
 import main.processor.SimulatorProcessor;
@@ -129,7 +128,7 @@ public class Runner {
 			throws Exception {
 		// Disable button from being clicked 
 		window.setButton("Running...", false);
-		
+
 		// set running to true so other parts of code can know Runner state
 		running = true;
 
@@ -153,13 +152,12 @@ public class Runner {
 		// Inform window about running process
 		// TODO handle this better
 		if (!(this.processor instanceof SimulatorProcessor)) {
-			this.processor.addListener(new GuiListener(window.getPitch()));
+			this.processor.addListener(new GuiListener(window.getSimulator()));
 		}
-		this.strategy.setDrawablesListener(new DrawablesListener(window.getPitch()));
+		this.strategy.setDrawablesListener(new DrawablesListener(window.getSimulator()));
 
 		System.out.println("Processing starting");
 		
-
 		// start running processor
 		this.processor.run(our_robot.equals(ROBOT_BLUE),left_goal.equals(LEFT_GOAL));
 		
@@ -177,7 +175,7 @@ public class Runner {
 		if (type.equals("Local process")) {
 			processor = new main.processor.LocalVision("../../Vision/trunk/ObjectDetectionML/ObjectDetectionML/src/build/your_project c predict_major outputToConsole show");
 		} else if (type.equals("Simulator")) {
-			processor = new main.processor.SimulatorProcessor(window.getPitch());
+			processor = new main.processor.SimulatorProcessor(window.getSimulator());
 		} else {
 			processor = new main.processor.File("data/Outputlocs.txt");
 		}
@@ -223,7 +221,7 @@ public class Runner {
 		} else if (type.equals("Dull")) {
 			executor = new main.executor.Dull();
 		} else if (type.equals("Simulator")) {
-			executor = new main.executor.Simulator(window.getPitch());
+			executor = new main.executor.Simulator(window.getSimulator());
 		}
 	}
 

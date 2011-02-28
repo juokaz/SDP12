@@ -4,27 +4,27 @@ import java.util.ArrayList;
 
 public class DrawablesListener {
 	
-	protected Pitch pitch;
+	protected Simulator simulator;
 
 	/**
 	 * Drawables listener
 	 * 
-	 * @param pitch
+	 * @param simulator
 	 */
-	public DrawablesListener(Pitch pitch)
+	public DrawablesListener(Simulator simulator)
 	{
-		this.pitch = pitch;
+		this.simulator = simulator;
 	}
 	
 	/**
 	 * Set drawables
 	 * 
-	 * updates them on a pitch
+	 * updates them on a simulator
 	 * 
 	 * @param drawables
 	 */
 	public void setDrawables(ArrayList<Drawable> drawables)
 	{
-		pitch.setDrawables(drawables);
+		simulator.setDrawables(drawables);
 	}
 }

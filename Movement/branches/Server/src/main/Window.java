@@ -10,6 +10,7 @@ import javax.swing.*;
 
 import main.gui.Ball;
 import main.gui.Pitch;
+import main.gui.Simulator;
 
 import java.io.*;
 
@@ -68,7 +69,7 @@ public class Window {
 	/**
 	 * Pitch
 	 */
-	Pitch pitch;
+	Simulator simulator;
 
 	/**
 	 * Window instance
@@ -94,7 +95,7 @@ public class Window {
 		
 		frame.setLayout(new BorderLayout() ); 
 		
-		addPitch();
+		addSimulator();
 		
 		// frame size
 		frame.setSize(frame.getWidth(), frame.getHeight() + 150);
@@ -104,22 +105,24 @@ public class Window {
 
 		// add buttons and dropboxes
 		addControls();
-
+		
 		// show a window
 		frame.setVisible(true);
+		simulator.start();
 	}
 	
-	private void addPitch() {
+	private void addSimulator() {
 		
 		// TODO FIX THIS!!
 		main.gui.Robot robot1 = new main.gui.Robot("images/tb.jpg", 400, 400, 180);
 		main.gui.Robot robot2 = new main.gui.Robot("images/ty.jpg", 500, 250, 0);
 		Ball ball = new Ball("images/ball.jpg", 200, 400);
+		Pitch pitch = new Pitch("images/bg.jpg");
 
-		pitch = new Pitch(robot1, robot2, ball);
+		simulator = new Simulator(pitch, robot1, robot2, ball);
 		
-		frame.setSize(pitch.getPitchWidth() + 350, pitch.getPitchHeight());
-		frame.add(pitch);
+		frame.setSize(simulator.getPitch().getWidth() + 350, simulator.getPitch().getHeight());
+		frame.add(simulator);
 	}
 
 	/**
@@ -224,8 +227,8 @@ public class Window {
 	 * 
 	 * @return
 	 */
-	public Pitch getPitch() {
-		return this.pitch;
+	public Simulator getSimulator() {
+		return this.simulator;
 	}
 
 	/**
