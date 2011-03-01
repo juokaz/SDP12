@@ -132,7 +132,7 @@ public abstract class AbstractStrategy implements Strategy {
 		// a velocity proportional to the distance between them
 	
 		// TODO: Check threshold is acceptable for real robot. 
-		if(Math.abs(dirAngle - robot.getTDegrees()) % 360 < 15) {
+		if(Math.abs(dirAngle - robot.getTDegrees()) % 360 < 30) {
 			left = (int) (1*distance)/(pointThreshold - 5);
 			right = (int) (1*distance)/(pointThreshold - 5);	
 			rotateState = "straight";

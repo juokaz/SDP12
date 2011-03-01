@@ -93,8 +93,8 @@ public class Window {
 		    });
 		
 		frame.setLayout(new BorderLayout() ); 
-		
-		addPitch();
+		// TODO: Line below can turn off pitch, commenting out will 
+		//addPitch();
 		
 		// frame size
 		frame.setSize(frame.getWidth(), frame.getHeight() + 150);

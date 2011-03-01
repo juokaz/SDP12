@@ -18,5 +18,6 @@ public class TakePenalty2 extends AbstractStrategy implements Strategy {
 	protected void takePenalty() {
 		executor.takePenalty();
 		hasTaken = true;
+		executor.exit();
 	}
 }

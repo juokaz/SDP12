@@ -97,11 +97,13 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			setIAmDoing("Not in optimum - going to Optimum");
 			moveToPoint(robot, optimum);
 		}
+		/**
 		else if (isBallReached(robot, ball) && !isRobotCloseToGoal(robot, goal))
 		{
 			setIAmDoing("Moving to Goal");
-			moveToPoint(robot, goal, true);
+			moveToPoint(robot, goal);
 		}
+		*/
 		else if (isBallReached(robot, ball))
 		{
 			setIAmDoing("Kick");
