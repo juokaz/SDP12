@@ -89,7 +89,6 @@ public abstract class AbstractStrategy implements Strategy {
 		double dirAngle = 0;
 		int left=1;
 		int right=1;
-		
 		double currentAngle = robot.getTDegrees();
 
 		// find the distance between the robot and the ball
@@ -128,13 +127,14 @@ public abstract class AbstractStrategy implements Strategy {
 			right = -1;
 		}
 		
+		int pointThreshold = point.getPT();
 		// once the robot is facing in direction of the ball, move towards it at
 		// a velocity proportional to the distance between them
 	
 		// TODO: Check threshold is acceptable for real robot. 
-		if(Math.abs(dirAngle - robot.getTDegrees()) % 360 < 30) {
-			left = (int) (1*distance)/35;
-			right = (int) (1*distance)/35;	
+		if(Math.abs(dirAngle - robot.getTDegrees()) % 360 < 15) {
+			left = (int) (1*distance)/(pointThreshold - 5);
+			right = (int) (1*distance)/(pointThreshold - 5);	
 			rotateState = "straight";
 		}
 		

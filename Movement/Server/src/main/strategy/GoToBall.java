@@ -252,7 +252,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isRobotInOptimumPosition(Robot robot, Point optimum) {
-		return robot.isInPoint(optimum);
+		return robot.isInPoint(optimum, 30);
 	}
 	
 	/**

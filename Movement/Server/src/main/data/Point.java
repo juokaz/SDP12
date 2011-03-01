@@ -15,6 +15,8 @@ public class Point {
 	protected double X;
 	protected double Y;
 	
+	protected int pointThreshold = 30;
+	
 	public Point(double X, double Y) {
 		this.X = X;
 		this.Y = Y;
@@ -83,8 +85,7 @@ public class Point {
 	 * @return
 	 */
 	public boolean isInPoint(Point point) {
-		// TODO check 40
-		return isInPoint(point, 40);
+		return isInPoint(point, pointThreshold);
 	}
 	
 	/**
@@ -110,8 +111,8 @@ public class Point {
 		double p_x = point.getX();
 		double p_y = point.getY();
 			
-		return x < p_x + threshold && x > p_x - threshold && 
-			   y < p_y + threshold && y > p_y - threshold;
+		return x <= p_x + threshold && x >= p_x - threshold && 
+			   y <= p_y + threshold && y >= p_y - threshold;
 	}
 
 	public double getX() {
@@ -128,5 +129,13 @@ public class Point {
 	
 	public void setY(double y) {
 		Y = y;
+	}
+	
+	public void setPT(int threshold) {
+		pointThreshold = threshold;
+	}
+	
+	public int getPT() {
+		return pointThreshold;
 	}
 }
