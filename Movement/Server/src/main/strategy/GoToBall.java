@@ -55,7 +55,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 
 		
 		// This state machine covers the basic stages robot can be in 
-		if (isBallOutOfPitch(ball))
+		if (ball.isPointOutOfPitch())
 		{
 			setIAmDoing("Ball out of pitch");
 			// We have scored (hopefully)
@@ -76,22 +76,17 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		}
 		else if (robot.isObstacleInFront(opponent, optimum, opponentWidth))
 		{			
-			goingToAvoid = true;
 			setIAmDoing("Obstacle in front - going to Avoid");
 			Point point = getPointToAvoidObstacle(robot, opponent, optimum);
-			if (robot.isInPoint(point)) 
-				goingToAvoid = false;
-			drawPoint(point, "Avoid");
 			moveToPoint(robot, point);
 		}
 		else if (isBallBehindRobot(robot, ball, optimum, goal))
 		{
-			goingToBehind = true;
 			setIAmDoing("Ball behind robot - going to Behind");
 			Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum, goal);
-			if (robot.isInPoint(point)) 
-				goingToBehind = false;
 			drawPoint(point, "Behind");
+			// Checks to see if there is an obstacle in the way of the new point,
+			// if there is, set new point to avoid obstacle.
 			if (robot.isObstacleInFront(opponent, point, opponentWidth)) {
 				point = getPointToAvoidObstacle(robot, opponent, point);
 			}
@@ -134,8 +129,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * much more accurate way of measuring if an obstacle is inbetween the robot 
 	 * and its intended point.
 	 * 
-	 * TODO: Calculate if is too close to the walls
-	 * 
 	 * @param robot
 	 * @param opponent
 	 * @param optimum
@@ -146,20 +139,26 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		if (robot.getY() > opponent.getY()) {
 			belowOpponent = true;
 		}
+		
+		// Get the two possible points available.
 		Point pointAbove = calculateAvoidancePoint(robot, opponent, 100, false);
 		Point pointBelow = calculateAvoidancePoint(robot, opponent, 100, true);
 
+		// Get the overall distance that will be travelled to reach ball.
 		double distancePointA = robot.getDistanceBetweenPoints(pointAbove) + pointAbove.getDistanceBetweenPoints(optimum);
 		double distancePointB = robot.getDistanceBetweenPoints(pointBelow) + pointBelow.getDistanceBetweenPoints(optimum);
 		
-		if (!robot.isObstacleInFront(opponent, pointAbove, opponentWidth) && !robot.isObstacleInFront(opponent, pointBelow, opponentWidth)) {
+		// If there are no obstacles inbetween the robot and either point, and neither point is outside the pitch, 
+		// go to the one which has the shortest distance to the ball
+		if (!robot.isObstacleInFront(opponent, pointAbove, opponentWidth) && !robot.isObstacleInFront(opponent, pointBelow, opponentWidth)
+				&& !pointAbove.isPointOutOfPitch() && !pointBelow.isPointOutOfPitch()) {
 			if (distancePointA < distancePointB) {
 				return pointAbove;
 			} else {
 				return pointBelow;
 			}
 		}
-		
+		// If there is an obstacle in front of the point or it is off the pitch, go to the other point
 		if (robot.isObstacleInFront(opponent, pointAbove, opponentWidth) || pointAbove.isPointOutOfPitch()) {
 			return pointBelow;
 		} 
@@ -207,6 +206,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 */	
 	protected Point getPointToFaceBallFromCorrectSide(Robot robot, Ball ball, Point optimum, Goal goal) {		
 		int behindGap = 50;
+		// Check if robot is below the ball and which side of the ball it is on
 		boolean belowBall = true;
 		if (goal.getX() != 0) {
 			belowBall = false;
@@ -216,6 +216,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		if (robot.getY() > optimum.getY()) {
 			belowBall = false;
 		}
+		// Calculate the avoid point, if point is out of pitch, change to other point.
+		// TODO check the need for this, as robot is unlikely to reach the avoid point.
 		Point point = calculateAvoidancePoint(robot, ball, behindGap, belowBall);
 		if (point.isPointOutOfPitch()) {
 			if(belowBall) {
@@ -280,35 +282,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	}
 	
 	/**
-	 * Is ball out of pitch
-	 * 
-	 * @param ball
-	 * @return
-	 */
-	protected boolean isBallOutOfPitch(Ball ball) {
-		return ball.getX() < PITCH_X_MIN || ball.getX() > PITCH_X_MAX ||
-			   ball.getY() < PITCH_Y_MIN || ball.getY() > PITCH_Y_MAX;
-	}
-	
-	/**
-	 * TODO:  Not sure if this is needed, need to change all other methods
-	 * to take goal into account though, so will leave until that is done 
-	 * 
-	 * @param ballGoalAngle
-	 * @param ball
-	 * @param gap
-	 * @return
-	 */
-	protected Point calculatePosBehindBall(double ballGoalAngle, Point ball, int gap) {
-		// Need to work out sin and cos distances to get new X and Y positions
-		double xOffset = gap*Math.cos(ballGoalAngle);
-		double yOffset = gap*Math.sin(ballGoalAngle);
-		
-		
-		return new Point(ball.getX()+xOffset, ball.getY()+yOffset);
-	}
-	
-	/**
 	 * Calculates a point at a 90 degree angle to the ball in relation to the robot.
 	 * 
 	 * @param robot
@@ -359,6 +332,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		if (goal.getX() == 0) {
 			opponentGoal.setX(550);
 		}
+		// Checks to see if ball is inbetween opponent and the opponents goal (goal
+		// we are defending), and if it is within a distance that defines possesion.
 		if(opponent.isObstacleInFront(ball, opponentGoal, ballWidth) 
 			&& opponent.getDistanceBetweenPoints(ball) <= possesionDistance) {
 			return true;
