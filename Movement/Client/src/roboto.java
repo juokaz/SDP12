@@ -30,6 +30,8 @@ public class roboto {
 	
 	private static final int CELEBRATE = 5;
 	
+	private static final int PENALTY = 6;
+	
 
 	
 	/**
@@ -120,6 +122,55 @@ public class roboto {
 					case CELEBRATE:
 						Tune.Tune();
 						break;
+					case PENALTY:
+						Motor.A.setSpeed(360);
+						Motor.C.setSpeed(360);
+						int rotateAmount = 200;
+						
+						if (Math.random() < 0.5) {
+							try {  
+								//rotate right
+								Motor.A.backward();
+								Motor.C.forward();
+								Thread.sleep(rotateAmount);
+								Motor.A.stop();
+								Motor.C.stop();
+								
+								//kick
+								Motor.B.setSpeed(1020);
+								Motor.B.forward();
+								Thread.sleep(120);
+								Motor.B.stop();
+								Motor.B.backward();
+								Thread.sleep(150);
+								Motor.B.stop();
+								
+							} catch (InterruptedException e) {
+								drawMessage("Error in Penalty: " + e);
+							}
+						} else {
+							try {  
+								//rotate left
+								Motor.A.forward();
+								Motor.C.backward();
+								Thread.sleep(rotateAmount);
+								Motor.A.stop();
+								Motor.C.stop();
+								
+								//kick
+								Motor.B.setSpeed(1020);
+								Motor.B.forward();
+								Thread.sleep(120);
+								Motor.B.stop();
+								Motor.B.backward();
+								Thread.sleep(150);
+								Motor.B.stop();
+								
+							} catch (InterruptedException e) {
+								drawMessage("Error in Penalty: " + e);
+							}
+						
+						}
 					case STOP:
 						Motor.A.stop();
 						Motor.B.stop();

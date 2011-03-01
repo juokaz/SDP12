@@ -125,4 +125,10 @@ public class Simulator extends AbstractProcessor implements Executor {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void takePenalty() {
+		// TODO Auto-generated method stub
+		
+	}
 }

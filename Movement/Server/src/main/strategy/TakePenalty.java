@@ -12,35 +12,16 @@ import main.data.Location;
 import main.data.Robot;
 import main.gui.Drawable;
 
-/**
- * @author Marc Howarth
- *
- */
-/**
- * @author Marc Howarth
- *
- */
-/**
- * @author Marc Howarth
- *
- */
-/**
- * @author Marc Howarth
- *
- */
-/**
- * @author Marc Howarth
- *
- */
 public class TakePenalty extends AbstractStrategy implements Strategy {
 
 	private boolean haveKicked = false;
 
 	private double angleThreshold = Math.PI / 8;
-	private int rotateSpeed = 100;
-	private int forwardSpeed = 100;
+	private int rotateSpeed = 200;
+	private int forwardSpeed = 200;
 	private int offsetGoal = 120; // used to aim 120 away from the centre of the goal
 
+	@Override
 	public void updateLocation(Location data) {
 
 		Ball ball = data.getBall();

@@ -53,6 +53,11 @@ public class Bluetooth implements Executor {
 	private static final String CELEBRATE = "5";
 	
 	/**
+	 * Take Penalty command
+	 */
+	private static final String PENALTY = "6";
+	
+	/**
 	 * Separator for commands
 	 */
 	private static final String SPACE = " ";
@@ -93,13 +98,19 @@ public class Bluetooth implements Executor {
 	@Override
 	public void rotate(int T) {
 		if(!closed)
-		server.sendCommand(ROTATE + SPACE + Integer.toString(T));
+			server.sendCommand(ROTATE + SPACE + Integer.toString(T));
 	}
 	
 	@Override
 	public void celebrate() {
 		if(!closed)
-		server.sendCommand(CELEBRATE);
+			server.sendCommand(CELEBRATE);
+	}
+	
+	@Override
+	public void takePenalty() {
+		if(!closed)
+			server.sendCommand(PENALTY);
 	}
 	
 	@Override

@@ -38,6 +38,11 @@ public interface Executor {
 	public void celebrate();
 	
 	/**
+	 * Take Penalty
+	 */
+	public void takePenalty();
+	
+	/**
 	 * Send exit command to executor
 	 */
 	public void exit();
