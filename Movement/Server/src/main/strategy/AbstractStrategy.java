@@ -90,6 +90,7 @@ public abstract class AbstractStrategy implements Strategy {
 		int left=1;
 		int right=1;
 		
+		double currentAngle = robot.getTDegrees();
 
 		// find the distance between the robot and the ball
 		double dy = robot.getY() - point.getY();
@@ -98,25 +99,34 @@ public abstract class AbstractStrategy implements Strategy {
 
 		dirAngle = Math.toDegrees(point.getAngleBetweenPoints(robot));
 
-		double angleDifference = robot.getTDegrees() - dirAngle;
+		double angleDifference = currentAngle - dirAngle;
+		
+		while (angleDifference > 180) {
+			angleDifference = angleDifference - 360;
+		}
+		while (angleDifference < -180) {
+			angleDifference = angleDifference + 360;
+		}
+		
+		if (rotateState.equals("straight")){
+			if (angleDifference > 180)
+				rotateState = "left";
+			else if (angleDifference >= 0 && angleDifference <= 180)
+				rotateState = "right";
+			else if (angleDifference < 0) // default condition
+				rotateState = "left";
+			else
+				rotateState = "straight";	
+		}
 		
 		if (rotateState.equals("left")){
 			left = -1;
 			right = 1;
-			rotationState = "left";
 		}
 		if (rotateState.equals("right")){
 			left = 1;
 			right = -1;
 		}
-		if (rotateState.equals("straight")){
-			if((angleDifference < 0 && Math.abs(angleDifference) < 180)
-					|| (angleDifference > 180 && Math.abs(angleDifference) > 180)) 
-				rotateState = "left";
-			else
-				rotateState = "right";	
-		}
-		
 		
 		// once the robot is facing in direction of the ball, move towards it at
 		// a velocity proportional to the distance between them
@@ -145,8 +155,10 @@ public abstract class AbstractStrategy implements Strategy {
 		
 		drawables.add(new Drawable(Drawable.LABEL, "Distance: " + formatter.format(distance), 50, 30, Color.WHITE));
 		drawables.add(new Drawable(Drawable.LABEL, "dirAngle: " + formatter.format(dirAngle), 50, 50, Color.WHITE));
-		drawables.add(new Drawable(Drawable.LABEL, "robotAngle: " + formatter.format(robot.getTDegrees()), 50, 70, Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL, "robotAngle: " + formatter.format(currentAngle), 50, 70, Color.WHITE));
+
 	}
+
 	
 	/**
 	 * Change to positive

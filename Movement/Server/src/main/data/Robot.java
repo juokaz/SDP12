@@ -21,6 +21,13 @@ public class Robot extends Point {
 	}
 	
 	public double getTDegrees() {
-		return Math.toDegrees(T);
+		double t = Math.toDegrees(T);
+		while ( t > 180 ){
+			t = t - 360;
+		}
+		while ( t < -180 ){
+			t = t + 360;
+		}
+		return t;
 	}
 }

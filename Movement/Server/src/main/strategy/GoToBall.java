@@ -22,8 +22,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 
 	// Gap is the distance behind ball for the point we want to move to.
 	private int optimalGap = 50;
-	private int gap = 30;
 	private final static int ballWidth = 10;
+	private int gap = 30;
 	// This is the distance between the opponent and the ball that defines 
 	// the opponent to be in possession
 	private final static int possesionDistance = 50;
