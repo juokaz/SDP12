@@ -30,7 +30,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	//Thresholds
 	private int wallThreshold = 30;
 
-	private int opponentWidth;
+	// TODO: calculate width of the opponent taking into account its angle (?)
+	private int opponentWidth = 75;
 	boolean goingToAvoid = false;
 	boolean goingToBehind = false;
 	
@@ -41,8 +42,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		Robot opponent = /*new Robot(-1,-1,-1);*/data.getOpponentRobot();
 		Goal goal = data.getGoal();
 		Point optimum = getOptimumPoint(ball, goal);
-		// TODO: calculate width of the opponent taking into account its angle (?)
-		opponentWidth = 60; 
 		//	ballBuffer.addPoint(ball);
 
 		// statistics
@@ -78,18 +77,19 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		{			
 			setIAmDoing("Obstacle in front - going to Avoid");
 			Point point = getPointToAvoidObstacle(robot, opponent, optimum);
+			drawPoint(point, "Avoid");
 			moveToPoint(robot, point);
 		}
 		else if (isBallBehindRobot(robot, ball, optimum, goal))
 		{
 			setIAmDoing("Ball behind robot - going to Behind");
 			Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum, goal);
-			drawPoint(point, "Behind");
 			// Checks to see if there is an obstacle in the way of the new point,
 			// if there is, set new point to avoid obstacle.
 			if (robot.isObstacleInFront(opponent, point, opponentWidth)) {
 				point = getPointToAvoidObstacle(robot, opponent, point);
 			}
+			drawPoint(point, "Behind");
 			moveToPoint(robot, point);
 		}
 		else if (!isRobotInOptimumPosition(robot, optimum))
