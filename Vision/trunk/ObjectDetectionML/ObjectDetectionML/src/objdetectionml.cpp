@@ -1,5 +1,124 @@
 #include "objdetectionml.h"
-void objDetection::machineLearning::setDataSetClasses2 (int selected,int rejected,CvMat* classData)
+void objDetection::machineLearning::train_complete(config& conf,predictions& predicts)
+{
+	if(conf.train_major)
+	{
+		objDetection::machineLearning::trainDataSet_major(MODEL_MAJOR_NAME_TY,predicts.selectedDataSet_TY,predicts.rejectedDataSet_TY);
+		objDetection::machineLearning::trainDataSet_major(MODEL_MAJOR_NAME_B,predicts.selectedDataSet_Ball,predicts.rejectedDataSet_Ball);
+		objDetection::machineLearning::trainDataSet_major(MODEL_MAJOR_NAME_D,predicts.selectedDataSet_D,predicts.rejectedDataSet_D);
+		objDetection::machineLearning::trainDataSet_major(MODEL_MAJOR_NAME_TB,predicts.selectedDataSet_TB,predicts.rejectedDataSet_TB);
+
+	}
+	train_minor_complete(conf,predicts);
+}
+void objDetection::machineLearning::train_minor_complete(config& conf,predictions& predict)
+{
+	if(conf.train_minor)
+	{
+		objDetection::machineLearning::trainDataSet_minor(MODEL_MINOR_NAME_TY,predict.selectedDataSet_D_TY,predict.rejectedDataSet_D_TY, predict.selectedtuples_DataSet_TY,predict.rejectedtuples_DataSet_TY);
+		objDetection::machineLearning::trainDataSet_minor(MODEL_MINOR_NAME_TB,predict.selectedDataSet_D_TB,predict.rejectedDataSet_D_TB,predict.selectedtuples_DataSet_TB,predict.rejectedtuples_DataSet_TB);
+	}
+}
+void objDetection::machineLearning::predict_minor(config& conf,CvContour* cnt_TB,CvContour* cnt_TY,IplImage* current_frame_pro_D)
+{
+	if(cnt_TB!=NULL)
+	{
+		std::vector<CvBox2D> TB= objDetection::machineLearning::tester_image_minor(current_frame_pro_D,MODEL_MINOR_NAME_TB,cnt_TB,conf.storage,conf.current_frame);
+		if(TB.size()>0)
+		{
+			conf.sel_TB=TB.at(0);
+			objDetection::utilities::cb_push_back(&conf.TB_Buffer,(void*)&conf.sel_TB.angle);
+			conf.sel_TB.angle=objDetection::utilities::average_cb_buffer(&conf.TB_Buffer);
+		}
+	}
+	if(cnt_TY!=NULL)
+	{
+		std::vector<CvBox2D> TY= objDetection::machineLearning::tester_image_minor(current_frame_pro_D,MODEL_MINOR_NAME_TY,cnt_TY,conf.storage,conf.current_frame);
+		if(TY.size()>0)
+		{
+			conf.sel_TY=TY.at(0);
+			objDetection::utilities::cb_push_back(&conf.TY_Buffer,(void*)&conf.sel_TY.angle);
+			conf.sel_TY.angle=objDetection::utilities::average_cb_buffer(&conf.TY_Buffer);
+		}
+	}
+}
+void objDetection::machineLearning::predict(config& conf,IplImage* current_frame_pro_B,IplImage* current_frame_pro_TB,IplImage* current_frame_pro_TY,IplImage* current_frame_pro_D)
+{
+	CvContour* cnt_TB=NULL;
+	CvContour* cnt_TY=NULL;
+	CvContour* cnt_B=NULL;
+	if(conf.predict_major||conf.predict_minor)
+	{
+
+		std::vector<CvContour*> cnt_D;
+		std::vector<CvContour*> cnt;
+		cnt= objDetection::machineLearning::tester_image_major(current_frame_pro_B,MODEL_MAJOR_NAME_B,conf.storage);
+		if(cnt.size()!=0)
+			cnt_B=cnt.at(0);
+		cnt.clear();
+		cnt= objDetection::machineLearning::tester_image_major(current_frame_pro_TB,MODEL_MAJOR_NAME_TB,conf.storage);
+		if(cnt.size()!=0)
+			cnt_TB=cnt.at(0);
+		cnt.clear();
+		cnt= objDetection::machineLearning::tester_image_major(current_frame_pro_TY,MODEL_MAJOR_NAME_TY,conf.storage);
+		if(cnt.size()!=0)
+			cnt_TY=cnt.at(0);
+		if(conf.predict_major)
+		{
+			if(cnt_TB!=NULL)
+			{
+				conf.sel_TB=objDetection::orientation_secondOrderMoment(cnt_TB);//,cnt_D,current_frame);
+				objDetection::utilities::cb_push_back(&conf.TB_Buffer,(void*)&conf.sel_TB.angle);
+				conf.sel_TB.angle=objDetection::utilities::average_cb_buffer(&conf.TB_Buffer);
+			}
+			if(cnt_TY!=NULL)
+			{
+				conf.sel_TY=objDetection::orientation_secondOrderMoment(cnt_TY);//,cnt_D,current_frame);
+				objDetection::utilities::cb_push_back(&conf.TY_Buffer,(void*)&conf.sel_TY.angle);
+				conf.sel_TY.angle=objDetection::utilities::average_cb_buffer(&conf.TY_Buffer);
+			}
+			if(cnt_B!=NULL)
+			{
+				conf.rect_B=cvBoundingRect(cnt_B);
+			}
+		}
+		predict_minor(conf,cnt_TB,cnt_TY,current_frame_pro_D);
+	}
+}
+void objDetection::machineLearning::train(config& conf,predictions& predicts,IplImage* current_frame_pro_B,IplImage* current_frame_pro_TB,IplImage* current_frame_pro_TY,IplImage* current_frame_pro_D)
+{
+	if(conf.train_major||conf.train_minor)
+	{
+		std::vector<CvContour*> cnt= objDetection::getContours(current_frame_pro_B,conf.storage);
+		objDetection::machineLearning::trainDataSet("Find Ball",conf.current_frame,cnt,predicts.selectedDataSet_Ball,predicts.rejectedDataSet_Ball);
+
+		cnt= objDetection::getContours(current_frame_pro_TY,conf.storage);
+		objDetection::machineLearning::trainDataSet("Find TY",conf.current_frame,cnt,predicts.selectedDataSet_TY,predicts.rejectedDataSet_TY);
+
+		cnt= objDetection::getContours(current_frame_pro_TB,conf.storage);
+		objDetection::machineLearning::trainDataSet("Find TB",conf.current_frame,cnt,predicts.selectedDataSet_TB,predicts.rejectedDataSet_TB);
+
+		cnt= objDetection::getContours(current_frame_pro_D,conf.storage);
+		objDetection::machineLearning::trainDataSet("Find D",conf.current_frame,cnt,predicts.selectedDataSet_D,predicts.rejectedDataSet_D);
+		train_minor(conf,predicts,current_frame_pro_D);
+
+	}
+}
+void objDetection::machineLearning::train_minor(config& conf,predictions& predicts,IplImage* current_frame_pro_D)
+{
+	if(conf.train_minor)
+	{
+
+		std::vector<CvContour*> cnt_D= objDetection::getContours(current_frame_pro_D,conf.storage);
+		objDetection::machineLearning::trainDataSet("Find D Near TY",conf.current_frame,cnt_D,predicts.selectedDataSet_D_TY,predicts.rejectedDataSet_D_TY);
+		objDetection::machineLearning::train_bind(predicts.selectedDataSet_D_TY,predicts.rejectedDataSet_D_TY,predicts.selectedDataSet_TY,predicts.rejectedDataSet_TY,predicts.selectedtuples_DataSet_TY,predicts.rejectedtuples_DataSet_TY);
+		objDetection::machineLearning::trainDataSet("Find D Near TB",conf.current_frame,cnt_D,predicts.selectedDataSet_D_TB,predicts.rejectedDataSet_D_TB);
+		objDetection::machineLearning::train_bind(predicts.selectedDataSet_D_TB,predicts.rejectedDataSet_D_TB,predicts.selectedDataSet_TB,predicts.rejectedDataSet_TB,predicts.selectedtuples_DataSet_TB,predicts.rejectedtuples_DataSet_TB);
+
+
+	}
+}
+void objDetection::machineLearning::setDataSetClasses (int selected,int rejected,CvMat* classData)
 {
 	CvMat trainClassesAccepted;
 	CvMat trainClassesRejected;
@@ -8,11 +127,6 @@ void objDetection::machineLearning::setDataSetClasses2 (int selected,int rejecte
 	for(unsigned int i=0;i<(selected);i++)
 	{
 		*( (float*)CV_MAT_ELEM_PTR( trainClassesAccepted, i, 0 ) ) = 1000.0;
-
-
-
-
-
 	}
 
 	cvGetRows( classData, &trainClassesRejected, selected,selected+ rejected);
@@ -26,7 +140,6 @@ void objDetection::machineLearning::setDataSetClasses2 (int selected,int rejecte
 
 	}
 }
-
 void objDetection::machineLearning::trainDataSet_major(const char* filename,std::vector<CvContour*> selectedDataSet,std::vector<CvContour*> rejectedDataSet)
 {
 	if(selectedDataSet.size()==0||rejectedDataSet.size()==0)
@@ -38,7 +151,7 @@ void objDetection::machineLearning::trainDataSet_major(const char* filename,std:
 	CvMat* trainData=cvCreateMat(selectedDataSet.size()+rejectedDataSet.size(),1,CV_32FC1);
 	objDetection::machineLearning::setDataSetFeatures_Area(selectedDataSet,rejectedDataSet,trainData,0);
 	//objDetection::machineLearning::setDataSetFeatures_Compactness(selectedDataSet,rejectedDataSet,trainData,1);
-	objDetection::machineLearning::setDataSetClasses(selectedDataSet,rejectedDataSet,trainClass);
+	objDetection::machineLearning::setDataSetClasses(selectedDataSet.size(),rejectedDataSet.size(),trainClass);
 
 	CvSVM svm;
 	CvSVMParams param;
@@ -49,37 +162,6 @@ void objDetection::machineLearning::trainDataSet_major(const char* filename,std:
 
 	cvReleaseMat(&trainClass);
 	cvReleaseMat(&trainData);
-}
-void objDetection::machineLearning::setDataSetClasses (std::vector<CvContour*> selected,std::vector<CvContour*> rejected,CvMat* classData)
-{
-	CvMat trainClassesAccepted;
-	CvMat trainClassesRejected;
-	cvGetRows( classData, &trainClassesAccepted, 0, selected.size());
-
-	for(unsigned int i=0;i<(selected.size());i++)
-	{
-		*( (float*)CV_MAT_ELEM_PTR( trainClassesAccepted, i, 0 ) ) = 1000.0;
-
-
-
-
-
-	}
-	if(rejected.size()==0)
-		return;
-	cvGetRows( classData, &trainClassesRejected, selected.size(),selected.size()+ rejected.size());
-	for(unsigned int i=0;i<(rejected.size());i++)
-	{
-		*( (float*)CV_MAT_ELEM_PTR( trainClassesRejected, i, 0 ) ) =0;
-
-
-
-
-
-	}
-
-
-
 }
 void objDetection::machineLearning::setDataSetFeatures_Area (std::vector<CvContour*> selected,std::vector<CvContour*> rejected,CvMat* trainData,int start_col)
 {
@@ -118,6 +200,7 @@ void objDetection::machineLearning::setDataSetFeatures_Area (std::vector<CvConto
 	}
 
 }
+
 void objDetection::machineLearning::trainDataSet(const char* title,IplImage* img ,std::vector<CvContour*> contours,std::vector<CvContour*>& accepted,std::vector<CvContour*>& rejected)
 {
 	std::vector<CvContour*> slc_list;
@@ -151,23 +234,22 @@ void objDetection::machineLearning::trainDataSet(const char* title,IplImage* img
 	cvDestroyWindow(title);
 
 }
-
-void objDetection::machineLearning::trainDataSet_minor(const char* filename,std::vector<CvContour*> selectedcon_DataSet,::vector<CvContour*> rejectedcon_DataSet,std::vector<ContourTuple> selectedtuples_DataSet,::vector<ContourTuple> rejectedtuples_DataSet)
+void objDetection::machineLearning::trainDataSet_minor(const char* filename,std::vector<CvContour*> selecteddot_DataSet,::vector<CvContour*> rejecteddot_DataSet,std::vector<ContourTuple> selectedDataSet,	std::vector<ContourTuple> rejectedDataSet)
 {
-	if(selectedtuples_DataSet.size()==0||rejectedtuples_DataSet.size()==0)
+	if(selectedDataSet.size()==0||rejectedDataSet.size()==0)
 	{
 		std::cout<<"Either SelectedDataSet or RejectedDataSet is 0"<<std::endl;
 		return;
 	}
 
-	int dataSetsize=(selectedtuples_DataSet.size()+rejectedtuples_DataSet.size());
+	int dataSetsize=(selectedDataSet.size()+rejectedDataSet.size());
 	CvMat* trainClass=cvCreateMat(dataSetsize,1,CV_32FC1);
 	CvMat* trainData=cvCreateMat(dataSetsize,3,CV_32FC1);
-	objDetection::machineLearning::setDataSetFeatures_DDistance2(selectedtuples_DataSet,rejectedtuples_DataSet,trainData,0);
-	objDetection::machineLearning::setDataSetFeatures_Compactness(selectedcon_DataSet,rejectedcon_DataSet,trainData,1);
-	objDetection::machineLearning::setDataSetFeatures_Area(selectedcon_DataSet,rejectedcon_DataSet,trainData,2);
+	objDetection::machineLearning::setDataSetFeatures_DDistance2(selectedDataSet,rejectedDataSet,trainData,0);
+	objDetection::machineLearning::setDataSetFeatures_Compactness(selecteddot_DataSet,rejecteddot_DataSet,trainData,1);
+	objDetection::machineLearning::setDataSetFeatures_Area(selecteddot_DataSet,rejecteddot_DataSet,trainData,2);
 	//objDetection::machineLearning::setDataSetFeatures_HuMoments(selectedcon_DataSet,rejectedcon_DataSet,trainData,3,10);
-	objDetection::machineLearning::setDataSetClasses2(selectedtuples_DataSet.size(),rejectedtuples_DataSet.size(),trainClass);
+	objDetection::machineLearning::setDataSetClasses(selectedDataSet.size(),rejectedDataSet.size(),trainClass);
 
 	CvSVM svm;
 	CvSVMParams param;
@@ -181,7 +263,7 @@ void objDetection::machineLearning::trainDataSet_minor(const char* filename,std:
 }
 void objDetection::machineLearning::train_bind(std::vector<CvContour*> selecteddot_DataSet,std::vector<CvContour*> rejecteddot_DataSet,
 	std::vector<CvContour*> selectedcon_DataSet,std::vector<CvContour*> rejectedcon_DataSet,
-	std::vector<objDetection::machineLearning::ContourTuple>& selectedtup_DataSet,std::vector<objDetection::machineLearning::ContourTuple>& rejectedtup_DataSet)
+	std::vector<ContourTuple>& selectedtup_DataSet,std::vector<ContourTuple>& rejectedtup_DataSet)
 {
 
 	for(int j=0;j<selecteddot_DataSet.size();j++)
@@ -211,11 +293,10 @@ void objDetection::machineLearning::train_bind(std::vector<CvContour*> selectedd
 	}
 
 }
-
 std::vector<CvBox2D> objDetection::machineLearning::tester_image_minor(IplImage* image,const char* filename,CvContour* sel,CvMemStorage* storage,IplImage* orig)
 {
-	
-	
+
+
 	std::vector<ContourTuple> selected_tuples;
 	std::vector<ContourTuple> rejected_tuples;
 	std::vector<CvContour*> cnt_dot= objDetection::getContours(image,storage);
@@ -229,7 +310,7 @@ std::vector<CvBox2D> objDetection::machineLearning::tester_image_minor(IplImage*
 	if(noSVM)
 	{
 
-		results.push_back(objDetection::getorientation_with_dot(sel,cnt_dot));
+		results.push_back(objDetection::orientation_plate2(sel,cnt_dot));
 		return results;
 	}
 	std::vector<CvContour*> cnt_sel;
@@ -244,7 +325,7 @@ std::vector<CvBox2D> objDetection::machineLearning::tester_image_minor(IplImage*
 	objDetection::machineLearning::setDataSetFeatures_Area(cnt_dot,std::vector<CvContour*>(),predictData,2);
 	//objDetection::machineLearning::setDataSetFeatures_HuMoments(cnt_dot,std::vector<CvContour*>(),predictData,3,10);
 	CvSVM svm;
-	
+
 	svm.load(filename);
 	int selI=-1;
 	float min_dist=10000000;
@@ -274,7 +355,7 @@ std::vector<CvBox2D> objDetection::machineLearning::tester_image_minor(IplImage*
 		dots.push_back(selected_tuples.at(selI).b);
 		cvDrawLine(orig,cvPointFrom32f(cvMinAreaRect2(selected_tuples.at(selI).b).center),cvPointFrom32f(cvMinAreaRect2(selected_tuples.at(selI).a).center),cvScalar(0,155,255),4);
 		cvDrawContours(orig,(CvSeq*)selected_tuples.at(selI).b,cvScalarAll(255),cvScalarAll(255),0);
-		CvBox2D d=objDetection::getorientation_with_dot(selected_tuples.at(selI).a,dots);
+		CvBox2D d=objDetection::orientation_plate2(selected_tuples.at(selI).a,dots);
 		results.push_back(d);
 
 
@@ -369,7 +450,7 @@ void objDetection::machineLearning::setDataSetFeatures_Compactness (std::vector<
 
 	}
 }
-void objDetection::machineLearning::setDataSetFeatures_DDistance2 (std::vector<objDetection::machineLearning::ContourTuple> selected,std::vector<objDetection::machineLearning::ContourTuple> rejected,CvMat* TrainData,int start_col)
+void objDetection::machineLearning::setDataSetFeatures_DDistance2 (std::vector<ContourTuple> selected,std::vector<ContourTuple> rejected,CvMat* TrainData,int start_col)
 {
 	CvMat trainDataAccepted;
 	CvMat trainDataRejected;
@@ -393,37 +474,6 @@ void objDetection::machineLearning::setDataSetFeatures_DDistance2 (std::vector<o
 
 	}
 
-}
-void objDetection::machineLearning::setDataSetFeatures_DDistance (std::vector<CvContour*> selected,std::vector<CvContour*> rejected,std::vector<CvContour*> selected_dots,std::vector<CvContour*> rejected_dots,CvMat* TrainData,int start_col)
-{
-	CvMat trainDataAccepted;
-	CvMat trainDataRejected;
-
-	cvGetRows( TrainData, &trainDataAccepted, 0, selected.size());
-	for(unsigned int i=0;i<(selected.size());i++)
-	{
-		*( (float*)CV_MAT_ELEM_PTR( trainDataAccepted, i, start_col ) ) = (float)objDetection::distance(selected.at(i),selected_dots.at(i));
-
-
-
-
-
-	}
-	if(rejected.size()==0)
-		return;
-	cvGetRows( TrainData, &trainDataRejected, selected.size(),selected.size()+ rejected.size());
-	for(unsigned int i=0;i<(rejected.size());i++)
-	{
-
-
-		*( (float*)CV_MAT_ELEM_PTR( trainDataRejected, i, start_col ) ) =(float)objDetection::distance(rejected.at(i),rejected_dots.at(i));
-
-
-
-
-
-
-	}
 }
 void objDetection::machineLearning::setDataSetFeatures_HuMoments (std::vector<CvContour*> selected,std::vector<CvContour*> rejected,CvMat* trainData,int start_col,int end_col)
 {
@@ -559,43 +609,7 @@ void objDetection::machineLearning::setDataSetFeatures_HuMoments (std::vector<Cv
 
 	}
 }
-void objDetection::machineLearning::getPredictDataSets (std::vector<CvContour*> contours,CvMat* predictData)
-{
 
-
-
-	//cvGetRows( trainData, &trainDataAccepted, selectedIndex, selected.size());
-	for(unsigned int i=0;i<(contours.size());i++)
-	{
-		CvMat curRow;
-		cvGetRows(predictData,&curRow,i,i+1);
-		CvMoments moments;
-		cvMoments(contours.at(i),&moments);
-		CvHuMoments huMoments;
-		cvGetHuMoments(&moments,&huMoments);
-		//Setting HuMomenets as Training Data
-		CvMat curCell;
-		cvGetCol(&curRow,&curCell,0);
-		cvSet(&curCell,cvScalar(huMoments.hu1));
-		cvGetCol(&curRow,&curCell,1);
-		cvSet(&curCell,cvScalar(huMoments.hu2));
-		cvGetCol(&curRow,&curCell,2);
-		cvSet(&curCell,cvScalar(huMoments.hu3));
-		cvGetCol(&curRow,&curCell,3);
-		cvSet(&curCell,cvScalar(huMoments.hu4));
-		cvGetCol(&curRow,&curCell,4);
-		cvSet(&curCell,cvScalar(huMoments.hu5));
-		cvGetCol(&curRow,&curCell,5);
-		cvSet(&curCell,cvScalar(huMoments.hu6));
-		cvGetCol(&curRow,&curCell,6);
-		cvSet(&curCell,cvScalar(huMoments.hu7));
-		cvGetCol(&curRow,&curCell,7);
-		cvSet(&curCell,cvScalar(cvContourArea(contours.at(i))));
-		//End of setting HuMomenets as Training Data
-
-
-	}
-}
 void objDetection::machineLearning::getTrainDataSets (std::vector<CvContour*> selected,std::vector<CvContour*> rejected,CvMat* trainData, CvMat* trainClasses)
 {
 	CvMat trainClassesAccepted;

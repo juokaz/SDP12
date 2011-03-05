@@ -17,6 +17,7 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,IplImage* f
 	{
 		//if bgr (meaning BGR colourspace) is unset then we convert images to HSV.
 		hsv_frame = cvCreateImage(size, frame->depth,3);
+		
 		hsv_back_frame = cvCreateImage(size, frame->depth,3);
 		cvCvtColor(frame, hsv_frame, CV_BGR2HSV);
 		cvCvtColor(frame_back, hsv_back_frame, CV_BGR2HSV);
@@ -134,7 +135,7 @@ CvBox2D objDetection::DotCloseObjectDetection(IplImage* robot_frame,IplImage* do
 	}
 
 	//std::cout<<"calculating orientation"<<std::endl;
-	res=orientation3(robot_contour,dot_contour);// objDetection::getorientation_with_dot(robot_contour,dot_contour);
+	res=orientation_plate2(robot_contour,dot_contour);// objDetection::getorientation_with_dot(robot_contour,dot_contour);
 
 	return res;
 }
@@ -154,12 +155,12 @@ CvContour* objDetection::rankedArea(IplImage* frame,CvMemStorage* storage)
 	return NULL;
 }
 
-CvBox2D objDetection::orientation_hueMoment(CvContour* cntr,IplImage* img)
+CvBox2D objDetection::orientation_secondOrderMoment(CvContour* cntr)
 {
 	float r=0;
 	CvBox2D result;
 	
-	CvBox2D res1= orientation_centerMoment(cntr,img);
+	CvBox2D res1= orientation_centerMoment(cntr);
 	
 	//Next we calculate Center of mass. 
 	CvMoments moments;
@@ -178,7 +179,6 @@ CvBox2D objDetection::orientation_hueMoment(CvContour* cntr,IplImage* img)
 	float angle = atan2(2*mu11,mu20-mu02)/2;	
 	//float angle= atan2(mu11, mu02);
 	//float angle= atan2(mu20, mu11);	
-
 	if (res1.angle > PI/2 || res1.angle < -PI/2)
 	{
 		angle = angle + PI;
@@ -221,22 +221,6 @@ std::vector<CvContour*> objDetection::getContours(IplImage* frame,CvMemStorage* 
 
 	return selectedContours;
 }
-
-CvBox2D objDetection::getorientation_with_dot(CvContour* robot_contour,std::vector<CvContour*> dot_contour)
-{
-	//std::cout<<"Computing Orientation"<<std::endl;
-	CvContour* dot=findClosest(robot_contour,dot_contour);
-	CvPoint2D32f center;
-	float r=0;
-	cvMinEnclosingCircle(dot,&center,&r);
-	//CvBox2D dotm_bbox =cvMinAreaRect2(dot);
-	CvBox2D	res =cvMinAreaRect2(robot_contour);
-	//the correct calculation to draw orientation from dot to T.
-	res.angle=((float)atan2((res.center.y-center.y),(res.center.x-center.x)));
-	//std::cout<<"End of Computing Orientation"<<std::endl;
-	return res;
-}
-
 CvContour* objDetection::findClosest(CvContour* robot_contour,std::vector<CvContour*> dot_contour)
 {
 	CvContour* dot;
@@ -265,13 +249,13 @@ float objDetection::distance(CvContour* contour1,CvContour* contour2)
 	return (int) (pow((double)(contour_1.center.x-contour_2.center.x),2) + pow((double)(contour_1.center.y-contour_2.center.y),2));
 }
 
-CvBox2D objDetection::orientation(CvContour* cntr)
+CvBox2D objDetection::orientation_minRect(CvContour* cntr)
 {
 	CvBox2D result=cvMinAreaRect2(cntr);
 	//result.angle+=180;
 	return result ;
 }
-CvBox2D objDetection::orientation_centerMoment(CvContour* cntr,IplImage* img)
+CvBox2D objDetection::orientation_centerMoment(CvContour* cntr)
 {
 	//First get cntours CvBox2D this can be done with different models of calculation cvFitEllipse2 etc.
 	float r=0;
@@ -301,7 +285,7 @@ CvBox2D objDetection::orientation_centerMoment(CvContour* cntr,IplImage* img)
 
 }
 
-CvBox2D objDetection::orientation2(CvContour* cntr)
+CvBox2D objDetection::orientation_minRect_Circle(CvContour* cntr)
 {
 	CvBox2D cen1= cvMinAreaRect2(cntr);
 	CvPoint2D32f p_cen2;
@@ -314,7 +298,7 @@ CvBox2D objDetection::orientation2(CvContour* cntr)
 		return cen1;
 	}
 }
-CvBox2D objDetection::orientation_plate(CvContour* cntr, std::vector<CvContour*> plate_vector,IplImage* img)
+CvBox2D objDetection::orientation_plate1(CvContour* cntr, std::vector<CvContour*> plate_vector)
 {
 	//First find the closest plate.
 	CvContour* plate_contour= findClosest(cntr,plate_vector);
@@ -342,7 +326,7 @@ CvBox2D objDetection::orientation_plate(CvContour* cntr, std::vector<CvContour*>
 	if(plate_rect.angle>180)
 		plate_rect.angle-=180;
 	//For different cases of T location angle is changed.
-	cvEllipseBox(img,plate_rect,cvScalar(255,255,0));
+	
 	//std::cout<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
 
 
@@ -358,12 +342,9 @@ CvBox2D objDetection::orientation_plate(CvContour* cntr, std::vector<CvContour*>
 	}
 	//Normalize angles again!
 	NORMALIZE(plate_rect.angle);
-	//uncomment for debugging.
-	cvDrawCircle(img,cvPointFrom32f(robot_rect.center),15,cvScalar(200,200,200),2);
-	cvDrawCircle(img,cvPointFrom32f(plate_rect.center),20,cvScalar(0,200,200),2);
 	return plate_rect;
 }
-CvBox2D objDetection::orientation3(CvContour* robot_contour, std::vector<CvContour*> plate_vector)
+CvBox2D objDetection::orientation_plate2(CvContour* robot_contour, std::vector<CvContour*> plate_vector)
 {
 	CvContour* plate_contour= findClosest(robot_contour,plate_vector);
 
@@ -396,9 +377,3 @@ void objDetection::drawOrientation(IplImage* frame, CvBox2D box,CvScalar color)
 	}
 }
 
-void objDetection::outputToText(CvBox2D blue,CvBox2D yellow,CvPoint ball)
-{
-	ofstream f(TEXT_OUTPUT,std::ios::app);
-	f<<(int)blue.center.x<<" "<<(int)blue.center.y<<" "<<blue.angle<<" "<<ball.x<<" "<<ball.y<<" "<<(int)yellow.center.x<<" "<<(int)yellow.center.y<<" "<<yellow.angle<<std::endl;
-	f.close();
-}
