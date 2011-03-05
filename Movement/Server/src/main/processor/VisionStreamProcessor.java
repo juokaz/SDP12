@@ -54,7 +54,7 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 	    while (true) {
 	    	
 	    	// stop this from running
-	    	if (stopped) {
+	    	if (stopped || Thread.currentThread().isInterrupted()) {
 	    		System.out.println("Stopping processor");
 	    		return;
 	    	}
@@ -62,7 +62,7 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 	    	while ((line = brCleanUp.readLine ()) != null) {
 	    		try {
 			    	// stop this from running
-			    	if (stopped) {
+			    	if (stopped || Thread.currentThread().isInterrupted()) {
 			    		System.out.println("Stopping processor");
 			    		return;
 			    	}
@@ -112,7 +112,7 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 			    	
 			    	propogateLocation(loc);
 	    		} catch(Exception e){
-	    			// TODO handle this exception
+	    			System.out.println("Exception in vision processing: " + e.getMessage());
 	    			continue;
 	    		}
 	    	}

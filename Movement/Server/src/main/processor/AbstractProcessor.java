@@ -44,10 +44,8 @@ public abstract class AbstractProcessor implements Processor {
 	 * @param our_robot
 	 * @param left_goal
 	 */
-	public void run(boolean our_robot, boolean left_goal) {
+	public void run() {
 		stopped = false;
-		this.our_robot_first = our_robot;
-		this.left_goal = left_goal;
 	}
 	
 	/**
@@ -74,6 +72,26 @@ public abstract class AbstractProcessor implements Processor {
 		for (Listener listener : listeners) {
 			listener.updateLocation(location);
 		}
+	}
+	
+	/**
+	 * Set our robot
+	 * 
+	 * @param first
+	 */
+	public void setOurRobot(boolean first)
+	{
+		our_robot_first = first;
+	}
+	
+	/**
+	 * Set left goal
+	 * 
+	 * @param left
+	 */
+	public void setLeftGoal(boolean left)
+	{
+		left_goal = left;
 	}
 	
 	/**

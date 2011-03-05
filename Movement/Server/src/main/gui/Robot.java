@@ -364,25 +364,21 @@ public class Robot extends BaseEntity implements ActionListener {
 	}
 
 	public void resetMovement() {
-
 		startX = getXPos();
 		startY = getYPos();
 		startTheta = getTheta();
-
 	}
 
 	public void toggleCommandReceiving() {
-
 		if (isEnabled) {
-
 			isEnabled = false;
-
 		} else {
-
 			isEnabled = true;
-
 		}
-
+	}
+	
+	public void setEnabled(boolean enabled) {
+		isEnabled = enabled;
 	}
 
 	/*

@@ -1,8 +1,10 @@
 package main.processor;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import main.Processor;
+import main.Runner;
 
 public class LocalVision extends VisionStreamProcessor implements Processor {
 	
@@ -17,12 +19,25 @@ public class LocalVision extends VisionStreamProcessor implements Processor {
 	protected Process process;
 	
 	/**
+	 * Input stream
+	 */
+	protected InputStream in;
+	
+	/**
+	 * Debug stream
+	 */
+	protected InputStream debug;
+	
+	/**
 	 * Local vision progress
 	 * 
 	 * @param command
+	 * @throws IOException 
 	 */
-	public LocalVision(String command) {
+	public LocalVision(String command) throws IOException {
 		this.command = command;
+		
+		initialize();
 	}
 
 	/**
@@ -31,27 +46,42 @@ public class LocalVision extends VisionStreamProcessor implements Processor {
 	 * @param our_robot
 	 * @param left_foal
 	 */
-	public void run(boolean our_robot, boolean left_goal) {
+	public void run() {
 		
 		// this needed to set running to true or set it manually
-		super.run(our_robot, left_goal);
-		try {
-			// execute Vision program
-			process = Runtime.getRuntime().exec(command);
-
-		    // Get the error stream and read from it
-		    InputStream in = process.getErrorStream();
-		    
-		    // Get the input stream and read from it
-		    InputStream debug = process.getInputStream();
-		    
+		super.run();
+		try {		    
 			// start processing data, method in VisionStreamProcessor
-			process(in, debug);
+			if (Runner.DEBUG) {
+				process(in, debug);
+			} else {
+				process(in);
+			}
 		} catch (Exception e) {
 			System.out.println("Processor error: " + e.getMessage()+" Restarting:");
-			// TODO what if it fails not because of crashing?
-			run(our_robot,left_goal);
+			
+			// reinitialize program
+			try {
+				initialize();
+				
+				// TODO what if it fails not because of crashing?
+				run();
+			} catch (IOException e1) {
+				System.out.println("Processor cannot be restarted");
+			}
 		}
+	}
+	
+	/**
+	 * Initialises local vision process
+	 * @throws IOException 
+	 */
+	private void initialize() throws IOException
+	{
+		// execute Vision program
+		process = Runtime.getRuntime().exec(command);
+	    in = process.getErrorStream();
+	    debug = process.getInputStream();
 	}
 	
 	/**

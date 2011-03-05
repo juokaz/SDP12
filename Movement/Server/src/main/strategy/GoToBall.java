@@ -441,27 +441,33 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		predictor.fitLine(parameters, ballBuffer.getXBuffer(), ballBuffer.getYBuffer(),
 							null, null, ballBuffer.getBufferLength());
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Ball Intercept: " + parameters[0], 800, 270, Color.BLACK));
+				"Ball Intercept: " + parameters[0], 800, 290, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Ball Slope: " + parameters[1], 800, 290, Color.BLACK));
+				"Ball Slope: " + parameters[1], 800, 310, Color.BLACK));
+		
 		if(Math.abs(ballBuffer.getXPosAt(ballBuffer.getCurrentPosition())) -
 				Math.abs(ballBuffer.getYPosAt(ballBuffer.getLastPosition())) < 0)
-		//	parameters[1] = parameters[1] - Math.PI;
-		drawables.add(new Drawable(Drawable.LINE,
-				(int) ball.getX(), (int) (parameters[1]*ball.getX() + parameters[0]),
-				(int) ball.getX()+100, (int) (parameters[1]*(ball.getX()+100) + parameters[0]),
-				Color.CYAN, true));
+		{
+			//	parameters[1] = parameters[1] - Math.PI;
+			drawables.add(new Drawable(Drawable.LINE,
+					(int) ball.getX(), (int) (parameters[1]*ball.getX() + parameters[0]),
+					(int) ball.getX()+100, (int) (parameters[1]*(ball.getX()+100) + parameters[0]),
+					Color.CYAN, true));
+		}
 		else
+		{
 			drawables.add(new Drawable(Drawable.LINE,
 					(int) ball.getX(), (int) (parameters[1]*ball.getX() + parameters[0]),
 					(int) ball.getX()-100, (int) (parameters[1]*(ball.getX()-100) + parameters[0]),
 					Color.CYAN, true));
+		}
+		
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Current: " + ballBuffer.getCurrentPosition(), 800, 310, Color.BLACK));
+				"Current position: " + ballBuffer.getCurrentPosition(), 800, 330, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Last: " + ballBuffer.getLastPosition(), 800, 330, Color.BLACK));
+				"Last position: " + ballBuffer.getLastPosition(), 800, 350, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
-				"Last: " + (ballBuffer.getLastPosition() == ballBuffer.getCurrentPosition()), 800, 350, Color.BLACK));
+				"Last == Current: " + (ballBuffer.getLastPosition() == ballBuffer.getCurrentPosition()), 800, 370, Color.BLACK));
 	}
 	
 	/**

@@ -29,6 +29,11 @@ public class Window {
 	 * Button for start/stop
 	 */
 	private JButton button;
+
+	/**
+	 * Button for start/stop strategy
+	 */
+	private JButton start_strategy;
 	
 	/**
 	 * Processors list
@@ -94,10 +99,11 @@ public class Window {
 		
 		frame.setLayout(new BorderLayout() ); 
 		// TODO: Line below can turn off pitch, commenting out will 
-		//addPitch();
-		
+		addPitch();
 		// frame size
 		frame.setSize(frame.getWidth(), frame.getHeight() + 150);
+		
+		//frame.setSize(900, 200);
 
 		// enable system.out pipe
 		System.setOut(aPrintStream); // catches System.out messages
@@ -130,16 +136,25 @@ public class Window {
 		// start button
 		button = new JButton("Start");
 
-		// add onclick listener to make runner start/stop once clicked
+		// add onclick listener to make runner initialize once clicked
 		button.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				runner.toggle((String) processor.getSelectedItem(),
-						(String) strategy.getSelectedItem(),
 						(String) executor.getSelectedItem(),
 						(String) robots.getSelectedItem(),
 						(String) goals.getSelectedItem());
+			}
+		});
+		
+		start_strategy = new JButton("Start execution");
+		start_strategy.setEnabled(false);
+		
+		// add onclick listener to make runner start/stop once clicked
+		start_strategy.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				runner.toggleExecution((String) strategy.getSelectedItem());
 			}
 		});
 
@@ -181,6 +196,7 @@ public class Window {
 		panel.add(executorl);
 		panel.add(executor);
 		panel.add(button);
+		panel.add(start_strategy);
 		
 		aTextArea.setColumns(100);
 		aTextArea.setRows(5);
@@ -217,6 +233,17 @@ public class Window {
 	public void setButton(String label, boolean enabled) {
 		button.setText(label);
 		button.setEnabled(enabled);
+	}
+	
+	/**
+	 * Update execution button disable/enable it
+	 * 
+	 * @param label
+	 * @param enabled
+	 */
+	public void setButtonExecution(String label, boolean enabled) {
+		start_strategy.setText(label);
+		start_strategy.setEnabled(enabled);
 	}
 	
 	/**

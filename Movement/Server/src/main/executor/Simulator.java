@@ -22,14 +22,13 @@ public class Simulator extends AbstractProcessor implements Executor {
 	}
 
 	@SuppressWarnings("static-access")
-	public void run(boolean our_robot, boolean left_goal) {
-
-		super.run(our_robot, left_goal);
-		try {
-			Thread.currentThread().sleep(2000);// sleep for 2000 ms
-		} catch (Exception ie) {
-			// If this thread was interrupted by another thread
-		}
+	public void run() {
+		super.run();
+		
+		// re-enable robots as they might have been disabled
+		robot1.setEnabled(true);
+		robot2.setEnabled(true);
+		
 		Robot robotA = new Robot((int) robot1.getXPos(),
 				(int) robot1.getYPos(), (float) robot1.getTheta());
 		Robot robotB = new Robot((int) robot2.getXPos(),
@@ -55,7 +54,7 @@ public class Simulator extends AbstractProcessor implements Executor {
 		
 		while (true) {
 			// stop this from running
-			if (stopped) {
+			if (stopped || Thread.currentThread().isInterrupted()) {
 				System.out.println("Stopping processor");
 				return;
 			}
@@ -102,13 +101,16 @@ public class Simulator extends AbstractProcessor implements Executor {
 
 	@Override
 	public void rotate(int T) {
-		// TODO Auto-generated method stub
 		robot1.rotate(T);
 	}
 	
 	@Override
 	public void exit() {
-		
+		// disable robots to stop them from moving
+		robot1.setEnabled(false);
+		robot2.setEnabled(false);
+		// disable ball from rolling
+		ball.getTimer().stop();
 	}
 
 	@Override
@@ -122,13 +124,9 @@ public class Simulator extends AbstractProcessor implements Executor {
 
 	@Override
 	public void celebrate() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void takePenalty() {
-		// TODO Auto-generated method stub
-		
 	}
 }

@@ -3,6 +3,7 @@ package main.processor;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -16,37 +17,39 @@ public class File extends VisionStreamProcessor implements Processor {
 	private String file = null;
 	
 	/**
+	 * Input stream
+	 */
+	private InputStream stdout = null;
+	
+	/**
 	 * File processor instance
 	 * 
 	 * @param filename
+	 * @throws FileNotFoundException 
 	 */
-	public File(String filename) {
-		file = filename;
+	public File(String filename) throws FileNotFoundException {
+		this.file = filename;
 		
 		// How input elements are separated
 		SEPARATOR = " ";
+
+		java.io.File file_ = new java.io.File(this.file);
+		FileInputStream fis = new FileInputStream(file_);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		stdout = new DataInputStream(bis);
 	}
 
 	/**
 	 * Start processing
-	 * 
-	 * @param our_robot
-	 * @param left_foal
 	 */
-	public void run(boolean our_robot, boolean left_goal) {
+	public void run() {
 		
 		// this needed to set running to true or set it manually
-		super.run(our_robot, left_goal);
+		super.run();
 		
 		try {
-			java.io.File file = new java.io.File(this.file);
-			FileInputStream fis = new FileInputStream(file);
-			BufferedInputStream bis = new BufferedInputStream(fis);
-			InputStream stdout = new DataInputStream(bis);
-		    
 			// start processing data, method in VisionStreamProcessor
-			process(stdout);
-		    
+			process(stdout); 
 		} catch (IOException e) {
 			System.out.println("Processor error: " + e.getMessage());
 		}

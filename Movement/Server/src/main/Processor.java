@@ -14,12 +14,26 @@ public interface Processor {
 	 * 
 	 * @param our_robot
 	 */
-	public void run(boolean our_robot, boolean left_goal);
+	public void run();
 	
 	/**
 	 * Stop processing data
 	 */
 	public void stop();
+	
+	/**
+	 * Set our robot
+	 * 
+	 * @param first
+	 */
+	public void setOurRobot(boolean first);
+	
+	/**
+	 * Set left goal
+	 * 
+	 * @param left
+	 */
+	public void setLeftGoal(boolean left);
 	
 	/**
 	 * Add location data listener

@@ -1,5 +1,7 @@
 package main;
 
+import java.io.IOException;
+
 import javax.swing.*;
 
 import main.executor.Simulator;
@@ -33,6 +35,11 @@ public class Runner {
 	 * Is Runner running?
 	 */
 	private boolean running = false;
+
+	/**
+	 * Is Runner initialised?
+	 */
+	private boolean initialised = false;
 	
 	/**
 	 * Processing worker instance used to run processing in a separate thread
@@ -113,7 +120,7 @@ public class Runner {
 	}
 
 	/**
-	 * Start runner using 3 sub-parts
+	 * Initialize runner using 3 sub-parts
 	 * 
 	 * Might throw exception if configuration is wrong or any of the sub-parts fail to start
 	 * 
@@ -124,28 +131,17 @@ public class Runner {
 	 * @param goal
 	 * @throws Exception
 	 */
-	public void startRunner(String processor, String strategy, String executor, String our_robot, String left_goal)
+	public void initialize(String processor, String executor, String our_robot, String left_goal)
 			throws Exception {
 		// Disable button from being clicked 
 		window.setButton("Running...", false);
 		
-		// set running to true so other parts of code can know Runner state
-		running = true;
+		// set initialised to true so other parts of code can know Runner state
+		initialised = true;
 
 		// initialise all sub-components
 		setProcessor(processor);
-		setStrategy(strategy);
 		setExecutor(executor);
-		
-		// if strategy exists, connect strategy with executor
-		if (this.strategy != null) {
-			this.strategy.setExecutor(this.executor);
-		}
-		
-		// if processor exists, connect with strategy
-		if (this.processor != null) {
-			this.processor.addListener(new ProcessorListener(this.strategy));
-		}
 
 		// allow Runner to be stopped by settings button text
 		window.setButton("Stop", true);
@@ -154,23 +150,86 @@ public class Runner {
 		if (!(this.processor instanceof Simulator)) {
 			this.processor.addListener(new GuiListener(window.getPitch()));
 		}
-		this.strategy.setDrawablesListener(new DrawablesListener(window.getPitch()));
-
+		// which robot are we controlling
+		this.processor.setOurRobot(our_robot.equals(ROBOT_BLUE));
+		
+		// which is left goal
+		this.processor.setLeftGoal(left_goal.equals(LEFT_GOAL));
+	}
+	
+	/**
+	 * Start processing
+	 */
+	public void startRunner(String strategy)
+	{
 		System.out.println("Processing starting");
 		
-
-		// start running processor
-		this.processor.run(our_robot.equals(ROBOT_BLUE),left_goal.equals(LEFT_GOAL));
+		// intialise the strategy
+		setStrategy(strategy);
 		
-		stopRunner();
+		// if strategy exists, connect strategy with executor
+		if (this.strategy != null) {
+			this.strategy.setExecutor(this.executor);
+		}
+
+		// if processor exists, connect with strategy
+		if (this.processor != null) {
+			this.processor.addListener(new ProcessorListener(this.strategy));
+		}
+		
+		// Strategy drawables listener
+		this.strategy.setDrawablesListener(new DrawablesListener(window.getPitch()));
+		
+		// update button to make it clear what next click will do
+		window.setButtonExecution("Stop execution", true);
+		
+		// update running state
+		running = true;
+		
+		// start running processor
+		processor.run();
+	}
+
+	/**
+	 * Stop runner from being executed anymore
+	 */
+	public void stopRunner() {
+		
+		// first disable the button
+		window.setButton("Stopping...", false);
+		
+		// cancel worker thread
+		if (worker != null) {
+			worker.cancel(true);
+			worker = null;
+		}
+
+		// stop processing data and kill the executor
+		if (processor != null) {
+			processor.stop();
+		}
+		if (executor != null) {
+			executor.exit();
+		}
+
+		// set initialised to false to notify later code that Runner has been
+		// successfully stopped 
+		initialised = false;
+		running = false;
+		
+		// re-enable button for start Runner again
+		window.setButton("Run", true);
+		window.setButtonExecution("Start execution", false);
+		System.out.println("Runner stopped");
 	}
 
 	/**
 	 * Set processor by it's type 
 	 * 
 	 * @param type
+	 * @throws IOException 
 	 */
-	private void setProcessor(String type) {
+	private void setProcessor(String type) throws IOException {
 
 		// TODO refactor this
 		if (type.equals("Local process")) {
@@ -234,47 +293,17 @@ public class Runner {
 	}
 
 	/**
-	 * Stop runner from being executed anymore
-	 * 
-	 * 
-	 */
-	public void stopRunner() {
-		
-		// first disable the button
-		window.setButton("Stopping...", false);
-		
-		// cancel worker thread
-		if (worker != null)
-			worker.cancel(true);
-
-		// stop processing data and kill the executor
-		if (processor != null)
-			processor.stop();
-		if (executor != null)
-			executor.exit();
-
-		// set running to false to notify later code that Runner has been
-		// successfully stopped 
-		running = false;
-		
-		// re-enable button for start Runner again
-		window.setButton("Run", true);
-		System.out.println("Runner stopped");
-	}
-
-	/**
 	 * Toggle runner, so if it's not started yet - start it, if started - stop it
 	 * 
 	 * @param processor
-	 * @param strategy
 	 * @param executor
 	 * @param our_robot
 	 * @return true for started, false for stopped
 	 */
-	public boolean toggle(String processor, String strategy, String executor, String our_robot, String left_goal) {
+	public boolean toggle(String processor, String executor, String our_robot, String left_goal) {
 		
 		// is it running now?
-		if (running) {
+		if (initialised) {
 			if (Runner.DEBUG) {
 				System.out.println("Stopping runner");
 			}
@@ -283,32 +312,64 @@ public class Runner {
 			return false;
 		}
 		
-		if (Runner.DEBUG) {
-			System.out.println("Starting runner");
-		}
+		System.out.println("Initializing runner");
 
-		// create a worker thread and execute it
-		// this is needed so processor doesn't block UI
-		worker = new ProcessingWorker(processor, strategy, executor, our_robot, left_goal);
-		worker.execute();
+		try 
+		{
+			initialize(processor, executor, our_robot, left_goal);
+			
+			window.setButtonExecution("Start execution", true);
+			
+			System.out.println("Runner initialized");
+		}
+		catch (Exception e)
+		{
+			// runner cannot be started
+			System.out.println("Runner cannot be initialized: " + e.getMessage());
+			// stop it, this is unneeded in most cases, but just makes sure all processes are reset
+			stopRunner();
+		}
 
 		return true;
 	}
-
-	public Processor getProcessor() {
-		return processor;
-	}
-
-	public Strategy getStrategy() {
-		return strategy;
-	}
-
-	public Executor getExecutor() {
-		return executor;
-	}
 	
-	public boolean isRunning() {
-		return running;
+	/**
+	 * Instantiates worked and starts it's process
+	 * 
+	 * @param strategy
+	 */
+	public void toggleExecution(String strategy)
+	{
+		if (!initialised) {
+			System.out.println("Runner is not initialised");
+			return;
+		}
+		
+		if (!running) {
+			if (Runner.DEBUG) {
+				System.out.println("Starting runner");
+			}
+	
+			worker = new ProcessingWorker(strategy);
+			worker.execute();
+			
+		} else {
+			if (Runner.DEBUG) {
+				System.out.println("Pausing runner");
+			}
+			
+			// send stop command
+			if (executor != null) {
+				executor.stop();
+			}
+			
+			// set to dull strategy so it doesn't do anything
+			this.strategy = new main.strategy.Dull();
+			window.setButtonExecution("Start execution", true);
+			
+			// update status
+			running = false;
+		}
 	}
 	
 	/**
@@ -317,33 +378,21 @@ public class Runner {
 	 */
 	class ProcessingWorker extends SwingWorker<String, Object> {
 
-		protected String processor;
-		protected String strategy;
-		protected String executor;
-		protected String our_robot;
-		protected String left_goal;
-
-		public ProcessingWorker(String processor, String strategy, String executor, String our_robot, String left_goal) {
-			this.processor = processor;
+		private String strategy;
+		
+		public ProcessingWorker(String strategy) {
 			this.strategy = strategy;
-			this.executor = executor;
-			this.our_robot = our_robot;
-			this.left_goal = left_goal;
-
-			if (Runner.DEBUG) {
-				System.out.printf("Creating worker for Processor: %s, Strategy: %s, Executor: %s\n", 
-					processor, strategy, executor);
-			}
 		}
-
+		
 		@Override
 		public String doInBackground() {
 			try {
 				// try starting runner
-				startRunner(processor, strategy, executor, our_robot, left_goal);
+				startRunner(strategy);
 			} catch (Exception e) {
 				// runner cannot be started
 				System.out.println("Runner cannot be started: " + e.getMessage());
+				e.printStackTrace();
 				// stop it, this is unneeded in most cases, but just makes sure all processes are reset
 				stopRunner();
 			}
