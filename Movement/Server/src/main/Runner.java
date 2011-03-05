@@ -186,8 +186,11 @@ public class Runner {
 		// update running state
 		running = true;
 		
-		// start running processor
-		processor.run();
+		if (!this.processor.isRunning()) {
+			System.out.println("Starting processor");
+			// start running processor
+			this.processor.run();
+		}
 	}
 
 	/**
@@ -265,6 +268,8 @@ public class Runner {
 			strategy = new main.strategy.GetBallFromWall();
 		} else if (type.equals("TakePenalty2")){
 			strategy = new main.strategy.TakePenalty2();
+		} else {
+			strategy = new main.strategy.Dull();
 		}
 	}
 
@@ -326,6 +331,7 @@ public class Runner {
 		{
 			// runner cannot be started
 			System.out.println("Runner cannot be initialized: " + e.getMessage());
+			e.printStackTrace();
 			// stop it, this is unneeded in most cases, but just makes sure all processes are reset
 			stopRunner();
 		}
@@ -364,7 +370,7 @@ public class Runner {
 			}
 			
 			// set to dull strategy so it doesn't do anything
-			this.strategy = new main.strategy.Dull();
+			setStrategy("");
 			window.setButtonExecution("Start execution", true);
 			
 			// update status

@@ -11,10 +11,15 @@ public interface Processor {
 
 	/**
 	 * Start processing data
-	 * 
-	 * @param our_robot
 	 */
 	public void run();
+	
+	/**
+	 * Is processing data
+	 * 
+	 * @return boolean
+	 */
+	public boolean isRunning();
 	
 	/**
 	 * Stop processing data

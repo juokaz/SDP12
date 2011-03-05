@@ -11,7 +11,7 @@ public abstract class AbstractProcessor implements Processor {
 	/**
 	 * Has the processor been stopped?
 	 */
-	protected boolean stopped = false;
+	protected boolean stopped = true;
 	
 	/**
 	 * Is our robot the first vision returns or second
@@ -29,14 +29,7 @@ public abstract class AbstractProcessor implements Processor {
 	/**
 	 * Listeners for new locations data
 	 */
-	private List<Listener> listeners;
-	
-	/**
-	 * Stop processor
-	 */
-	public void stop() {
-		stopped = true;
-	}
+	private List<Listener> listeners = new ArrayList<Listener>();
 	
 	/**
 	 * Run processor
@@ -49,16 +42,27 @@ public abstract class AbstractProcessor implements Processor {
 	}
 	
 	/**
+	 * Stop processor
+	 */
+	public void stop() {
+		stopped = true;
+	}
+	
+	/**
+	 * Is running
+	 */
+	public boolean isRunning()
+	{
+		return !stopped;
+	}
+	
+	/**
 	 * Add listener
 	 * 
 	 * @param listener
 	 */
 	public void addListener(Listener listener)
 	{
-		if (listeners == null) {
-			listeners = new ArrayList<Listener>();
-		}
-		
 		listeners.add(listener);
 	}
 	
