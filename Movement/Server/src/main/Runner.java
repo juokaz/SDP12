@@ -147,7 +147,7 @@ public class Runner {
 		window.setButton("Stop", true);
 		// Inform window about running process
 		// TODO handle this better
-		if (!(this.processor instanceof Simulator)) {
+		if (!(this.processor instanceof Simulator) && window.getPitch() != null) {
 			this.processor.addListener(new GuiListener(window.getPitch()));
 		}
 		// which robot are we controlling
@@ -336,7 +336,10 @@ public class Runner {
 		{
 			// runner cannot be started
 			System.out.println("Runner cannot be initialized: " + e.getMessage());
-			e.printStackTrace();
+			// print stack trace to help with debugging
+			if (DEBUG) {
+				e.printStackTrace();
+			}
 			// stop it, this is unneeded in most cases, but just makes sure all processes are reset
 			stopRunner();
 		}
