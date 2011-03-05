@@ -26,7 +26,14 @@ public abstract class AbstractStrategy implements Strategy {
 	protected int PITCH_Y_MAX = 290;
 	protected String rotateState = "straight";
 	protected String rotationState = "straight";
-	
+
+	/**
+	 * Thresholds
+	 */
+	private final static int ballWidth = 10;
+	private final static int possesionDistance = 50;
+	private int wallThreshold = 30;
+
 	/**
 	 * Executor which is going to execute these commands
 	 */
@@ -78,7 +85,7 @@ public abstract class AbstractStrategy implements Strategy {
 	/**
 	 * Move robot from robotX and robotY to a Point position in a pitch
 	 * 
-	 * Point can be a Ball, Pitch or other Robot
+	 * Point can be a Ball, Pitch or other Robot, or a point...
 	 * 
 	 * @param robot
 	 * @param point
@@ -96,7 +103,7 @@ public abstract class AbstractStrategy implements Strategy {
 		double dx = robot.getX() - point.getX();
 		double distance = Math.sqrt(dx*dx + dy*dy);
 
-		dirAngle = Math.toDegrees(point.getAngleBetweenPoints(robot));
+		dirAngle = Math.toDegrees(robot.angleBetweenPoints(point));
 
 		double angleDifference = currentAngle - dirAngle;
 		
@@ -175,6 +182,62 @@ public abstract class AbstractStrategy implements Strategy {
 		
 		return angle;
 	}
+	
+	/**
+	 * This method detects whether the opponent is in possession of the ball.
+	 * It does this by checking if the ball is in-between the opponent and the 
+	 * goal they are attacking, and seeing if they are within the possession 
+	 * distance of the ball
+	 * 
+	 * @param opponent
+	 * @param ball
+	 * @param opponentGoal
+	 * @return
+	 */
+	protected boolean isOpponentInPossession(Robot opponent, Ball ball, Goal goal) {
+		
+		Goal opponentGoal = new Goal(0, 175);
+		if (goal.getX() == 0) {
+			opponentGoal.setX(550);
+		}
+		// Checks to see if ball is inbetween opponent and the opponents goal (goal
+		// we are defending), and if it is within a distance that defines possesion.
+		if(opponent.isObstacleInFront(ball, opponentGoal, ballWidth) 
+			&& opponent.getDistanceBetweenPoints(ball) <= possesionDistance) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Is point close to walls
+	 * 
+	 * @param point
+	 * @return
+	 */
+	protected boolean isWallClose(Point point){
+		double x = point.getX();
+		double y = point.getY();
+		return (PITCH_X_MIN + wallThreshold >= x || PITCH_Y_MIN + wallThreshold >= y ||
+				PITCH_Y_MAX - wallThreshold <= y || PITCH_X_MAX - wallThreshold <= x);
+	}
+	
+	/**
+	 * Is a ball in once of the corners
+	 * 
+	 * @param ball
+	 * @return
+	 */
+	protected boolean isBallInACorner(Ball ball) {
+		int threshold = 30;
+		
+		return ball.getX() < PITCH_X_MIN + threshold && ball.getY() < PITCH_Y_MIN + threshold ||
+			   ball.getX() > PITCH_X_MAX - threshold && ball.getY() < PITCH_Y_MIN + threshold ||
+			   ball.getX() > PITCH_X_MAX - threshold && ball.getY() > PITCH_Y_MAX - threshold ||
+			   ball.getX() < PITCH_X_MIN + threshold && ball.getY() > PITCH_Y_MAX - threshold;
+	}
+	
 	
 	/**
 	 * Set listener

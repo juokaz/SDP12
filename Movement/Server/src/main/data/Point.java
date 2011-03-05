@@ -36,19 +36,6 @@ public class Point {
 	}
 	
 	/**
-	 * Finds the angle between two points, using dirPoint as the point to move to
-	 * 
-	 * @param dirPoint
-	 * @return
-	 */
-	public double getAngleBetweenPoints(Point dirPoint) {
-		return Math.atan2(getY()-dirPoint.getY(), getX()-dirPoint.getX());
-	}
-	
-	//TODO: Decide which method we are using. Above version is currently used, but
-	// method below makes more sense to use. 
-	
-	/**
 	 * Finds the angle between 2 points, giving the angle from the point 
 	 * which calls this method.
 	 * @param point
@@ -70,7 +57,7 @@ public class Point {
 		// angle between lines going through opponent center and edge. opponent width is doubled in order to take into account width of both robots.
 		int theta = (int) Math.abs(Math.toDegrees(Math.atan2((obstacleWidth), getDistanceBetweenPoints(possibleObstacle))));
 		// angle between obstacle and optimum point from robot's point of view
-		int theta2 = (int) Math.toDegrees(Math.abs(getAngleBetweenPoints(possibleObstacle) - getAngleBetweenPoints(destination)));
+		int theta2 = (int) Math.toDegrees(Math.abs(angleBetweenPoints(possibleObstacle) - angleBetweenPoints(destination)));
 		if (theta2 < theta && getDistanceBetweenPoints(possibleObstacle) < getDistanceBetweenPoints(destination)){
 			return true;
 		} else return false;
