@@ -68,7 +68,7 @@ namespace objDetection
 	std::vector<ContourTuple> rejectedtuples_DataSet_TY;		/**< incorrect tuple contours classified as second order object(darkspot/greenplate) which relates to a Yellow plate*/
 	std::vector<ContourTuple> selectedtuples_DataSet_TB;		/**< correct tuple contours classified as second order object(darkspot/greenplate) which relates to a Blue plate*/
 	std::vector<ContourTuple> rejectedtuples_DataSet_TB;		/**< incorrect tuple contours classified as second order object(darkspot/greenplate) which relates to a Blue plate*/
-};
+}predictions;
 //! \brief using a window, user classifies correct and incorrect contours in a image.
 /*!
  \param title title of window to be shown on top and asks user to classify a certain object.

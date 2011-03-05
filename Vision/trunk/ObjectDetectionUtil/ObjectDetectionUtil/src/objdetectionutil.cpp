@@ -13,11 +13,11 @@ CvScalar hsv_min_B = cvScalar(0,131,104);
 CvScalar hsv_max_B = cvScalar(10,255,255);
 
 // Color threshold for Yellow T 
-CvScalar hsv_min_TY = cvScalar(0,8,75);
-CvScalar hsv_max_TY = cvScalar(20,255,255);
+CvScalar hsv_min_TY = cvScalar(0,8,69);
+CvScalar hsv_max_TY = cvScalar(8,242,157);
 
 // Color threshold for Blue T
-CvScalar hsv_min_TB = cvScalar(29,14,0);
+CvScalar hsv_min_TB = cvScalar(31,6,0);
 CvScalar hsv_max_TB = cvScalar(78,255,255);
 
 void objDetection::utilities::showResults(IplImage*& frame,config& conf,IplImage*& thresh1,IplImage*& thresh2,IplImage*& thresh3,int64 diffTime)
@@ -83,15 +83,19 @@ void objDetection::utilities::showResults(IplImage*& frame,config& conf,IplImage
 	cvReleaseImage(&thresh2_c);
 	cvReleaseImage(&thresh3_c);
 }
-void objDetection::utilities::getImageFromCamera(config& conf,IplImage*& image)
+IplImage* objDetection::utilities::getImageFromCamera(config& conf)
 {
+	
 	if( !cvGrabFrame( conf.capture ))
 	{
 		std::cout<<"Camera Stopped working, Closing"<<std::endl;
-		conf.current_frame=NULL;
-		return;
+		return NULL;
 	}
-	image = cvRetrieveFrame( conf.capture );
+	IplImage* img= cvRetrieveFrame( conf.capture );
+	IplImage* res= cvCreateImage(cvSize(img->width,img->height), img->depth,3);
+	cvCopy(img,res);
+	return res;
+	
 }
 void objDetection::utilities::getImageFromFile(const char* file,IplImage*& image)
 {
@@ -99,11 +103,7 @@ void objDetection::utilities::getImageFromFile(const char* file,IplImage*& image
 }
 void objDetection::utilities::releaseCurrentFrame(config& conf)
 {
-	if((!conf.current_frame)&&(conf.image_file))
-	{	
-		cvReleaseImage(&conf.current_frame);
-
-	}
+	cvReleaseImage(&conf.current_frame);
 }
 std::string objDetection::utilities::getNextImageFileName(config& conf)
 {
@@ -119,10 +119,10 @@ bool objDetection::utilities::getNextFrame(config& conf)
 {
 	if(conf.camera)
 	{
-		getImageFromCamera(conf,conf.current_frame);
-		if(conf.current_frame!=NULL)
-			return true;
-		else
+		
+		conf.current_frame=getImageFromCamera(conf);
+		
+		if(conf.current_frame==NULL)
 			return false;
 	}
 	else if(conf.image_file)
@@ -133,13 +133,13 @@ bool objDetection::utilities::getNextFrame(config& conf)
 		else
 			return false;
 	}
-	if(conf.current_frame!=NULL)
+	if(conf.current_frame==NULL)
 	{
-		cropFrame(conf,conf.current_frame);
-		return true;
+		return false;	
 	}
-	else
-		return false;
+	
+	cropFrame(conf,conf.current_frame);
+	return true;
 }
 void objDetection::utilities::cropFrame(config& conf,IplImage*& img)
 {
@@ -147,7 +147,7 @@ void objDetection::utilities::cropFrame(config& conf,IplImage*& img)
 	int h=conf.windowOfInterest.Height; 
 	cvSetImageROI(img,cvRect(conf.windowOfInterest.X,conf.windowOfInterest.Y,w,h));
 	IplImage* temp=cvCreateImage(cvSize(w,h), img->depth,3);
-	cvCopy(img,temp);
+	cvCopy(img,temp);	
 	cvReleaseImage(&img);
 	img=temp;
 }
@@ -166,7 +166,7 @@ void objDetection::utilities::setupBackgroundImage(config& conf)
 			else
 			{
 				std::cout<<"Setup for Background image"<<std::endl;
-				getImageFromCamera(conf,conf.background);	
+				conf.background = getImageFromCamera(conf);	
 			}
 		}
 		else if(conf.image_file)
@@ -336,6 +336,7 @@ config objDetection::utilities::get_Config(int argc, char* argv[])
 	{
 		return res;
 	}
+std::cout<<"loading config"<<std::endl;
 	for(int i=0;i<3;i++)
 	{
 		if(!strcmp(argv[currentIndex],"show"))
@@ -352,6 +353,10 @@ config objDetection::utilities::get_Config(int argc, char* argv[])
 		}else
 			break;
 		currentIndex++;
+		if(currentIndex==argc)
+		{
+		return res;
+		}
 		
 	}
 	if(currentIndex==argc)

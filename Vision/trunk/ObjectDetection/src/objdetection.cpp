@@ -13,6 +13,7 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,IplImage* f
 	CvSize size = cvSize(frame->width,frame->height);
 	IplImage* hsv_frame;
 	IplImage* hsv_back_frame;
+	
 	if(!bgr)
 	{
 		//if bgr (meaning BGR colourspace) is unset then we convert images to HSV.
@@ -20,7 +21,9 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,IplImage* f
 		
 		hsv_back_frame = cvCreateImage(size, frame->depth,3);
 		cvCvtColor(frame, hsv_frame, CV_BGR2HSV);
+		
 		cvCvtColor(frame_back, hsv_back_frame, CV_BGR2HSV);
+		
 	}
 	else
 	{
@@ -28,6 +31,7 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,IplImage* f
 		hsv_frame=frame;
 		hsv_back_frame=frame_back;
 	}
+	
 	IplImage* sub_frame = cvCreateImage(size, frame->depth,3);
 	//subtract images according to back variable.
 	if(!back)
@@ -188,7 +192,7 @@ CvBox2D objDetection::orientation_secondOrderMoment(CvContour* cntr)
 
 	//uncomment for debugging...
 
-	//cvDrawContours(img,(CvSeq*)cntr,cvScalar(150,150,150),cvScalar(150,150,150),0,5);
+	
 	//cvDrawCircle(img,cvPointFrom32f(center),14,cvScalar(100,0,100),5);
 	//cvDrawCircle(img,cvPointFrom32f(cenMoment),14,cvScalar(0,200,200),3);
 	//std::cout<<"Moment"<<cenMoment.x<<","<<cenMoment.y<<"- circle"<<center.x<<","<<center.y<<std::endl;
@@ -375,5 +379,6 @@ void objDetection::drawOrientation(IplImage* frame, CvBox2D box,CvScalar color)
 		cvDrawLine(frame,point1,point2,cvScalar(0,0,0),4);
 		cvCircle(frame,pointc,10,color,2);
 	}
+
 }
 

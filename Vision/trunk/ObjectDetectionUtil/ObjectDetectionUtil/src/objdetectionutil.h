@@ -100,9 +100,9 @@ namespace objDetection
 		//! \brief retrieves an image from camera and update image pointer.
 		/*!
 			\param conf configuration variable.
-			\param image image pointer which will point to the new image
+			\return image image pointer which will point to the new image
 		*/
-		void getImageFromCamera(config& conf,IplImage*& image);
+		IplImage* getImageFromCamera(config& conf);
 		//! \brief retrieves an image from file and update image pointer.
 		/*!
 			\param file file name to read image from.

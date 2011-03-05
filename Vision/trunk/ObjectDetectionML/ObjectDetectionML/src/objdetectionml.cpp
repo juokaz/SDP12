@@ -67,12 +67,15 @@ void objDetection::machineLearning::predict(config& conf,IplImage* current_frame
 		{
 			if(cnt_TB!=NULL)
 			{
+				cvDrawContours(conf.current_frame,(CvSeq*)cnt_TB,cvScalar(150,150,150),cvScalar(150,150,150),0,3);
 				conf.sel_TB=objDetection::orientation_secondOrderMoment(cnt_TB);//,cnt_D,current_frame);
 				objDetection::utilities::cb_push_back(&conf.TB_Buffer,(void*)&conf.sel_TB.angle);
 				conf.sel_TB.angle=objDetection::utilities::average_cb_buffer(&conf.TB_Buffer);
+				
 			}
 			if(cnt_TY!=NULL)
 			{
+				cvDrawContours(conf.current_frame,(CvSeq*)cnt_TY,cvScalar(150,150,150),cvScalar(150,150,150),0,3);
 				conf.sel_TY=objDetection::orientation_secondOrderMoment(cnt_TY);//,cnt_D,current_frame);
 				objDetection::utilities::cb_push_back(&conf.TY_Buffer,(void*)&conf.sel_TY.angle);
 				conf.sel_TY.angle=objDetection::utilities::average_cb_buffer(&conf.TY_Buffer);

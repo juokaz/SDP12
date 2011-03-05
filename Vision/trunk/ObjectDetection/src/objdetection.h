@@ -59,7 +59,7 @@ typedef struct circular_buffer
     size_t sz;        /**< size of each item in the buffer*/
     void *head;       /**< pointer to head*/
     void *tail;       /**< pointer to tail*/
-	};
+	}circular_buffer;
 /*  \struct config
 *	\brief this struct contains main configuration parameters.
 */

@@ -32,9 +32,14 @@ void launch(config conf)
 			int64 startTick=0;
 	
 		startTick= cv::getTickCount();
+		
 		objDetection::utilities::setupBackgroundImage(conf);
+		
 		if(!objDetection::utilities::getNextFrame(conf))
+		{
+			std::cout<<"frame not loaded"<<std::endl;
 			break;
+		}
 		
 		if(!conf.current_frame)
 		{
@@ -49,14 +54,13 @@ void launch(config conf)
 		IplImage* current_frame_pro_B;
 		IplImage* current_frame_pro_D;
 		
-		//std::cout<<"reformat completed"<<std::endl;
+		
 
 		current_frame_pro_TB=objDetection::preprocess_to_single_channel(current_frame,back_img,conf.hsv_min_TB,conf.hsv_max_TB);
 		if(!current_frame_pro_TB)
 		{
 			std::cout<<"Error in transforming image"<<std::endl;
 		}
-
 		current_frame_pro_TY=objDetection::preprocess_to_single_channel(current_frame,back_img,conf.hsv_min_TY,conf.hsv_max_TY);
 		if(!current_frame_pro_TY)
 		{
@@ -72,6 +76,7 @@ void launch(config conf)
 		{
 			std::cout<<"Error in transforming image"<<std::endl;
 		}
+		
 		objDetection::machineLearning::train(conf,predict,current_frame_pro_B,current_frame_pro_TB,current_frame_pro_TY,current_frame_pro_D);
 		objDetection::machineLearning::predict(conf,current_frame_pro_B,current_frame_pro_TB,current_frame_pro_TY,current_frame_pro_D);
 		objDetection::utilities::show(conf);
@@ -83,7 +88,7 @@ void launch(config conf)
 		{
 			
 			objDetection::utilities::showResults(conf.current_frame,conf,current_frame_pro_TB,current_frame_pro_TY,current_frame_pro_B,endTick-startTick);
-			if( (cvWaitKey(10000) & 255) == 27 ) break;
+			if( (cvWaitKey(10) & 255) == 27 ) break;
 		}
 		cvClearMemStorage(conf.storage);
 		cvReleaseImage(&current_frame_pro_TB);
