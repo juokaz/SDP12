@@ -294,7 +294,7 @@ CvBox2D objDetection::orientation_minRect_Circle(CvContour* cntr)
 	cen1.angle=atan2(cen1.center.y-p_cen2.y,cen1.center.x-p_cen2.x);
 	if(cen1.size.height<cen1.size.width)
 	{
-		cen1.angle-=90;
+		cen1.angle-=PI/2;
 		return cen1;
 	}
 }
@@ -305,7 +305,7 @@ CvBox2D objDetection::orientation_plate1(CvContour* cntr, std::vector<CvContour*
 	CvBox2D robot_rect;
 	//Get CvBox2D
 	CvBox2D plate_rect= cvMinAreaRect2(plate_contour);
-
+	plate_rect.angle=plate_rect.angle*PI/180;
 	float r=0;
 	//Get center of the contour of T by fitting a circle. other modes makes it very vulnurable. 
 	cvMinEnclosingCircle(cntr,&robot_rect.center,&r);
@@ -316,15 +316,15 @@ CvBox2D objDetection::orientation_plate1(CvContour* cntr, std::vector<CvContour*
 		float temp=plate_rect.size.height;
 		plate_rect.size.height=plate_rect.size.width;
 		plate_rect.size.width=temp;
-		plate_rect.angle-=90;
+		plate_rect.angle-=PI/2;
 	}
 	//normalize angles to make sure angles are between 0-360
 	NORMALIZE(plate_rect.angle);
 	//bound angle between 0-180
 	if(plate_rect.angle<0)
-		plate_rect.angle-=180;
-	if(plate_rect.angle>180)
-		plate_rect.angle-=180;
+		plate_rect.angle-=PI;
+	if(plate_rect.angle>PI)
+		plate_rect.angle-=PI;
 	//For different cases of T location angle is changed.
 	
 	//std::cout<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
@@ -332,12 +332,12 @@ CvBox2D objDetection::orientation_plate1(CvContour* cntr, std::vector<CvContour*
 
 	if((robot_rect.center.x>plate_rect.center.x)&&(robot_rect.center.y>plate_rect.center.y)&&(plate_rect.angle>90))
 	{
-		plate_rect.angle-=180;
+		plate_rect.angle-=PI;
 		//std::cout<<"Modified2:"<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
 	}
 	if((robot_rect.center.x<plate_rect.center.x)&&(robot_rect.center.y>plate_rect.center.y)&&(plate_rect.angle<90))
 	{
-		plate_rect.angle-=180;
+		plate_rect.angle-=PI;
 		//std::cout<<"Modified3:"<<plate_rect.size.height<<","<<plate_rect.size.width<<","<<plate_rect.angle<<std::endl;
 	}
 	//Normalize angles again!

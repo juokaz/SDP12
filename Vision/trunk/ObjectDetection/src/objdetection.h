@@ -113,7 +113,7 @@ namespace objDetection
 #define PI 3.14159265
 #define TEXT_OUTPUT "Outputlocs.txt"
 //Normalization macro
-#define NORMALIZE(X) if (X>360) X=X-360; else if(X<0) X=X+360;
+#define NORMALIZE(X) if (X>PI*2) X=X-PI*2; else if(X<0) X=X+PI*2;
 
 //! \brief extracts contours in a image.
 /*!
