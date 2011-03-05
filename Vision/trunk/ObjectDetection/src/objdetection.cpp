@@ -278,7 +278,7 @@ CvBox2D objDetection::orientation_centerMoment(CvContour* cntr)
 	//std::cout<<"Moment"<<cenMoment.x<<","<<cenMoment.y<<"- circle"<<center.x<<","<<center.y<<std::endl;
 	//cvDrawLine(img,cvPoint(x,y),cvPointFrom32f(result.center),cvScalar(200,0,255),10);
 	result.center=center;
-	result.angle = atan2(result.center.y-cenMoment.y, result.center.x-cenMoment.x);
+	result.angle = atan2(cenMoment.y-result.center.y, cenMoment.x-result.center.x);
 	
 
 	return result;
@@ -350,7 +350,7 @@ CvBox2D objDetection::orientation_plate2(CvContour* robot_contour, std::vector<C
 
 	CvBox2D robot_rect= cvMinAreaRect2(robot_contour);
 	CvBox2D plate_rect= cvMinAreaRect2(plate_contour);
-	robot_rect.angle= atan2(robot_rect.center.y - plate_rect.center.y, robot_rect.center.x - plate_rect.center.x)*180/PI;
+	robot_rect.angle= atan2(robot_rect.center.y - plate_rect.center.y, robot_rect.center.x - plate_rect.center.x);
 
 	//std::cout<<robot_rect.angle<<std::endl;
 

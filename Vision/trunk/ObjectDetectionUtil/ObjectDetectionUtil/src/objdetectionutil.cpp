@@ -195,8 +195,8 @@ void objDetection::utilities::initImageStack(config& conf)
 	}
 	if(conf.camera)
 	{
-		objDetection::utilities::cb_init(&conf.TY_Buffer,5,sizeof(float));
-		objDetection::utilities::cb_init(&conf.TB_Buffer,5,sizeof(float));
+		objDetection::utilities::cb_init(&conf.TY_Buffer,1,sizeof(float));
+		objDetection::utilities::cb_init(&conf.TB_Buffer,1,sizeof(float));
 	}
 }
 void objDetection::utilities::output(config& conf,ofstream* file)
