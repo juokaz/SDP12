@@ -23,14 +23,24 @@ public class GuiListener implements Listener {
 	 * Update locations on screen
 	 * 
 	 * @param data
+	 * @param isOurRobotFirst
 	 */
-	public void updateLocation(Location location) {
-		pitch.getRobot1().setXPosRemapped(location.getOurRobot().getX());
-		pitch.getRobot1().setYPosRemapped(location.getOurRobot().getY());
-		pitch.getRobot1().setTheta(location.getOurRobot().getT());
-		pitch.getRobot2().setXPosRemapped(location.getOpponentRobot().getX());
-		pitch.getRobot2().setYPosRemapped(location.getOpponentRobot().getY());
-		pitch.getRobot2().setTheta(location.getOpponentRobot().getT());
+	public void updateLocation(Location location, boolean isOurRobotFirst) {
+		if (isOurRobotFirst) {
+			pitch.getRobot1().setXPosRemapped(location.getOurRobot().getX());
+			pitch.getRobot1().setYPosRemapped(location.getOurRobot().getY());
+			pitch.getRobot1().setTheta(location.getOurRobot().getT());
+			pitch.getRobot2().setXPosRemapped(location.getOpponentRobot().getX());
+			pitch.getRobot2().setYPosRemapped(location.getOpponentRobot().getY());
+			pitch.getRobot2().setTheta(location.getOpponentRobot().getT());
+		} else {
+			pitch.getRobot2().setXPosRemapped(location.getOurRobot().getX());
+			pitch.getRobot2().setYPosRemapped(location.getOurRobot().getY());
+			pitch.getRobot2().setTheta(location.getOurRobot().getT());
+			pitch.getRobot1().setXPosRemapped(location.getOpponentRobot().getX());
+			pitch.getRobot1().setYPosRemapped(location.getOpponentRobot().getY());
+			pitch.getRobot1().setTheta(location.getOpponentRobot().getT());
+		}
 		pitch.getBall().setXPosRemapped(location.getBall().getX());
 		pitch.getBall().setYPosRemapped(location.getBall().getY());
 	}

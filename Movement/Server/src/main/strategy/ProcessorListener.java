@@ -27,8 +27,9 @@ public class ProcessorListener implements Listener {
 	 * Update location for strategy
 	 * 
 	 * @param data
+	 * @param isOurRobotFirst
 	 */
-	public void updateLocation(Location data) 
+	public void updateLocation(Location data, boolean isOurRobotFirst) 
 	{
 		strategy.updateLocation(data);
 	}

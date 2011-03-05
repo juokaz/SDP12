@@ -1,10 +1,13 @@
 package main.executor;
 
+import javax.swing.JOptionPane;
+
 import main.Executor;
 import main.data.Ball;
 import main.data.Goal;
 import main.data.Location;
 import main.data.Robot;
+import main.gui.Pitch;
 import main.processor.AbstractProcessor;
 
 public class Simulator extends AbstractProcessor implements Executor {
@@ -12,8 +15,10 @@ public class Simulator extends AbstractProcessor implements Executor {
 	main.gui.Robot robot1;
 	main.gui.Robot robot2;
 	main.gui.Ball ball;
+	Pitch pitch;
 
-	public Simulator(main.gui.Pitch pitch) {
+	public Simulator(Pitch pitch) {
+		this.pitch = pitch;
 		robot1 = pitch.getRobot1();
 		robot1.getKicker().enable();
 		robot2 = pitch.getRobot2();
@@ -55,30 +60,41 @@ public class Simulator extends AbstractProcessor implements Executor {
 				return;
 			}
 
-			// simulate wait
-			data.getOurRobot().setX(robot1.getCenterXRemapped());
-			data.getOurRobot().setY(robot1.getCenterYRemapped());
-			data.getOurRobot().setT((float) (robot1.getTheta()));
-			data.getOpponentRobot().setX(robot2.getCenterXRemapped());
-			data.getOpponentRobot().setY(robot2.getCenterYRemapped());
-			data.getOpponentRobot().setT((float) (robot2.getTheta()));
+			// update robots positions
+			if (isOurRobotFirst()) {
+				data.getOurRobot().setX(robot1.getCenterXRemapped());
+				data.getOurRobot().setY(robot1.getCenterYRemapped());
+				data.getOurRobot().setT((float) (robot1.getTheta()));
+				data.getOpponentRobot().setX(robot2.getCenterXRemapped());
+				data.getOpponentRobot().setY(robot2.getCenterYRemapped());
+				data.getOpponentRobot().setT((float) (robot2.getTheta()));
+			} else {
+				data.getOurRobot().setX(robot2.getCenterXRemapped());
+				data.getOurRobot().setY(robot2.getCenterYRemapped());
+				data.getOurRobot().setT((float) (robot2.getTheta()));
+				data.getOpponentRobot().setX(robot1.getCenterXRemapped());
+				data.getOpponentRobot().setY(robot1.getCenterYRemapped());
+				data.getOpponentRobot().setT((float) (robot1.getTheta()));
+			}
+			
+			// update ball position			
 			data.getBall().setX(this.ball.getCenterXRemapped());
 			data.getBall().setY(this.ball.getCenterYRemapped());
 			
 			propogateLocation(data);
 			
+			// make this somewhat slow to be easier to follow
 			try {
 				Thread.currentThread().sleep(40);// sleep for 1000 ms
 			} catch (Exception ie) {
 				// If this thread was intrrupted by nother thread
 			}
 		}
-
 	}
 
 	@Override
 	public void rotateWheels(final int leftWheelSpeed, final int rightWheelSpeed) {
-		// TODO FIX THIS
+		// TODO FIX THIS Simulator things left is right, what a weird boy :-(
 		if (isOurRobotFirst()) {
 			robot1.move(rightWheelSpeed, leftWheelSpeed);
 		} else {
@@ -123,6 +139,8 @@ public class Simulator extends AbstractProcessor implements Executor {
 
 	@Override
 	public void celebrate() {
+		// Am what?...
+		JOptionPane.showMessageDialog(pitch, "You have scored!", "Scored", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	@Override

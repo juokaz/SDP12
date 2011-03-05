@@ -11,6 +11,7 @@ public interface Listener {
 	 * Receive new location
 	 * 
 	 * @param location
+	 * @param isOurRobotFirst
 	 */
-	public void updateLocation(Location location);
+	public void updateLocation(Location location, boolean isOurRobotFirst);
 }

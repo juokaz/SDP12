@@ -74,7 +74,7 @@ public abstract class AbstractProcessor implements Processor {
 	protected void propogateLocation(Location location)
 	{
 		for (Listener listener : listeners) {
-			listener.updateLocation(location);
+			listener.updateLocation(location, isOurRobotFirst());
 		}
 	}
 	
