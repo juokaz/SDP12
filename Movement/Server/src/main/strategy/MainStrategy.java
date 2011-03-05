@@ -1,5 +1,6 @@
 package main.strategy;
 
+import main.Executor;
 import main.Strategy;
 import main.data.Ball;
 import main.data.Goal;
@@ -18,9 +19,7 @@ public class MainStrategy extends AbstractStrategy implements Strategy {
 	
 	public MainStrategy() {
 		stratGTB = new GoToBall();
-		stratGTB.setExecutor(executor);
 		stratGBFW = new GetBallFromWall();
-		stratGBFW.setExecutor(executor);
 		// TODO: implement a defensive strategy.
 	}
 	
@@ -54,5 +53,11 @@ public class MainStrategy extends AbstractStrategy implements Strategy {
 		{
 			stratGTB.updateLocation(data);
 		}	
+	}
+	
+	public void setExecutor(Executor executor) {
+		super.setExecutor(executor);
+		stratGTB.setExecutor(executor);
+		stratGBFW.setExecutor(executor);
 	}
 }
