@@ -25,10 +25,6 @@ public class Simulator extends AbstractProcessor implements Executor {
 	public void run() {
 		super.run();
 		
-		// re-enable robots as they might have been disabled
-		robot1.setEnabled(true);
-		robot2.setEnabled(true);
-		
 		Robot robotA = new Robot((int) robot1.getXPos(),
 				(int) robot1.getYPos(), (float) robot1.getTheta());
 		Robot robotB = new Robot((int) robot2.getXPos(),
@@ -103,23 +99,26 @@ public class Simulator extends AbstractProcessor implements Executor {
 	public void rotate(int T) {
 		robot1.rotate(T);
 	}
-	
+
 	@Override
-	public void exit() {
+	public void start() {
+		// re-enable robots as they might have been disabled
+		robot1.setEnabled(true);
+		robot2.setEnabled(true);
+	}
+
+	@Override
+	public void stop() {
 		// disable robots to stop them from moving
 		robot1.setEnabled(false);
 		robot2.setEnabled(false);
 		// disable ball from rolling
 		ball.getTimer().stop();
 	}
-
+	
 	@Override
-	public void stop() {
-		if (isOurRobotFirst()) {
-			robot1.move(0, 0);
-		} else {
-			robot2.move(0, 0);
-		}
+	public void exit() {
+		stop();
 	}
 
 	@Override

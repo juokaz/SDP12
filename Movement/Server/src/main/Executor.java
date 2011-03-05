@@ -28,7 +28,12 @@ public interface Executor {
 	public void rotate(int T);
 	
 	/**
-	 * Stop robot
+	 * Start executor running (initialise what is needed)
+	 */
+	public void start();
+	
+	/**
+	 * Stop executor running
 	 */
 	public void stop();
 	

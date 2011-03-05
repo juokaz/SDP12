@@ -21,6 +21,10 @@ public class Dull implements Executor {
 	}
 	
 	@Override
+	public void start(){
+	}
+	
+	@Override
 	public void exit() {
 	}
 

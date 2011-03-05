@@ -120,6 +120,12 @@ public class Bluetooth implements Executor {
 	}
 	
 	@Override
+	public void start(){
+		// we ignore this command for Bluetooth as there is no need to start something explicitly
+		// * connection is created on construct
+	}
+	
+	@Override
 	public void exit() {
 		if(!closed)
 		server.sendCommand(EXIT);

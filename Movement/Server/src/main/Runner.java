@@ -186,6 +186,9 @@ public class Runner {
 		// update running state
 		running = true;
 		
+		// start executing commands
+		executor.start();
+		
 		if (!this.processor.isRunning()) {
 			System.out.println("Starting processor");
 			// start running processor
