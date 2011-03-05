@@ -13,17 +13,19 @@ import main.data.Robot;
  */
 public class MainStrategy extends AbstractStrategy implements Strategy {
 
+	private GoToBall stratGTB;
+	private GetBallFromWall stratGBFW;
 	
+	public MainStrategy() {
+		stratGTB = new GoToBall();
+		stratGTB.setExecutor(executor);
+		stratGBFW = new GetBallFromWall();
+		stratGBFW.setExecutor(executor);
+		// TODO: implement a defensive strategy.
+	}
 	
 	@Override
 	public void updateLocation(Location data) {
-		
-		GoToBall stratGTB = new GoToBall();
-		stratGTB.setExecutor(executor);
-		GetBallFromWall stratGBFW = new GetBallFromWall();
-		stratGBFW.setExecutor(executor);
-		// TODO: implement a defensive strategy.
-		
 		Ball ball = data.getBall();
 		Robot robot = data.getOurRobot();
 		Robot opponent = /*new Robot(-1,-1,-1);*/data.getOpponentRobot();
@@ -51,11 +53,6 @@ public class MainStrategy extends AbstractStrategy implements Strategy {
 		else 
 		{
 			stratGTB.updateLocation(data);
-		}
-		
-		
+		}	
 	}
-
-	
-	
 }
