@@ -126,12 +126,9 @@ public class Runner {
 	 * 
 	 * @param processor
 	 * @param strategy
-	 * @param executor
-	 * @param our_robot
-	 * @param goal
 	 * @throws Exception
 	 */
-	public void initialize(String processor, String executor, String our_robot, String left_goal)
+	public void initialize(String processor, String executor)
 			throws Exception {
 		// Disable button from being clicked 
 		window.setButton("Running...", false);
@@ -150,50 +147,17 @@ public class Runner {
 		if (!(this.processor instanceof Simulator) && window.getPitch() != null) {
 			this.processor.addListener(new GuiListener(window.getPitch()));
 		}
-		// which robot are we controlling
-		this.processor.setOurRobot(our_robot.equals(ROBOT_BLUE));
-		
-		// which is left goal
-		this.processor.setLeftGoal(left_goal.equals(LEFT_GOAL));
 	}
 	
 	/**
 	 * Start processing
 	 */
-	public void startRunner(String strategy)
+	public void startRunner()
 	{
 		System.out.println("Processing starting");
 		
-		// intialise the strategy
-		setStrategy(strategy);
-		
-		// if strategy exists, connect strategy with executor
-		if (this.strategy != null) {
-			this.strategy.setExecutor(this.executor);
-		}
-
-		// if processor exists, connect with strategy
-		if (this.processor != null) {
-			this.processor.addListener(new ProcessorListener(this.strategy));
-		}
-		
-		// Strategy drawables listener
-		this.strategy.setDrawablesListener(new DrawablesListener(window.getPitch()));
-		
-		// update button to make it clear what next click will do
-		window.setButtonExecution("Stop execution", true);
-		
-		// update running state
-		running = true;
-		
-		// start executing commands
-		executor.start();
-		
-		if (!this.processor.isRunning()) {
-			System.out.println("Starting processor");
-			// start running processor
-			this.processor.run();
-		}
+		// start running processor
+		this.processor.run();
 	}
 
 	/**
@@ -310,7 +274,7 @@ public class Runner {
 	 * @param our_robot
 	 * @return true for started, false for stopped
 	 */
-	public boolean toggle(String processor, String executor, String our_robot, String left_goal) {
+	public boolean toggle(String processor, String executor) {
 		
 		// is it running now?
 		if (initialised) {
@@ -326,7 +290,7 @@ public class Runner {
 
 		try 
 		{
-			initialize(processor, executor, our_robot, left_goal);
+			initialize(processor, executor);
 			
 			window.setButtonExecution("Start execution", true);
 			
@@ -350,9 +314,11 @@ public class Runner {
 	/**
 	 * Instantiates worked and starts it's process
 	 * 
-	 * @param strategy
+	 * @param strategy_name
+	 * @param our_robot
+	 * @param left_goal
 	 */
-	public void toggleExecution(String strategy)
+	public void toggleExecution(String strategy_name, String our_robot, String left_goal)
 	{
 		if (!initialised) {
 			System.out.println("Runner is not initialised");
@@ -363,10 +329,46 @@ public class Runner {
 			if (Runner.DEBUG) {
 				System.out.println("Starting runner");
 			}
-	
-			worker = new ProcessingWorker(strategy);
-			worker.execute();
 			
+			// which robot are we controlling
+			processor.setOurRobot(our_robot.equals(ROBOT_BLUE));
+			
+			// which is left goal
+			processor.setLeftGoal(left_goal.equals(LEFT_GOAL));
+		
+			// intialise the strategy
+			setStrategy(strategy_name);
+
+			if (Runner.DEBUG) {
+				System.out.println("Strategy to use: " + strategy_name);
+			}
+			
+			// connect strategy with executor, strategy will send commands to it
+			strategy.setExecutor(executor);
+
+			// connect processor with strategy, sends new locations to strategy
+			processor.addListener(new ProcessorListener(strategy));
+			
+			// Strategy drawables listener
+			strategy.setDrawablesListener(new DrawablesListener(window.getPitch()));
+			
+			// update button to make it clear what next click will do
+			window.setButtonExecution("Stop execution", true);
+			
+			// update running state
+			running = true;
+			
+			// start executing commands
+			executor.start();
+	
+			System.out.println(strategy.getClass().toString());
+			
+			// create runner if doesn't exist
+			if (worker == null) 
+			{
+				worker = new ProcessingWorker();
+				worker.execute();
+			}
 		} else {
 			if (Runner.DEBUG) {
 				System.out.println("Pausing runner");
@@ -379,6 +381,11 @@ public class Runner {
 			
 			// set to dull strategy so it doesn't do anything
 			setStrategy("");
+
+			// connect processor with strategy, sends new locations to strategy
+			processor.addListener(new ProcessorListener(strategy));
+			
+			// allow restarting
 			window.setButtonExecution("Start execution", true);
 			
 			// update status
@@ -392,17 +399,11 @@ public class Runner {
 	 */
 	class ProcessingWorker extends SwingWorker<String, Object> {
 
-		private String strategy;
-		
-		public ProcessingWorker(String strategy) {
-			this.strategy = strategy;
-		}
-		
 		@Override
 		public String doInBackground() {
 			try {
 				// try starting runner
-				startRunner(strategy);
+				startRunner();
 			} catch (Exception e) {
 				// runner cannot be started
 				System.out.println("Runner cannot be started: " + e.getMessage());

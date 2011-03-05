@@ -39,7 +39,7 @@ public class Simulator extends AbstractProcessor implements Executor {
 
 		Goal goal = null;
 		
-    	if (this.isGoalLeft()){
+    	if (isGoalLeft()){
     		goal = new Goal(0,155);
     	} else {
     		goal = new Goal(550,155);
@@ -80,6 +80,12 @@ public class Simulator extends AbstractProcessor implements Executor {
 			// update ball position			
 			data.getBall().setX(this.ball.getCenterXRemapped());
 			data.getBall().setY(this.ball.getCenterYRemapped());
+			
+	    	if (isGoalLeft()){
+	    		goal = new Goal(0,155);
+	    	} else {
+	    		goal = new Goal(550,155);
+	    	}
 			
 			propogateLocation(data);
 			
@@ -134,6 +140,10 @@ public class Simulator extends AbstractProcessor implements Executor {
 	
 	@Override
 	public void exit() {
+		// call parent stop, to stop Processor
+		super.stop();
+		
+		// stop executor
 		stop();
 	}
 

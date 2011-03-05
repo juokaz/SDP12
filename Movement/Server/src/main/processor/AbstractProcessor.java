@@ -61,8 +61,15 @@ public abstract class AbstractProcessor implements Processor {
 	 * 
 	 * @param listener
 	 */
-	public void addListener(Listener listener)
+	public synchronized void addListener(Listener listener)
 	{
+		// remove same type listeners, for example process listeners for strategies
+		for (Object listener_ : listeners.toArray()) {
+			if (listener_.getClass().isInstance(listener)) {
+				listeners.remove((Listener) listener_);
+			}
+		}
+		
 		listeners.add(listener);
 	}
 	
@@ -71,7 +78,7 @@ public abstract class AbstractProcessor implements Processor {
 	 * 
 	 * @param location
 	 */
-	protected void propogateLocation(Location location)
+	protected synchronized void propogateLocation(Location location)
 	{
 		for (Listener listener : listeners) {
 			listener.updateLocation(location, isOurRobotFirst());

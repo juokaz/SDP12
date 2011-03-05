@@ -141,9 +141,7 @@ public class Window {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				runner.toggle((String) processor.getSelectedItem(),
-						(String) executor.getSelectedItem(),
-						(String) robots.getSelectedItem(),
-						(String) goals.getSelectedItem());
+						(String) executor.getSelectedItem());
 			}
 		});
 		
@@ -154,7 +152,9 @@ public class Window {
 		start_strategy.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				runner.toggleExecution((String) strategy.getSelectedItem());
+				runner.toggleExecution((String) strategy.getSelectedItem(),
+						(String) robots.getSelectedItem(),
+						(String) goals.getSelectedItem());
 			}
 		});
 
