@@ -2,6 +2,7 @@ import java.io.DataInputStream;
 import lejos.robotics.navigation.Pilot;
 import lejos.robotics.navigation.TachoPilot;
 
+import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
@@ -43,18 +44,27 @@ public class roboto {
 		TouchSensor touchRight = new TouchSensor(SensorPort.S1);
 		TouchSensor touchLeft = new TouchSensor(SensorPort.S2);
 		
-		drawMessage("Connecting...");
-
-		BTConnection connection = Bluetooth.waitForConnection();
-
-		drawMessage("Connected");
-		
-		DataInputStream input = connection.openDataInputStream();
-		
-		Pilot pilot = new TachoPilot(15.2f, 8.27f, Motor.A, Motor.C, true); //parameters in mm
-		
-		mainLoop:
+		while (true) {
+			// Enter button click will halt the program
+			if (Button.ENTER.isPressed())
+				break;
+			
+			drawMessage("Connecting...");
+	
+			BTConnection connection = Bluetooth.waitForConnection();
+	
+			drawMessage("Connected");
+			
+			DataInputStream input = connection.openDataInputStream();
+			
+			Pilot pilot = new TachoPilot(15.2f, 8.27f, Motor.A, Motor.C, true); //parameters in mm
+			
+			mainLoop:
 			while (true) {
+				// Enter button click will halt the program
+				if (Button.ENTER.isPressed())
+					break;
+				
 				try {
 					int command = input.readInt();
 					
@@ -66,8 +76,11 @@ public class roboto {
 						Thread.sleep(400);
 					} 
 					
+					// no input available
 					while(input.available() == 0) {
-						// no input available
+						// Enter button click will halt the program
+						if (Button.ENTER.isPressed())
+							break mainLoop;
 					}
 					
 					switch (command) {
@@ -185,9 +198,9 @@ public class roboto {
 					drawMessage("Error " + e1.getMessage());
 				}
 			}
-		
-		connection.close();
-		
+			
+			connection.close();
+		}
 	}
 	
 	private static void drawMessage(String message) {
