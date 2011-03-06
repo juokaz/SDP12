@@ -66,7 +66,16 @@ public class roboto {
 					break;
 				
 				try {
+					// no input available
+					while(input.available() == 0) {
+						// Enter button click will halt the program
+						if (Button.ENTER.isPressed())
+							break mainLoop;
+					}
+					
 					int command = input.readInt();
+					
+					drawMessage(Integer.toString(command));
 					
 					if (touchLeft.isPressed() || touchRight.isPressed()){
 						Motor.A.setSpeed(200);
@@ -76,15 +85,11 @@ public class roboto {
 						Thread.sleep(400);
 					} 
 					
-					// no input available
-					while(input.available() == 0) {
-						// Enter button click will halt the program
-						if (Button.ENTER.isPressed())
-							break mainLoop;
-					}
-					
 					switch (command) {
 					case EXIT:
+						Motor.A.stop();
+						Motor.B.stop();
+						Motor.C.stop();
 						// stop
 						break mainLoop;
 					case MOVE:
