@@ -61,7 +61,7 @@ public class Runner {
 	 * Available strategies
 	 * TODO make this automatic
 	 */
-	public final String[] strategies = {"Main Strategy", "GoToBall", "PFS", "Take penalty", "Basic", "GetBallFromWall", "TakePenalty2"};
+	public final String[] strategies = {"Main Strategy", "GoToBall", "PFS", "Basic", "GetBallFromWall", "TakePenalty2", "Interception"};
 	/**
 	 * Available executors
 	 * TODO make this automatic
@@ -225,8 +225,6 @@ public class Runner {
 			// second parameter is 2.48 * 10 / 3
 			// TODO use config for settings
 			strategy = new main.strategy.PFStrategy(15.2, 8.27);
-		} else if (type.equals("Take penalty")) {
-			strategy = new main.strategy.TakePenalty();
 		} else if (type.equals("Basic")) {
 			strategy = new main.strategy.BasicStrategy();
 		} else if (type.equals("GoToBall")){
@@ -237,6 +235,8 @@ public class Runner {
 			strategy = new main.strategy.TakePenalty2();
 		} else if (type.equals("Main Strategy")) {
 			strategy = new main.strategy.MainStrategy();
+		} else if (type.equals("Interception")) {
+			strategy = new main.strategy.Interception();
 		} else {
 			strategy = new main.strategy.Dull();
 		}
