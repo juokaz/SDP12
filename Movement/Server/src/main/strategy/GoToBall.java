@@ -380,7 +380,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		int lineLength = 100;
 		int xOffset = (int) (lineLength / Math.sqrt(1 + parameters[1]*parameters[1]));
 		
-		//draw line of best fit for points in ballBuffer
+		//changed the offset if the ball is travelling right
 		if(Math.abs(ballBuffer.getXPosAt(ballBuffer.getCurrentPosition())) -
 				Math.abs(ballBuffer.getXPosAt(ballBuffer.getLastPosition())) > 0)
 			xOffset = xOffset * -1;
@@ -391,12 +391,36 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		int x2 = (int) ball.getX()+xOffset;
 		int y2 = (int) (parameters[1]*(ball.getX()+xOffset) + parameters[0]);
 		
+		//draw the line between (x1,y1) and (x2,y2)
 		drawables.add(new Drawable(Drawable.LINE,
 				x1, y1, x2, y2, Color.CYAN, true));
 		
+		//define a point to move to based on x2, y2
+		int x = x2;
+		int y = y2;
+		
+		Point predictPoint = new Point(x,y);
+		
 		//check if the line is going out of the pitch
+		while (predictPoint.isPointOutOfPitch()) {
+			
+			//use symmetry to get point in pitch
+			if (x2 > PITCH_X_MAX) {
+				predictPoint.setX(PITCH_X_MAX - Math.abs(x2 - PITCH_X_MAX));
+			}
+			else if (x2 < PITCH_X_MIN) {
+				predictPoint.setX(PITCH_X_MIN + Math.abs(x2 - PITCH_X_MIN));
+			}
+			if (y2 > PITCH_Y_MAX) {
+				predictPoint.setY(PITCH_Y_MAX - Math.abs(y2 - PITCH_Y_MAX));
+			}
+			else if (y2 < PITCH_Y_MIN) {
+				predictPoint.setY(PITCH_Y_MIN + Math.abs(y2 - PITCH_Y_MIN));
+			}	
+				
+		}
 		
-		
+		drawPoint(predictPoint, "Prediction");
 		/*
 		drawables.add(new Drawable(Drawable.LABEL,
 				"Current position: " + ballBuffer.getCurrentPosition(), 800, 330, Color.BLACK));
