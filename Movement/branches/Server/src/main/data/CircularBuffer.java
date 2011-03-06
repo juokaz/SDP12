@@ -124,6 +124,8 @@ public class CircularBuffer {
 	 * @return
 	 */
 	public Point getPointAt(int position) {
+		position = position % getBufferLength();
+		position = position < 0 ? position + getBufferLength() : position;
 		return new Point(getXPosAt(position), getYPosAt(position));
 	}
 	

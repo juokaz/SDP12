@@ -33,7 +33,8 @@ public class CollisionDetector {
 		
 		for(CollisionListener currentListener : collisionListeners) {
 			for(CollisionListener otherListener : collisionListeners) {
-				if(currentListener.equals(otherListener)) {
+				if(currentListener.equals(otherListener) || currentListener.getType() == "Kicker"
+					|| otherListener.getType() == "Kicker") {
 					continue;
 				}
 				
@@ -58,6 +59,7 @@ public class CollisionDetector {
 						 */
 						Collision collisionOther = new Collision(currentListener, sideOfCollision);
 						otherListener.collisionDetected(collisionOther);
+						System.out.println("");
 					}
 				}
 			}

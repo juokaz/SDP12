@@ -85,6 +85,13 @@ public class Ball extends AbstractSimulatedObject implements ActionListener, Col
 		moveBall();
 		
 	}
+	
+	/**
+	 * Stop ball movement
+	 */
+	public void stop() {
+		timer.stop();
+	}
 
 	@Override
 	public String getType() {
@@ -93,15 +100,29 @@ public class Ball extends AbstractSimulatedObject implements ActionListener, Col
 
 	@Override
 	public void collisionDetected(Collision collision) {
-		System.out.println("collision " + collision.getCollidedObjectType() + " " + changeToPositive(collision.getSideAngle()));
+		//System.out.println("collision " + collision.getCollidedObjectType() + " " + changeToPositive(collision.getSideAngle()));
+		System.out.println("Ball handling collision");
+		System.out.println("ball angle before collision: " + Math.toDegrees(getTheta()));
+		System.out.println(collision);
 		kick(changeToPositive(collision.getSideAngle()));
+		System.out.println("ball angle after collision: " + Math.toDegrees(getTheta()));
+	}
+	
+	// TODO FINISH THIS
+	public double getAngleDifference(double sideAngle, double ballAngle) {
+		double angleDifference = changeToPositive(sideAngle) - changeToPositive(ballAngle);
+		if ((angleDifference < 0 && Math.abs(angleDifference) < 180)
+					|| (angleDifference > 180 && Math.abs(angleDifference) > 180)) {
+			
+		}
+		return 0;
 	}
 	
 	public double changeToPositive(double angle) {
-		angle = angle % 2*Math.PI;
+		angle = angle % (2*Math.PI);
 		
 		if(angle < 0) {
-			angle = 2*Math.PI - Math.abs(angle);
+			angle = (2*Math.PI) - Math.abs(angle);
 		}
 		
 		return angle;

@@ -115,6 +115,9 @@ public class Simulator extends JComponent implements ActionListener {
 		ball.draw(g2d);
 		robot2.draw(g2d);
 		robot1.draw(g2d);
+		g2d.draw(ball.getShape());
+		g2d.draw(robot2.getShape());
+		g2d.draw(robot1.getShape());
 //        for(Point2D point : robot1.getCorners()) {
 //        	drawPoint(point.getX(), point.getY());
 //        	System.out.println(robot1.getShape().contains(point));
@@ -230,6 +233,8 @@ public class Simulator extends JComponent implements ActionListener {
 			public void keyPressed(KeyEvent keyEvent) {
 				if(keyEvent.getKeyCode() == KeyEvent.VK_R) {
 					getRobot1().toggleCommandReceiving();
+				} else if (keyEvent.getKeyCode() == KeyEvent.VK_B) {
+					getBall().stop();
 				} else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
 					getRobot1().kick();
 				}

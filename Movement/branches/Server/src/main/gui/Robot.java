@@ -3,12 +3,12 @@ package main.gui;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import main.data.CircularBuffer;
+
 public class Robot extends AbstractSimulatedObject implements CollisionListener {
 	private final String TYPE = "Robot";
 	
-	private double xPrevPos;
-	private double yPrevPos;
-	private double prevTheta;
+	CircularBuffer locationBuffer;
 	
 	private double leftWheelSpeed;
 	private double rightWheelSpeed;
@@ -40,6 +40,7 @@ public class Robot extends AbstractSimulatedObject implements CollisionListener 
 		defineRobot(xPos, yPos, Math.toRadians(theta));
 		isEnabled = true;
 		kicker = new Kicker(getXPos(), getYPos(), getTheta(), getWidth(), getHeight());
+		locationBuffer = new CircularBuffer(3);
 	}
 	
 	/**
@@ -63,7 +64,7 @@ public class Robot extends AbstractSimulatedObject implements CollisionListener 
 	 */
 	public void updateLocation() {
 		// Set the current positions as previous in case of collision
-		setPreviousPositions();
+		locationBuffer.addPoint(getXPos(), getYPos());
 		
 		if(!isEnabled) {
 			return;
@@ -90,23 +91,6 @@ public class Robot extends AbstractSimulatedObject implements CollisionListener 
 	
 	private void erodeWheelsSpeed(float erosionRate) {
 		setWheelsSpeed(erosionRate*leftWheelSpeed, erosionRate*rightWheelSpeed);
-	}
-	
-	/**
-	 * Store the current position and orientation of the robot
-	 * 	in case a collision occurs and there is a need to revert
-	 */
-	private void setPreviousPositions() {
-		xPrevPos = xPos;
-		yPrevPos = yPos;
-		prevTheta = theta;
-	}
-	
-	/**
-	 * Use positions set as previous
-	 */
-	public void usePreviousPositions() {
-		defineRobot(xPrevPos, yPrevPos, prevTheta);
 	}
 	
 	/**
@@ -177,11 +161,15 @@ public class Robot extends AbstractSimulatedObject implements CollisionListener 
 	public void collisionDetected(Collision collision) {
 		//System.out.println(getType() + " colliding with " + collision.getCollidedObjectType());
 		if(collision.getCollidedObjectType() == TYPE) {
-			// No particular reason to use these values, just looks alright
-			//moveFade(-5, -5);
-		}
-		if(collision.getCollidedObjectType() == "Ball") {
-			System.out.println(collision.getCollidedObjectType());
+			defineRobot(locationBuffer.getPointAt(locationBuffer.getCurrentPosition()-1).getX(),
+						locationBuffer.getPointAt(locationBuffer.getCurrentPosition()-1).getY(),
+						getTheta());
+			moveFade(-leftWheelSpeed, -rightWheelSpeed);
+			System.out.println(this);
+		} else if(collision.getCollidedObjectType() == "Ball") {
+			System.out.println("Robot handling collision:");
+			System.out.println(collision);
+			System.out.println("Robot angle: " + Math.toDegrees(getTheta()));
 		}
 	}
 	

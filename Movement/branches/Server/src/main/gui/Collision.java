@@ -13,14 +13,24 @@ public class Collision {
 		this.sideAngle = getSideAngle(collisionSide);
 	}
 	
-	
+	/**
+	 * Get the angle of the side of object involved in the collision
+	 * 
+	 * @param collisionSide
+	 * @return
+	 */
 	private double getSideAngle(Line2D collisionSide) {
-		if((collidedObjectType == "Robot")) 
-		System.out.println(collisionSide.getX1() + " " + collisionSide.getY1()
-							+ " " + collisionSide.getX2() + " " + collisionSide.getY2());
+//		if((collidedObjectType == "Robot")) 
+//		System.out.println(collisionSide.getX1() + " " + collisionSide.getY1()
+//							+ " " + collisionSide.getX2() + " " + collisionSide.getY2());
 		
 		return Math.atan2(collisionSide.getY2() - collisionSide.getY1(),
 						  collisionSide.getX2() - collisionSide.getX1());
+	}
+	
+	public String toString() {
+		return "Collision type: " + collidedObjectType +
+						"; Collision side angle(deg): " + Math.toDegrees(sideAngle);
 	}
 	
 	/*

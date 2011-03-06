@@ -177,7 +177,7 @@ public abstract class AbstractSimulatedObject {
 	
 	public void setXPos(double xPos) { this.xPos = xPos; }
 	public void setYPos(double yPos) { this.yPos = yPos; }
-	public void setTheta(double theta) { this.theta = theta; }
+	public void setTheta(double theta) { this.theta = theta % (2*Math.PI); } // Keep within 2*PI
 	public void setThetaDegrees(double theta) { this.theta = Math.toRadians(theta); }
 	public void setWidth(int width) { this.width = width; }
 	public void setHeight(int height) {	this.height = height; }	
