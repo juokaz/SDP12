@@ -62,15 +62,22 @@ public class roboto {
 			mainLoop:
 			while (true) {
 				// Enter button click will halt the program
-				if (Button.ENTER.isPressed())
+				if (Button.ENTER.isPressed()){
+					Motor.A.stop();
+					Motor.B.stop();
+					Motor.C.stop();
 					break;
-				
+				}
 				try {
 					// no input available
 					while(input.available() == 0) {
 						// Enter button click will halt the program
-						if (Button.ENTER.isPressed())
+						if (Button.ENTER.isPressed()){
+							Motor.A.stop();
+							Motor.B.stop();
+							Motor.C.stop();
 							break mainLoop;
+						}
 					}
 					
 					int command = input.readInt();
@@ -134,7 +141,7 @@ public class roboto {
 							Thread.sleep(150);
 							Motor.B.stop();
 						} catch (InterruptedException e) {
-							drawMessage("Error executing kick");
+							drawMessage("Error in KICK: " + e);
 						}
 						break;
 					case CELEBRATE:
@@ -164,7 +171,7 @@ public class roboto {
 								Motor.B.stop();
 								
 							} catch (InterruptedException e) {
-								drawMessage("Error in Penalty: " + e);
+								drawMessage("Error in PENALTY: " + e);
 							}
 						} else {
 							try {  
@@ -185,7 +192,7 @@ public class roboto {
 								Motor.B.stop();
 								
 							} catch (InterruptedException e) {
-								drawMessage("Error in Penalty: " + e);
+								drawMessage("Error in PENALTY: " + e);
 							}
 						
 						}
@@ -200,7 +207,7 @@ public class roboto {
 					}
 			
 				} catch (Exception e1) {
-					drawMessage("Error " + e1.getMessage());
+					drawMessage("Error in MainLoop: " + e1.getMessage());
 				}
 			}
 			
