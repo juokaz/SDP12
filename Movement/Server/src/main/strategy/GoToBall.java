@@ -39,7 +39,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		Robot opponent = /*new Robot(-1,-1,-1);*/data.getOpponentRobot();
 		Goal goal = data.getGoal();
 		Point optimum = getOptimumPoint(ball, goal);
-		//	ballBuffer.addPoint(ball);
+		ballBuffer.addPoint(ball);
 
 		// statistics
 		addDrawables(robot, opponent, ball, optimum, goal);
@@ -376,29 +376,35 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		drawables.add(new Drawable(Drawable.LABEL,
 				"Ball Slope: " + parameters[1], 800, 310, Color.BLACK));
 		
-		if(Math.abs(ballBuffer.getXPosAt(ballBuffer.getCurrentPosition())) -
-				Math.abs(ballBuffer.getYPosAt(ballBuffer.getLastPosition())) < 0)
-		{
-			//	parameters[1] = parameters[1] - Math.PI;
-			drawables.add(new Drawable(Drawable.LINE,
-					(int) ball.getX(), (int) (parameters[1]*ball.getX() + parameters[0]),
-					(int) ball.getX()+100, (int) (parameters[1]*(ball.getX()+100) + parameters[0]),
-					Color.CYAN, true));
-		}
-		else
-		{
-			drawables.add(new Drawable(Drawable.LINE,
-					(int) ball.getX(), (int) (parameters[1]*ball.getX() + parameters[0]),
-					(int) ball.getX()-100, (int) (parameters[1]*(ball.getX()-100) + parameters[0]),
-					Color.CYAN, true));
-		}
+		//get the x offset value such that distance of will always equal 100
+		int lineLength = 100;
+		int xOffset = (int) (lineLength / Math.sqrt(1 + parameters[1]*parameters[1]));
 		
+		//draw line of best fit for points in ballBuffer
+		if(Math.abs(ballBuffer.getXPosAt(ballBuffer.getCurrentPosition())) -
+				Math.abs(ballBuffer.getXPosAt(ballBuffer.getLastPosition())) > 0)
+			xOffset = xOffset * -1;
+
+		//define coordinates of the line to draw
+		int x1 = (int) ball.getX();
+		int y1 = (int) (parameters[1]*ball.getX() + parameters[0]);
+		int x2 = (int) ball.getX()+xOffset;
+		int y2 = (int) (parameters[1]*(ball.getX()+xOffset) + parameters[0]);
+		
+		drawables.add(new Drawable(Drawable.LINE,
+				x1, y1, x2, y2, Color.CYAN, true));
+		
+		//check if the line is going out of the pitch
+		
+		
+		/*
 		drawables.add(new Drawable(Drawable.LABEL,
 				"Current position: " + ballBuffer.getCurrentPosition(), 800, 330, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
 				"Last position: " + ballBuffer.getLastPosition(), 800, 350, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
 				"Last == Current: " + (ballBuffer.getLastPosition() == ballBuffer.getCurrentPosition()), 800, 370, Color.BLACK));
+		*/
 	}
 	
 	/**
