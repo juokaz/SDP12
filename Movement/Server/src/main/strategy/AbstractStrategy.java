@@ -33,6 +33,10 @@ public abstract class AbstractStrategy implements Strategy {
 	private final static int ballWidth = 10;
 	private final static int possesionDistance = 50;
 	private int wallThreshold = 30;
+	private int optimalGap = 50;
+	private int gap = 30;
+	// TODO: calculate width of the opponent taking into account its angle (?)
+	private int opponentWidth = 75;
 
 	/**
 	 * Executor which is going to execute these commands
@@ -249,5 +253,116 @@ public abstract class AbstractStrategy implements Strategy {
 		if (listener != null) {
 			listener.setDrawables(drawables);
 		}
+	}
+	
+	/**
+	 * Add drawables
+	 * 
+	 * @param robot
+	 * @param opponent
+	 * @param ball
+	 * @param optimum
+	 */
+	protected void addDrawables(Robot robot, Robot opponent, Ball ball, Point optimum, Goal goal) {
+		// Creating new object every time because of reasons related to
+		// the way Swing draws stuff. Will be fixed later.
+		drawables = new ArrayList<Drawable>();
+		
+		NumberFormat formatter = new DecimalFormat("#0.00");
+		
+		// Robot states of execution
+		drawables.add(new Drawable(Drawable.LABEL,
+						"isBallInACorner: " + isBallInACorner(ball),
+						800, 30, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"isOpponentInPossession: " + isOpponentInPossession(opponent, ball, goal),
+				800, 50, Color.BLACK));
+
+		drawables.add(new Drawable(Drawable.LABEL,
+						"isObstacleInFront: " + robot.isObstacleInFront(opponent, optimum, opponentWidth),
+						800, 70, Color.BLACK));
+		
+		drawables.add(new Drawable(Drawable.LABEL,
+						"gap: " + gap,
+						450, 30, Color.WHITE));
+		drawables.add(new Drawable(Drawable.LABEL,
+						"Ball (X, Y): " + formatter.format(ball.getX()) + " " + formatter.format(ball.getY()),
+						450, 50, Color.WHITE));
+
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Angle between robot and obstacle edge: " + formatter.format(Math.abs(Math.toDegrees(Math.atan((2*opponentWidth)/robot.getDistanceBetweenPoints(opponent))))),
+				800, 170, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Angle between optimum and opponent from robot view: " + formatter.format(Math.toDegrees(Math.abs(Math.abs(opponent.angleBetweenPoints(robot)) - Math.abs(optimum.angleBetweenPoints(robot))))),
+				800, 190, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Difference of angles between robots: " + formatter.format(Math.abs(Math.abs(robot.angleBetweenPoints(optimum)) - Math.abs(opponent.angleBetweenPoints(optimum)))),
+				800, 210, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Distance between optimum and robot: " + formatter.format(robot.getDistanceBetweenPoints(optimum)),
+				800, 230, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Distance between optimum and opponent: " + formatter.format(opponent.getDistanceBetweenPoints(optimum)),
+				800, 250, Color.BLACK));
+		drawables.add(new Drawable(Drawable.LABEL,
+				"Distance between robot and goal: " + formatter.format(goal.getDistanceBetweenPoints(robot)),
+				800, 270, Color.BLACK));
+	
+	}
+	
+	/**
+	 * Set information about what I'm doing doing right now
+	 * 
+	 * @param name
+	 */
+	protected void setIAmDoing(String name) {
+		drawables.add(new Drawable(Drawable.LABEL,
+						"I am doing: " + name,
+						800, 140, Color.RED));
+	}
+	
+	/**
+	 * Draw point on screen to show its position
+	 * 
+	 * @param point
+	 * @param label
+	 */
+	protected void drawPoint(Point point, String label) {
+		drawPoint(point, label, true);
+	}
+	
+	/**
+	 * Draw point on screen to show its position
+	 * 
+	 * @param point
+	 * @param label
+	 * @param remap
+	 */
+	protected void drawPoint(Point point, String label, boolean remap) {
+		if(drawables==null)
+			drawables=new ArrayList<Drawable>();
+		drawables.add(new Drawable(Drawable.CIRCLE,
+						(int) point.getX(), (int) point.getY(), Color.WHITE, remap));
+		if (label != null) {
+			drawables.add(new Drawable(Drawable.LABEL,
+					label,
+					(int) point.getX() + 5, (int) point.getY(), Color.WHITE, remap));
+		}
+	}
+	
+	protected void setGap(int newGap) {
+		gap = newGap;
+	}
+	
+	protected int getGap() {
+		return gap;
+	}
+	
+	protected int getOptimalGap() {
+		return optimalGap;
+	}
+	
+	protected int getOppenentWidth(){
+		return opponentWidth;
 	}
 }

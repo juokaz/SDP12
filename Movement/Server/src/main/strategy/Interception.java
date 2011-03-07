@@ -1,29 +1,67 @@
 package main.strategy;
 
+import main.Strategy;
 import main.data.Ball;
 import main.data.Goal;
 import main.data.Location;
 import main.data.Point;
+import main.data.Robot;
 
-public class Interception  extends GoToBall  {
-
+public class Interception extends AbstractStrategy implements Strategy {
+	
+	private int ballCount = 0;
+	private int countNeeded = 20;					//require 20 readings of ball position
+	private boolean predictionPointSet = false;
+	private int lineLength = 150;					//length of prediction line
+	private Point intercept = new Point(0,0);
+	
 	@Override
 	public void updateLocation(Location data) {
-		super.updateLocation(data);
+		
+		Point optimum  = new Point(0,0);
+		Goal goal = data.getGoal();
+		Ball ball = data.getBall();
+		Robot opponent = data.getOpponentRobot();
+		Robot robot = data.getOurRobot();
+		ballBuffer.addPoint(ball);
+		
+		addDrawables(robot, opponent, ball, optimum, goal);
+		drawPoint(intercept,"Predict");
+		
+		//run kicker to get ball moving - comment out when testing on pitch
 		executor.kick();
+		
+		if (ballIsMoving(data.getBall()) && !predictionPointSet) {
+			//read a certain number of values
+			ballCount += 1;
+			if (ballCount > countNeeded) {
+				intercept = getPredictionPoint(ball, lineLength);
+				predictionPointSet = true;
+			}
+		} else if (robot.isInPoint(intercept)){
+			//reset to find new prediction point
+			predictionPointSet = false;
+		} else if (predictionPointSet) {
+			moveToPoint(robot, intercept);
+		} else {
+			//reset count of no. of values read.
+			ballCount = 0;
+		}
+		
+		setDrawables(drawables);
+		
 	}
 	
 	/**
-	 * Get point outside of ball far enough to have enough space to turn
-	 * 
-	 * @param ball
-	 * @param goal
+	 * Checks when ball has moved since last reading
 	 * @return
 	 */
-	protected Point getOptimumPoint(Ball ball, Goal goal) {
-		Point intercept = getPredictionPoint(ball, 150);
-			
-		return intercept;
+	private boolean ballIsMoving(Ball ball) {
+		Point oldBall = new Point (ballBuffer.getXPosAt(ballBuffer.getLastPosition()),ballBuffer.getYPosAt(ballBuffer.getLastPosition()));
+		if (oldBall.getDistanceBetweenPoints(ball) > 5) {
+			return true;
+		} else
+			return false;
 	}
 	
 	/**
@@ -52,8 +90,8 @@ public class Interception  extends GoToBall  {
 			xOffset = xOffset * -1;
 
 		//define coordinates of the line to draw
-		int x1 = (int) ball.getX();
-		int y1 = (int) (parameters[1]*ball.getX() + parameters[0]);
+		//int x1 = (int) ball.getX();
+		//int y1 = (int) (parameters[1]*ball.getX() + parameters[0]);
 		int x2 = (int) ball.getX()+xOffset;
 		int y2 = (int) (parameters[1]*(ball.getX()+xOffset) + parameters[0]);
 		

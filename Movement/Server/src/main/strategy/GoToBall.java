@@ -1,17 +1,12 @@
 package main.strategy;
 
-import java.awt.Color;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-
 import main.Strategy;
 import main.data.Ball;
 import main.data.Goal;
 import main.data.Location;
 import main.data.Robot;
 import main.data.Point;
-import main.gui.Drawable;
+
 
 /**
  * This strategy should find a position behind the ball and move the robot to it.
@@ -20,17 +15,12 @@ import main.gui.Drawable;
  */
 public class GoToBall extends AbstractStrategy implements Strategy {
 
-	// Gap is the distance behind ball for the point we want to move to.
-	private int optimalGap = 50;
-	private int gap = 30;
-	// This is the distance between the opponent and the ball that defines 
-	// the opponent to be in possession
-	//Thresholds
-
-	// TODO: calculate width of the opponent taking into account its angle (?)
-	private int opponentWidth = 75;
 	boolean goingToAvoid = false;
 	boolean goingToBehind = false;
+	
+	int optimalGap = getOptimalGap();
+	int gap = getGap();
+	int opponentWidth = getOppenentWidth();
 	
 	@Override
 	public void updateLocation(Location data) {
@@ -299,187 +289,4 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		return robot.getDistanceBetweenPoints(goal) < threshold;
 	}
 	
-	
-	
-	/**
-	 * Add drawables
-	 * 
-	 * @param robot
-	 * @param opponent
-	 * @param ball
-	 * @param optimum
-	 */
-	protected void addDrawables(Robot robot, Robot opponent, Ball ball, Point optimum, Goal goal) {
-		// Creating new object every time because of reasons related to
-		// the way Swing draws stuff. Will be fixed later.
-		drawables = new ArrayList<Drawable>();
-		
-		NumberFormat formatter = new DecimalFormat("#0.00");
-		
-		// Robot states of execution
-		drawables.add(new Drawable(Drawable.LABEL,
-						"isBallInACorner: " + isBallInACorner(ball),
-						800, 30, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-				"isOpponentInPossession: " + isOpponentInPossession(opponent, ball, goal),
-				800, 50, Color.BLACK));
-
-		drawables.add(new Drawable(Drawable.LABEL,
-						"isObstacleInFront: " + robot.isObstacleInFront(opponent, optimum, opponentWidth),
-						800, 70, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"isBallBehindRobot: " + isBallBehindRobot(robot, ball, optimum, goal),
-						800, 90, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"!isRobotInOptimumPosition: " + !isRobotInOptimumPosition(robot, optimum),
-						800, 110, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"isBallReached: " + isBallReached(robot, ball),
-						800, 130, Color.BLACK));
-		
-		drawables.add(new Drawable(Drawable.LABEL,
-						"gap: " + gap,
-						450, 30, Color.WHITE));
-		drawables.add(new Drawable(Drawable.LABEL,
-						"Ball (X, Y): " + formatter.format(ball.getX()) + " " + formatter.format(ball.getY()),
-						450, 50, Color.WHITE));
-
-		drawables.add(new Drawable(Drawable.LABEL,
-				"Angle between robot and obstacle edge: " + formatter.format(Math.abs(Math.toDegrees(Math.atan((2*opponentWidth)/robot.getDistanceBetweenPoints(opponent))))),
-				800, 170, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-				"Angle between optimum and opponent from robot view: " + formatter.format(Math.toDegrees(Math.abs(Math.abs(opponent.angleBetweenPoints(robot)) - Math.abs(optimum.angleBetweenPoints(robot))))),
-				800, 190, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-				"Difference of angles between robots: " + formatter.format(Math.abs(Math.abs(robot.angleBetweenPoints(optimum)) - Math.abs(opponent.angleBetweenPoints(optimum)))),
-				800, 210, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-				"Distance between optimum and robot: " + formatter.format(robot.getDistanceBetweenPoints(optimum)),
-				800, 230, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-				"Distance between optimum and opponent: " + formatter.format(opponent.getDistanceBetweenPoints(optimum)),
-				800, 250, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-				"Distance between robot and goal: " + formatter.format(goal.getDistanceBetweenPoints(robot)),
-				800, 270, Color.BLACK));
-	
-		
-		// Prediction test code
-		
-		Predictor predictor = new Predictor();
-		for(int i = 0; i < ballBuffer.getBufferLength(); i++)
-			drawPoint(ballBuffer.getPointAt(i), "");
-		double[] parameters = new double[4];
-		predictor.fitLine(parameters, ballBuffer.getXBuffer(), ballBuffer.getYBuffer(),
-							null, null, ballBuffer.getBufferLength());
-		drawables.add(new Drawable(Drawable.LABEL,
-				"Ball Intercept: " + parameters[0], 800, 290, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-				"Ball Slope: " + parameters[1], 800, 310, Color.BLACK));
-		
-		//get the x offset value such that distance of will always equal 100
-		int lineLength = 100;
-		int xOffset = (int) (lineLength / Math.sqrt(1 + parameters[1]*parameters[1]));
-		
-		//changed the offset if the ball is travelling right
-		if(Math.abs(ballBuffer.getXPosAt(ballBuffer.getCurrentPosition())) -
-				Math.abs(ballBuffer.getXPosAt(ballBuffer.getLastPosition())) > 0)
-			xOffset = xOffset * -1;
-
-		//define coordinates of the line to draw
-		int x1 = (int) ball.getX();
-		int y1 = (int) (parameters[1]*ball.getX() + parameters[0]);
-		int x2 = (int) ball.getX()+xOffset;
-		int y2 = (int) (parameters[1]*(ball.getX()+xOffset) + parameters[0]);
-		
-		//draw the line between (x1,y1) and (x2,y2)
-		drawables.add(new Drawable(Drawable.LINE, x1, y1, x2, y2, Color.CYAN, true));
-		
-		//define a point to move to based on x2, y2
-		int x = x2;
-		int y = y2;
-		
-		Point predictPoint = new Point(x,y);
-		
-		//check if the line is going out of the pitch
-		while (predictPoint.isPointOutOfPitch()) {
-			
-			//use symmetry to get point in pitch
-			if (x2 > PITCH_X_MAX) {
-				predictPoint.setX(PITCH_X_MAX - Math.abs(x2 - PITCH_X_MAX));
-			}
-			if (x2 < PITCH_X_MIN) {
-				predictPoint.setX(PITCH_X_MIN + Math.abs(x2 - PITCH_X_MIN));
-			}
-			if (y2 > PITCH_Y_MAX) {
-				predictPoint.setY(PITCH_Y_MAX - Math.abs(y2 - PITCH_Y_MAX));
-			}
-			if (y2 < PITCH_Y_MIN) {
-				predictPoint.setY(PITCH_Y_MIN + Math.abs(y2 - PITCH_Y_MIN));
-			}	
-				
-		}
-		
-		drawPoint(predictPoint, "Prediction");
-		/*
-		drawables.add(new Drawable(Drawable.LABEL,
-				"Current position: " + ballBuffer.getCurrentPosition(), 800, 330, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-				"Last position: " + ballBuffer.getLastPosition(), 800, 350, Color.BLACK));
-		drawables.add(new Drawable(Drawable.LABEL,
-				"Last == Current: " + (ballBuffer.getLastPosition() == ballBuffer.getCurrentPosition()), 800, 370, Color.BLACK));
-		*/
-	}
-	
-	/**
-	 * Set information about what I'm doing doing right now
-	 * 
-	 * @param name
-	 */
-	protected void setIAmDoing(String name) {
-		drawables.add(new Drawable(Drawable.LABEL,
-						"I am doing: " + name,
-						800, 140, Color.RED));
-	}
-	
-	/**
-	 * Draw point on screen to show its position
-	 * 
-	 * @param point
-	 * @param label
-	 */
-	protected void drawPoint(Point point, String label) {
-		drawPoint(point, label, true);
-	}
-	
-	/**
-	 * Draw point on screen to show its position
-	 * 
-	 * @param point
-	 * @param label
-	 * @param remap
-	 */
-	protected void drawPoint(Point point, String label, boolean remap) {
-		if(drawables==null)
-			drawables=new ArrayList<Drawable>();
-		drawables.add(new Drawable(Drawable.CIRCLE,
-						(int) point.getX(), (int) point.getY(), Color.WHITE, remap));
-		if (label != null) {
-			drawables.add(new Drawable(Drawable.LABEL,
-					label,
-					(int) point.getX() + 5, (int) point.getY(), Color.WHITE, remap));
-		}
-	}
-	
-	public void setGap(int newGap) {
-		gap = newGap;
-	}
-	
-	public int getGap() {
-		return gap;
-	}
-	
-	protected int getOptimalGap() {
-		return optimalGap;
-	}
 }
