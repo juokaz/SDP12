@@ -136,6 +136,10 @@ public class Simulator extends AbstractProcessor implements Executor {
 		robot2.setEnabled(false);
 		// disable ball from rolling
 		ball.getTimer().stop();
+		robot1.stop();
+		robot2.stop();
+		robot1.setEnabled(true);
+		robot2.setEnabled(true);
 	}
 	
 	@Override

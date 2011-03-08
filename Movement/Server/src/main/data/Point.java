@@ -45,6 +45,8 @@ public class Point {
 		return Math.atan2((point.getY() - getY()), (point.getX() - getX()));
 	}
 	
+	
+	
 	/**
 	 * Finds out if there is an obstacle inbetween two points
 	 * 

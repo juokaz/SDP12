@@ -109,6 +109,7 @@ public abstract class AbstractStrategy implements Strategy {
 
 		dirAngle = Math.toDegrees(robot.angleBetweenPoints(point));
 
+		
 		double angleDifference = currentAngle - dirAngle;
 		
 		while (angleDifference > 180) {
@@ -144,8 +145,8 @@ public abstract class AbstractStrategy implements Strategy {
 	
 		// TODO: Check threshold is acceptable for real robot. 
 		if(Math.abs(dirAngle - robot.getTDegrees()) % 360 < 30) {
-			left = (int) (1*distance)/(pointThreshold - 5);
-			right = (int) (1*distance)/(pointThreshold - 5);	
+			left = (int) (2*distance)/(pointThreshold - 5);
+			right = (int) (2*distance)/(pointThreshold - 5);	
 			rotateState = "straight";
 		}
 		
@@ -160,7 +161,7 @@ public abstract class AbstractStrategy implements Strategy {
 		left = Math.min(left, max);
 		right = Math.min(right, max);
 		
-		executor.rotateWheels(left*70, right*70);
+		executor.rotateWheels(left*35, right*35);
 		
 		NumberFormat formatter = new DecimalFormat("#0.00");
 		

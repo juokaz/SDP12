@@ -118,7 +118,7 @@ public class Pitch extends JComponent implements ActionListener {
 		});
 		
 		// Start timer
-		time = new Timer(15, this);
+		time = new Timer(60, this);
 		time.start();
 	}
 	

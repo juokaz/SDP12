@@ -10,9 +10,9 @@ import main.data.Robot;
 public class Interception extends AbstractStrategy implements Strategy {
 	
 	private int ballCount = 0;
-	private int countNeeded = 20;					//require 20 readings of ball position
+	private int countNeeded = 8;					//require 20 readings of ball position
 	private boolean predictionPointSet = false;
-	private int lineLength = 150;					//length of prediction line
+	private int lineLength = 200;					//length of prediction line
 	private Point intercept = new Point(0,0);
 	
 	@Override
@@ -29,7 +29,7 @@ public class Interception extends AbstractStrategy implements Strategy {
 		drawPoint(intercept,"Predict");
 		
 		//run kicker to get ball moving - comment out when testing on pitch
-		executor.kick();
+		//executor.kick();
 		
 		if (ballIsMoving(data.getBall()) && !predictionPointSet) {
 			//read a certain number of values
@@ -38,14 +38,20 @@ public class Interception extends AbstractStrategy implements Strategy {
 				intercept = getPredictionPoint(ball, lineLength);
 				predictionPointSet = true;
 			}
+			setIAmDoing("Getting ball positions");
 		} else if (robot.isInPoint(intercept)){
 			//reset to find new prediction point
 			predictionPointSet = false;
+			ballCount = 0;
+			executor.stop();
+			setIAmDoing("Predict point reached - stopping");
 		} else if (predictionPointSet) {
 			moveToPoint(robot, intercept);
+			setIAmDoing("Going to point - predict");
 		} else {
 			//reset count of no. of values read.
 			ballCount = 0;
+			setIAmDoing("Resetting ball count");
 		}
 		
 		setDrawables(drawables);

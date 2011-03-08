@@ -150,7 +150,7 @@ public class roboto {
 					case PENALTY:
 						Motor.A.setSpeed(360);
 						Motor.C.setSpeed(360);
-						int rotateAmount = 200;
+						int rotateAmount = 120;
 						
 						if (Math.random() < 0.5) {
 							try {  
