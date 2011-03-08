@@ -205,13 +205,15 @@ public class PFPlanning {
 			System.out.println("Current T: "+current.getAngle()+", dist_alpha="+dist_alpha);
 		double Vlin = Math.cos(dist_alpha) * size;
 		double angSize=1/size;
-	
-		double Vang = dist_alpha;//*angSize;
-		double threshold=0.3;
+		if(angSize>10)
+			angSize=10;
+		double Vang = dist_alpha*angSize;
+		double threshold=0.1;
 		if(Vang>threshold)
 			Vang=threshold;
 		if(Vang<-1*threshold)
 			Vang=-1*threshold;
+		
 		if(Runner.DEBUG)
 			System.out.println(Vlin + " " + Vang);
 		return CvtVelocity(Vlin, Vang, config.getr());

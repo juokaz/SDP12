@@ -17,11 +17,13 @@ public class MainStrategy extends AbstractStrategy implements Strategy {
 	private GoToBall stratGTB;
 	private GetBallFromWall stratGBFW;
 	private DefensiveStrategy stratDef;
+	private PFStrategy stratPFs;
 	
 	public MainStrategy() {
 		stratGTB = new GoToBall();
 		stratGBFW = new GetBallFromWall();
 		stratDef = new DefensiveStrategy();
+		stratPFs = new PFStrategy(15.2, 8.27);
 	}
 	
 	@Override
@@ -32,9 +34,14 @@ public class MainStrategy extends AbstractStrategy implements Strategy {
 		Goal goal = data.getGoal();
 		
 		
-		addDrawables(robot, opponent, ball, robot, goal);
-		setDrawables(drawables);
+	//	addDrawables(robot, opponent, ball, robot, goal);
+	//	setDrawables(drawables);
 		
+		
+		
+		
+		
+	
 		if (isRobotInPossession(opponent, ball, goal)) {
 			setIAmDoing("Opponent in possesion");
 			stratDef.updateLocation(data);
@@ -63,11 +70,13 @@ public class MainStrategy extends AbstractStrategy implements Strategy {
 			// Attacking case
 			stratGTB.updateLocation(data);
 		}	
+		
 	}
 	
 	public void setExecutor(Executor executor) {
 		super.setExecutor(executor);
 		stratGTB.setExecutor(executor);
 		stratGBFW.setExecutor(executor);
+		stratPFs.setExecutor(executor);
 	}
 }

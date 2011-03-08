@@ -23,6 +23,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	int opponentWidth = getOppenentWidth();
 	PFStrategy pfs = new PFStrategy(15.2, 8.27);
 	
+	
 	@Override
 	public void updateLocation(Location data) {
 		Ball ball = data.getBall();
@@ -61,11 +62,14 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			drawPoint(point, "Behind");
 			moveToPoint(robot, point);
 		}
+
 		else if (!isRobotInOptimumPosition(robot, optimum) && !haveBall(robot, optimum, ball))
+
 		{
 			setIAmDoing("Not in optimum - going to Optimum");
 			//moveToPoint(robot, optimum);
-			pfs.updateLocation(data);
+			pfsMoveToPoint(robot, opponent, optimum);
+
 		}
 		/**
 		 * Leaving out for the time being, see if new method works with robot.
@@ -87,10 +91,21 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		else {
 			setIAmDoing("Reaching ball");
 			moveToPoint(robot, ball);
+		//	pfsMoveToPoint(robot, opponent, ball);
 		}
+		
+		
 		
 		 
 		setDrawables(drawables);
+	}
+	
+
+	private boolean haveBall(Ball ball, Robot robot, Robot opponent, int width, Point optimum) {
+		if(!robot.isObstacleInFront(opponent, ball, width) && robot.getDistanceBetweenPoints(ball) <= 10 && optimum.isObstacleInFront(robot, ball, 10)){
+			return true;
+		}else
+		return false;
 	}
 
 
@@ -100,7 +115,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		} else
 		return false;
 	}
-
 
 	/**
 	 * Get a point which would make robot to avoid obstacle and go to a point

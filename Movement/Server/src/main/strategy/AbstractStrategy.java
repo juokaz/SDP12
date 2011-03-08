@@ -7,6 +7,11 @@ import java.util.ArrayList;
 
 import main.gui.Drawable;
 import main.gui.DrawablesListener;
+import main.strategy.pFStrategy.PFPlanning;
+import main.strategy.pFStrategy.Pos;
+import main.strategy.pFStrategy.RobotConf;
+import main.strategy.pFStrategy.VelocityVec;
+import main.Runner;
 import main.Strategy;
 import main.Executor;
 import main.data.Ball;
@@ -47,7 +52,7 @@ public abstract class AbstractStrategy implements Strategy {
 	 * Drawables to display on GUI
 	 */
 	protected ArrayList<Drawable> drawables;
-	protected CircularBuffer ballBuffer = new CircularBuffer(10);
+	protected CircularBuffer ballBuffer = new CircularBuffer(3);
 	
 	/**
 	 * Listener accepting drawables
@@ -106,7 +111,7 @@ public abstract class AbstractStrategy implements Strategy {
 		double dy = robot.getY() - point.getY();
 		double dx = robot.getX() - point.getX();
 		double distance = Math.sqrt(dx*dx + dy*dy);
-
+		
 		dirAngle = Math.toDegrees(robot.angleBetweenPoints(point));
 
 		
@@ -145,8 +150,8 @@ public abstract class AbstractStrategy implements Strategy {
 	
 		// TODO: Check threshold is acceptable for real robot. 
 		if(Math.abs(dirAngle - robot.getTDegrees()) % 360 < 30) {
-			left = (int) (2*distance)/(pointThreshold - 5);
-			right = (int) (2*distance)/(pointThreshold - 5);	
+			left = (int) (1*distance)/(pointThreshold - 5);
+			right = (int) (1*distance)/(pointThreshold - 5);	
 			rotateState = "straight";
 		}
 		
@@ -169,6 +174,43 @@ public abstract class AbstractStrategy implements Strategy {
 		drawables.add(new Drawable(Drawable.LABEL, "dirAngle: " + formatter.format(dirAngle), 50, 50, Color.WHITE));
 		drawables.add(new Drawable(Drawable.LABEL, "robotAngle: " + formatter.format(currentAngle), 50, 70, Color.WHITE));
 
+	}
+	
+	/**
+	 * Move to a point using PFS
+	 * @param point
+	 */
+	protected void pfsMoveToPoint(Robot robot, Robot opponent,  Point point) {
+		
+		PFPlanning planner;
+		RobotConf conf = new RobotConf(15.2, 8.27);
+		planner = new PFPlanning(conf, 0, 180, 0.03, 250000.0);
+		
+		Pos current = new Pos(new main.strategy.pFStrategy.Point(robot.getX(), robot.getY()),robot.getT());
+		
+		Pos opponentA = new Pos(new main.strategy.pFStrategy.Point(opponent.getX(), opponent.getY()), opponent.getT());
+		main.strategy.pFStrategy.Point ball = new main.strategy.pFStrategy.Point(point.getX(), point.getY());
+		// getting new velocity vectors
+		VelocityVec vector = planner.update(current, opponentA, ball,
+				false);
+		
+		// Converting Radians/sec to Degrees/sec
+		int left = (int) Math.toDegrees(vector.getLeft());
+		int right = (int) Math.toDegrees(vector.getRight());
+		if(vector.getLeft()==0&&vector.getRight()==0)
+		{
+			executor.stop();
+			return;
+		}
+		
+		if (Runner.DEBUG){
+			System.out.println("Final Command:"+left+","+right);
+		}
+		executor.rotateWheels(left,right);
+		
+		
+		
+		
 	}
 
 	
@@ -363,6 +405,8 @@ public abstract class AbstractStrategy implements Strategy {
 	 * @param name
 	 */
 	protected void setIAmDoing(String name) {
+		if(drawables==null)
+			drawables=new ArrayList<Drawable>();
 		drawables.add(new Drawable(Drawable.LABEL,
 						"I am doing: " + name,
 						800, 140, Color.RED));

@@ -24,7 +24,7 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 	public PFStrategy(double b, double r) {
 		RobotConf conf = new RobotConf(b, r);
 		//opponent power: 10000000
-		planner = new PFPlanning(conf, 750000, 180, 0.016, 250000.0);
+		planner = new PFPlanning(conf, 0, 180, 0.03, 250000.0);
 		current = new VelocityVec(0, 0);
 		double wallPowers=500;
 		double wallinf=60;
@@ -36,8 +36,9 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 
 	// updateLocation called in each cycle with fresh location updates.
 	public void updateLocation(Location data) {
-
-
+		
+		
+		
 		Pos current = new Pos(new Point(data.getOurRobot().getX(), data
 				.getOurRobot().getY()),data.getOurRobot().getT());
 		
