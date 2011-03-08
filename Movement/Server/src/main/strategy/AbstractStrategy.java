@@ -280,8 +280,8 @@ public abstract class AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean atShootingAngle(Robot robot, Point goal) {
-		if (robot.getT() <= robot.angleBetweenPoints(goal) + Math.toRadians(10) 
-				&& robot.getT() >= robot.angleBetweenPoints(goal) - Math.toRadians(10)) {
+		if (robot.getT() <= robot.angleBetweenPoints(goal) + Math.toRadians(20) 
+				&& robot.getT() >= robot.angleBetweenPoints(goal) - Math.toRadians(20)) {
 			return true;
 		} else {
 			return false;

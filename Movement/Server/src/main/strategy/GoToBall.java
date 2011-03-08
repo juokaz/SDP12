@@ -71,10 +71,11 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			setIAmDoing("Moving to Goal");
 			moveToPoint(robot, goal);
 		}
+		*/
 		else if (isBallReached(robot, ball)) {
 			executor.kick();
 		}
-		*/
+		// Possibly utilise this later on, method needs more work though
 		else if (isBallKickable(robot, ball, goal))
 		{
 			setIAmDoing("Kick");
