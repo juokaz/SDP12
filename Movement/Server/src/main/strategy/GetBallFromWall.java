@@ -1,12 +1,13 @@
 package main.strategy;
 
+import main.Strategy;
 import main.data.Ball;
 import main.data.Goal;
 import main.data.Location;
 import main.data.Point;
 import main.data.Robot;
 
-public class GetBallFromWall extends GoToBall {
+public class GetBallFromWall extends GoToBall implements Strategy {
 
 	private double optimalGap = this.getOptimalGap();
 	
@@ -70,6 +71,23 @@ public class GetBallFromWall extends GoToBall {
 	 */
 	protected boolean isRobotCloseToGoal(Robot robot, Goal goal) {
 		return true;	
+	}
+	
+	/**
+	 * Returns true if the robot is in a position where it can kick the ball at the goal.
+	 * 
+	 * @param robot
+	 * @param ball
+	 * @param goal
+	 * @return
+	 */
+	protected boolean isBallKickable(Robot robot, Ball ball, Goal goal) {
+		Point rebound = getReboundPoint(ball, goal);
+		if  (isBallReached(robot, ball) && atShootingAngle(robot, rebound)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 }

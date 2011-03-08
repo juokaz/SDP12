@@ -194,12 +194,12 @@ public abstract class AbstractStrategy implements Strategy {
 	 * goal they are attacking, and seeing if they are within the possession 
 	 * distance of the ball
 	 * 
-	 * @param opponent
+	 * @param robot
 	 * @param ball
 	 * @param opponentGoal
 	 * @return
 	 */
-	protected boolean isOpponentInPossession(Robot opponent, Ball ball, Goal goal) {
+	protected boolean isRobotInPossession(Robot robot, Ball ball, Goal goal) {
 		
 		Goal opponentGoal = new Goal(0, 175);
 		if (goal.getX() == 0) {
@@ -207,8 +207,8 @@ public abstract class AbstractStrategy implements Strategy {
 		}
 		// Checks to see if ball is inbetween opponent and the opponents goal (goal
 		// we are defending), and if it is within a distance that defines possesion.
-		if(opponent.isObstacleInFront(ball, opponentGoal, ballWidth) 
-			&& opponent.getDistanceBetweenPoints(ball) <= possesionDistance) {
+		if(robot.isObstacleInFront(ball, opponentGoal, ballWidth) 
+			&& robot.getDistanceBetweenPoints(ball) <= possesionDistance) {
 			return true;
 		} else {
 			return false;
@@ -257,6 +257,52 @@ public abstract class AbstractStrategy implements Strategy {
 	}
 	
 	/**
+	 * Returns true if the robot is in a position where it can kick the ball at the goal.
+	 * 
+	 * @param robot
+	 * @param ball
+	 * @param goal
+	 * @return
+	 */
+	protected boolean isBallKickable(Robot robot, Ball ball, Goal goal) {
+		if (isBallReached(robot, ball) && atShootingAngle(robot, goal)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns true if the robot is facing the correct angle to shoot at goal.
+	 * 
+	 * @param robot
+	 * @param goal
+	 * @return
+	 */
+	protected boolean atShootingAngle(Robot robot, Point goal) {
+		if (robot.getT() <= robot.angleBetweenPoints(goal) + Math.toRadians(10) 
+				&& robot.getT() >= robot.angleBetweenPoints(goal) - Math.toRadians(10)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Are we in a point which allows a kick
+	 * 
+	 * @param robot
+	 * @param ball
+	 * @return
+	 */
+	protected boolean isBallReached(Robot robot, Ball ball) {
+		return robot.isInPoint(ball);
+	}
+	
+	
+	
+	
+	/**
 	 * Add drawables
 	 * 
 	 * @param robot
@@ -276,7 +322,7 @@ public abstract class AbstractStrategy implements Strategy {
 						"isBallInACorner: " + isBallInACorner(ball),
 						800, 30, Color.BLACK));
 		drawables.add(new Drawable(Drawable.LABEL,
-				"isOpponentInPossession: " + isOpponentInPossession(opponent, ball, goal),
+				"isOpponentInPossession: " + isRobotInPossession(opponent, ball, goal),
 				800, 50, Color.BLACK));
 
 		drawables.add(new Drawable(Drawable.LABEL,

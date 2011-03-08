@@ -38,11 +38,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		drawPoint(goal, "Goal");
 		drawPoint(optimum, "Optimum");	
 		drawPoint(ball, "Ball");
-
 		
 		// This state machine covers the basic stages robot can be in 
-		
-		
 		if (robot.isObstacleInFront(opponent, optimum, opponentWidth))
 		{			
 			setIAmDoing("Obstacle in front - going to Avoid");
@@ -68,13 +65,17 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			moveToPoint(robot, optimum);
 		}
 		/**
-		else if (isBallReached(robot, ball) && !isRobotCloseToGoal(robot, goal))
+		 * Leaving out for the time being, see if new method works with robot.
+		 * else if (isBallReached(robot, ball) && !isRobotCloseToGoal(robot, goal))
 		{
 			setIAmDoing("Moving to Goal");
 			moveToPoint(robot, goal);
 		}
+		else if (isBallReached(robot, ball)) {
+			executor.kick();
+		}
 		*/
-		else if (isBallReached(robot, ball))
+		else if (isBallKickable(robot, ball, goal))
 		{
 			setIAmDoing("Kick");
 			executor.kick();
@@ -227,17 +228,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		return robot.isInPoint(optimum, 30);
 	}
 	
-	/**
-	 * Are we in a point which allows a kick
-	 * 
-	 * @param robot
-	 * @param ball
-	 * @return
-	 */
-	protected boolean isBallReached(Robot robot, Ball ball) {
-		return robot.isInPoint(ball);
-	}
-	
+
 	
 	/**
 	 * Calculates a point at a 90 degree angle to the ball in relation to the robot.
@@ -288,5 +279,4 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		
 		return robot.getDistanceBetweenPoints(goal) < threshold;
 	}
-	
 }
