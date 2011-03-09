@@ -21,27 +21,26 @@ import main.data.Point;
 import main.data.Robot;
 
 public abstract class AbstractStrategy implements Strategy {
-	
 	/**
 	 * Pitch dimensions
 	 */
-	protected int PITCH_X_MIN = 0;
-	protected int PITCH_Y_MIN = 0;
-	protected int PITCH_X_MAX = 540;
-	protected int PITCH_Y_MAX = 290;
+	protected final static int PITCH_X_MIN = 0;
+	protected final static int PITCH_Y_MIN = 0;
+	protected final static int PITCH_X_MAX = 540;
+	protected final static int PITCH_Y_MAX = 290;
 	protected String rotateState = "straight";
 	protected String rotationState = "straight";
 
 	/**
 	 * Thresholds
 	 */
-	private final static int ballWidth = 10;
-	private final static int possesionDistance = 50;
-	private int wallThreshold = 30;
-	private int optimalGap = 50;
-	private int gap = 30;
+	protected final static int ballWidth = 10;
+	protected final static int possesionDistance = 50;
+	protected int wallThreshold = 30;
+	protected int optimalGap = 50;
+	protected int gap = 30;
 	// TODO: calculate width of the opponent taking into account its angle (?)
-	private int opponentWidth = 75;
+	protected int opponentWidth = 75;
 	protected double lineLength = 2;	
 
 	/**
@@ -52,7 +51,7 @@ public abstract class AbstractStrategy implements Strategy {
 	/**
 	 * Drawables to display on GUI
 	 */
-	protected ArrayList<Drawable> drawables;
+	protected ArrayList<Drawable> drawables = new ArrayList<Drawable>();
 	protected CircularBuffer ballBuffer = new CircularBuffer(6);
 	protected CircularBuffer optimumBuffer = new CircularBuffer(6);
 	protected CircularBuffer avoidBuffer = new CircularBuffer(6);
@@ -177,7 +176,6 @@ public abstract class AbstractStrategy implements Strategy {
 		drawables.add(new Drawable(Drawable.LABEL, "Distance: " + formatter.format(distance), 50, 30, Color.WHITE));
 		drawables.add(new Drawable(Drawable.LABEL, "dirAngle: " + formatter.format(dirAngle), 50, 50, Color.WHITE));
 		drawables.add(new Drawable(Drawable.LABEL, "robotAngle: " + formatter.format(currentAngle), 50, 70, Color.WHITE));
-
 	}
 	
 	/**
@@ -185,7 +183,6 @@ public abstract class AbstractStrategy implements Strategy {
 	 * @param point
 	 */
 	protected void pfsMoveToPoint(Robot robot, Robot opponent,  Point point) {
-		
 		PFPlanning planner;
 		RobotConf conf = new RobotConf(15.2, 8.27);
 		planner = new PFPlanning(conf, 0, 180, 0.045, 250000.0);
@@ -201,6 +198,7 @@ public abstract class AbstractStrategy implements Strategy {
 		// Converting Radians/sec to Degrees/sec
 		int left = (int) Math.toDegrees(vector.getLeft());
 		int right = (int) Math.toDegrees(vector.getRight());
+		
 		if(vector.getLeft()==0&&vector.getRight()==0)
 		{
 			executor.stop();
@@ -211,10 +209,6 @@ public abstract class AbstractStrategy implements Strategy {
 			System.out.println("Final Command:"+left+","+right);
 		}
 		executor.rotateWheels(left,right);
-		
-		
-		
-		
 	}
 
 	
@@ -289,7 +283,6 @@ public abstract class AbstractStrategy implements Strategy {
 			   ball.getX() < PITCH_X_MIN + threshold && ball.getY() > PITCH_Y_MAX - threshold;
 	}
 	
-	
 	/**
 	 * Set listener
 	 * 
@@ -300,6 +293,16 @@ public abstract class AbstractStrategy implements Strategy {
 		if (listener != null) {
 			listener.setDrawables(drawables);
 		}
+	}
+	
+	/**
+	 * Use drawables instance
+	 * 
+	 * @param drawables
+	 */
+	protected void useDrawables(ArrayList<Drawable> drawables)
+	{
+		this.drawables = drawables;
 	}
 	
 	/**
@@ -345,7 +348,16 @@ public abstract class AbstractStrategy implements Strategy {
 		return robot.isInPoint(ball);
 	}
 	
-	
+	/**
+	 * Is point out of pitch
+	 * 
+	 * @param point
+	 * @return
+	 */
+	protected boolean isPointOutOfPitch(Point point) {
+		return point.getX() < PITCH_X_MIN || point.getX() > PITCH_X_MAX ||
+				point.getY() < PITCH_Y_MIN || point.getY() > PITCH_Y_MAX;
+	}
 	
 	
 	/**
@@ -357,9 +369,6 @@ public abstract class AbstractStrategy implements Strategy {
 	 * @param optimum
 	 */
 	protected void addDrawables(Robot robot, Robot opponent, Ball ball, Point optimum, Goal goal) {
-		// Creating new object every time because of reasons related to
-		// the way Swing draws stuff. Will be fixed later.
-		drawables = new ArrayList<Drawable>();
 		
 		NumberFormat formatter = new DecimalFormat("#0.00");
 		
@@ -409,11 +418,20 @@ public abstract class AbstractStrategy implements Strategy {
 	 * @param name
 	 */
 	protected void setIAmDoing(String name) {
-		if(drawables==null)
-			drawables=new ArrayList<Drawable>();
 		drawables.add(new Drawable(Drawable.LABEL,
 						"I am doing: " + name,
 						800, 140, Color.RED));
+	}
+	
+	/**
+	 * Set information about what I'm doing doing right now
+	 * 
+	 * @param name
+	 */
+	protected void setIAmDoingSecond(String name) {
+		drawables.add(new Drawable(Drawable.LABEL,
+						"I am doing: " + name,
+						800, 150, Color.RED));
 	}
 	
 	/**
@@ -434,8 +452,6 @@ public abstract class AbstractStrategy implements Strategy {
 	 * @param remap
 	 */
 	protected void drawPoint(Point point, String label, boolean remap) {
-		if(drawables==null)
-			drawables=new ArrayList<Drawable>();
 		drawables.add(new Drawable(Drawable.CIRCLE,
 						(int) point.getX(), (int) point.getY(), Color.WHITE, remap));
 		if (label != null) {
@@ -443,21 +459,5 @@ public abstract class AbstractStrategy implements Strategy {
 					label,
 					(int) point.getX() + 5, (int) point.getY(), Color.WHITE, remap));
 		}
-	}
-	
-	protected void setGap(int newGap) {
-		gap = newGap;
-	}
-	
-	protected int getGap() {
-		return gap;
-	}
-	
-	protected int getOptimalGap() {
-		return optimalGap;
-	}
-	
-	protected int getOppenentWidth(){
-		return opponentWidth;
 	}
 }

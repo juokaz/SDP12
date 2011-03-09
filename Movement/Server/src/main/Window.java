@@ -116,8 +116,8 @@ public class Window {
 	}
 	
 	private void addPitch() {
-		
-		// TODO FIX THIS!!
+		// this sets them to hardcoded initial positions
+		// someone might want to move this to config someday
 		main.gui.Robot robot1 = new main.gui.Robot("images/tb.jpg", 400, 400, 180);
 		main.gui.Robot robot2 = new main.gui.Robot("images/ty.jpg", 500, 250, 0);
 		Ball ball = new Ball("images/ball.jpg", 200, 400);

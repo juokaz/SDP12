@@ -18,7 +18,6 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 	 */
 	protected String SEPARATOR = ",";
 
-
 	/**
 	 * Process input stream
 	 * 
@@ -49,8 +48,6 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 	    
 		String line = null;
 		
-		int i = 0;
-		
 	    while (true) {
 	    	
 	    	// stop this from running
@@ -72,9 +69,6 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 				    		System.out.println ("[Stdout] " + backup.readLine());
 			    		}
 			    	}
-			    	
-			    	//if (i++ % 4 != 0)
-			    	//	continue;
 			    	
 			    	String[] lines = line.split(SEPARATOR);
 			    	int robotAX = (int) Float.parseFloat(lines[0]);

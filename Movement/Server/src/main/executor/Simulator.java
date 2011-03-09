@@ -123,23 +123,11 @@ public class Simulator extends AbstractProcessor implements Executor {
 	}
 
 	@Override
-	public void start() {
-		// re-enable robots as they might have been disabled
-		robot1.setEnabled(true);
-		robot2.setEnabled(true);
-	}
-
-	@Override
 	public void stop() {
-		// disable robots to stop them from moving
-		robot1.setEnabled(false);
-		robot2.setEnabled(false);
 		// disable ball from rolling
 		ball.getTimer().stop();
 		robot1.stop();
 		robot2.stop();
-		robot1.setEnabled(true);
-		robot2.setEnabled(true);
 	}
 	
 	@Override

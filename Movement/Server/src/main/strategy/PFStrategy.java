@@ -1,18 +1,8 @@
 package main.strategy;
 
-import java.awt.Color;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-
 import main.Runner;
 import main.Strategy;
-import main.data.Ball;
-import main.data.Goal;
 import main.data.Location;
-
-import main.data.Robot;
-import main.gui.Drawable;
 
 import main.strategy.pFStrategy.*;
 
@@ -26,18 +16,14 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 		//opponent power: 10000000
 		planner = new PFPlanning(conf, 0, 180, 0.03, 250000.0);
 		current = new VelocityVec(0, 0);
-		double wallPowers=500;
-		double wallinf=60;
+		//double wallPowers=500;
+		//double wallinf=60;
 		//planner.AddObjects(new RectObject(new Point(0, 0), new Point(540,30), wallPowers,wallinf));
 		//planner.AddObjects(new RectObject(new Point(0, 280), new Point(540,290), wallPowers,wallinf));
-		
-
 	}
 
 	// updateLocation called in each cycle with fresh location updates.
 	public void updateLocation(Location data) {
-		
-		
 		
 		Pos current = new Pos(new Point(data.getOurRobot().getX(), data
 				.getOurRobot().getY()),data.getOurRobot().getT());
@@ -88,6 +74,4 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 		executor.rotateWheels(left,right);
 
 	}
-
-
 }

@@ -160,7 +160,7 @@ public class Pitch extends JComponent implements ActionListener {
 		repaint();
 	}
 	
-	public void simulatorRender(Graphics2D g2d) {
+	public synchronized void simulatorRender(Graphics2D g2d) {
 		
 		g2d.drawImage(getPitchImage(), 0, 0, null);
 		
@@ -180,7 +180,7 @@ public class Pitch extends JComponent implements ActionListener {
 	 * GETTERS AND SETTERS
 	 */
 
-	public void setDrawables(ArrayList<Drawable> drawables) {
+	public synchronized void setDrawables(ArrayList<Drawable> drawables) {
 
 		this.drawables = drawables;
 	}

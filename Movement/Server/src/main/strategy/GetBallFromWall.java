@@ -9,8 +9,6 @@ import main.data.Robot;
 
 public class GetBallFromWall extends GoToBall implements Strategy {
 
-	private double optimalGap = this.getOptimalGap();
-	
 	@Override
 	public void updateLocation(Location data) {
 		super.updateLocation(data);
@@ -43,7 +41,6 @@ public class GetBallFromWall extends GoToBall implements Strategy {
 		drawPoint(rebound, "Rebound");
 		
 		return rebound;
-		
 	}
 	
 	/**
@@ -89,5 +86,4 @@ public class GetBallFromWall extends GoToBall implements Strategy {
 			return false;
 		}
 	}
-	
 }

@@ -23,8 +23,12 @@ public class DrawablesListener {
 	 * 
 	 * @param drawables
 	 */
+	@SuppressWarnings("unchecked")
 	public void setDrawables(ArrayList<Drawable> drawables)
 	{
-		pitch.setDrawables(drawables);
+		// dereference drawables
+		pitch.setDrawables((ArrayList<Drawable>) drawables.clone());
+		// clean them so new could be added
+		drawables.clear();
 	}
 }

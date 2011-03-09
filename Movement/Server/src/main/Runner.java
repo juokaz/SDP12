@@ -53,18 +53,16 @@ public class Runner {
 
 	/**
 	 * Available processors
-	 * TODO make this automatic
 	 */
 	public final String[] processors = { "File", "Local process", "Simulator" };
 	
 	/**
 	 * Available strategies
-	 * TODO make this automatic
 	 */
-	public final String[] strategies = {"Main Strategy", "GoToBall", "PFS", "Basic", "GetBallFromWall", "TakePenalty2", "Interception"};
+	public final String[] strategies = {"Main Strategy", "GoToBall", "PFS", "Basic", "GetBallFromWall", "TakePenalty", "Interception"};
+	
 	/**
 	 * Available executors
-	 * TODO make this automatic
 	 */
 	public final String[] executors = { "Simulator", "Bluetooth", "Dull" };
 
@@ -80,7 +78,6 @@ public class Runner {
 	
 	/**
 	 * Available robots
-	 * TODO make this automatic
 	 */
 	public final String[] robots = { ROBOT_BLUE, ROBOT_YELLOW };
 	
@@ -96,7 +93,6 @@ public class Runner {
 	
 	/**
 	 * Available goals
-	 * TODO make this automatic
 	 */
 	public final String[] goals = { LEFT_GOAL, RIGHT_GOAL };
 	
@@ -231,14 +227,12 @@ public class Runner {
 			strategy = new main.strategy.GoToBall();
 		} else if (type.equals("GetBallFromWall")){
 			strategy = new main.strategy.GetBallFromWall();
-		} else if (type.equals("TakePenalty2")){
-			strategy = new main.strategy.TakePenalty2();
+		} else if (type.equals("TakePenalty")){
+			strategy = new main.strategy.TakePenalty();
 		} else if (type.equals("Main Strategy")) {
 			strategy = new main.strategy.MainStrategy();
 		} else if (type.equals("Interception")) {
 			strategy = new main.strategy.Interception();
-		} else {
-			strategy = new main.strategy.Dull();
 		}
 	}
 
@@ -336,7 +330,7 @@ public class Runner {
 			// which is left goal
 			processor.setLeftGoal(left_goal.equals(LEFT_GOAL));
 		
-			// intialise the strategy
+			// initialise the strategy
 			setStrategy(strategy_name);
 
 			if (Runner.DEBUG) {
@@ -357,9 +351,6 @@ public class Runner {
 			
 			// update running state
 			running = true;
-			
-			// start executing commands
-			executor.start();
 	
 			System.out.println(strategy.getClass().toString());
 			
@@ -380,7 +371,7 @@ public class Runner {
 			}
 			
 			// set to dull strategy so it doesn't do anything
-			setStrategy("");
+			strategy = new main.strategy.Dull();
 
 			// connect processor with strategy, sends new locations to strategy
 			processor.addListener(new ProcessorListener(strategy));

@@ -3,7 +3,7 @@ package main.strategy;
 import main.Strategy;
 import main.data.Location;
 
-public class TakePenalty2 extends AbstractStrategy implements Strategy {
+public class TakePenalty extends AbstractStrategy implements Strategy {
 
 	private boolean hasTaken = false;
 	

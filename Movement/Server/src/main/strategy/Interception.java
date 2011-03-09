@@ -14,7 +14,7 @@ import main.gui.Drawable;
 public class Interception extends AbstractStrategy implements Strategy {
 	
 	private int ballCount = 0;
-	private int countNeeded = 6;					//require 20 readings of ball position
+	private int countNeeded = 6;					//require 6 readings of ball position
 	private boolean predictionPointSet = false;				
 	private Point intercept = new Point(0,0);
 	private double lineLength = 200;	
@@ -56,7 +56,6 @@ public class Interception extends AbstractStrategy implements Strategy {
 		}
 		
 		setDrawables(drawables);
-		
 	}
 	
 	/**
@@ -75,7 +74,6 @@ public class Interception extends AbstractStrategy implements Strategy {
 		Point oldBall = new Point (ballBuffer.getXPosAt(ballBuffer.getLastPosition()),ballBuffer.getYPosAt(ballBuffer.getLastPosition()));
 		
 		return oldBall.getDistanceBetweenPoints(ball);
-		
 	}
 	
 	/**
@@ -88,8 +86,11 @@ public class Interception extends AbstractStrategy implements Strategy {
 	protected Point getPredictionPoint(Ball ball, double length, CircularBuffer ballBuffer) {
 
 		Predictor predictor = new Predictor();
-		for(int i = 0; i < ballBuffer.getBufferLength(); i++)
+		
+		for(int i = 0; i < ballBuffer.getBufferLength(); i++) {
 			drawPoint(ballBuffer.getPointAt(i), "");
+		}
+		
 		double[] parameters = new double[4];
 		predictor.fitLine(parameters, ballBuffer.getXBuffer(), ballBuffer.getYBuffer(),
 							null, null, ballBuffer.getBufferLength());
@@ -100,8 +101,9 @@ public class Interception extends AbstractStrategy implements Strategy {
 		
 		//changed the offset if the ball is travelling right
 		if(Math.abs(ballBuffer.getXPosAt(ballBuffer.getCurrentPosition())) -
-				Math.abs(ballBuffer.getXPosAt(ballBuffer.getLastPosition())) > 0)
+				Math.abs(ballBuffer.getXPosAt(ballBuffer.getLastPosition())) > 0) {
 			xOffset = xOffset * -1;
+		}
 
 		//define coordinates of the line to draw
 		int x1 = (int) ball.getX();
@@ -112,11 +114,10 @@ public class Interception extends AbstractStrategy implements Strategy {
 		//draw the line between (x1,y1) and (x2,y2)
 		drawables.add(new Drawable(Drawable.LINE, x1, y1, x2, y2, Color.CYAN, true));
 		
-		
 		Point predictPoint = new Point(x2,y2);
 		
 		//check if the line is going out of the pitch
-		while (predictPoint.isPointOutOfPitch()) {
+		while (isPointOutOfPitch(predictPoint)) {
 			double x = predictPoint.getX();
 			double y = predictPoint.getY();
 			//use symmetry to get point in pitch
@@ -131,11 +132,9 @@ public class Interception extends AbstractStrategy implements Strategy {
 			}
 			else if (y < PITCH_Y_MIN) {
 				predictPoint.setY(PITCH_Y_MIN + Math.abs(y - PITCH_Y_MIN));
-			}	
-				
+			}		
 		}
 		
 		return predictPoint;
 	}
-
 }

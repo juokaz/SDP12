@@ -6,11 +6,6 @@ package main.data;
  * A piece of data containing X and Y
  */
 public class Point {
-	
-	protected int PITCH_X_MIN = 0;
-	protected int PITCH_Y_MIN = 0;
-	protected int PITCH_X_MAX = 540;
-	protected int PITCH_Y_MAX = 290;
 
 	protected double X;
 	protected double Y;
@@ -75,16 +70,6 @@ public class Point {
 	 */
 	public boolean isInPoint(Point point) {
 		return isInPoint(point, pointThreshold);
-	}
-	
-	/**
-	 * Is point out of pitch
-	 * @param ball
-	 * @return
-	 */
-	public boolean isPointOutOfPitch() {
-		return getX() < PITCH_X_MIN || getX() > PITCH_X_MAX ||
-			   getY() < PITCH_Y_MIN || getY() > PITCH_Y_MAX;
 	}
 	
 	/**

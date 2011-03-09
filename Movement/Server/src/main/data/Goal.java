@@ -10,7 +10,6 @@ public class Goal extends Point {
 	/**
 	 * Store the position for the goal.
 	 * Only really need to change X value as posts and centre point will be the same
-	 * TODO: Decide whether angle to ball is stored here.
 	 * 
 	 * @param X
 	 * @param Y

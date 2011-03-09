@@ -19,8 +19,6 @@ public class BasicStrategy extends AbstractStrategy implements Strategy {
 	
 	@Override
 	public void updateLocation(Location data) {
-		// TODO Auto-generated method stub
-		
 		/**
 		 * Get position of ball, robot, and move to ball
 		 */

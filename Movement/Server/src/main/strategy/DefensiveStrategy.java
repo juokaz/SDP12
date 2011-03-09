@@ -18,7 +18,7 @@ public class DefensiveStrategy extends AbstractStrategy implements Strategy {
 		
 		Ball ball = data.getBall();
 		Robot robot = data.getOurRobot();
-		Robot opponent = /*new Robot(-1,-1,-1);*/data.getOpponentRobot();
+		Robot opponent = data.getOpponentRobot();
 		Goal goal = data.getGoal();
 
 		Point defencePoint = getDefencePoint(opponent, goal);
@@ -38,5 +38,4 @@ public class DefensiveStrategy extends AbstractStrategy implements Strategy {
 		double angle = opponent.angleBetweenPoints(opponentGoal);
 		return null;
 	}
-
 }

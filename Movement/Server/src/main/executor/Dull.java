@@ -21,22 +21,14 @@ public class Dull implements Executor {
 	}
 	
 	@Override
-	public void start(){
-	}
-	
-	@Override
 	public void exit() {
 	}
 
 	@Override
 	public void celebrate() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void takePenalty() {
-		// TODO Auto-generated method stub
-		
 	}
 }

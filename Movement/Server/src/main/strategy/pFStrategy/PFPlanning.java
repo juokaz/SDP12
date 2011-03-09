@@ -77,7 +77,9 @@ public class PFPlanning {
 		complList.add((Object) this.opponent);
 		complList.add(obj);
 		Vector res = GoTo(complList, this.ball, robot.getLocation());
-		System.out.println("Result Vector: " + res.toString());
+		if (Runner.DEBUG) {
+			System.out.println("Result Vector: " + res.toString());
+		}
 		if (orig)
 			return (VelocityVec) res;
 		else
@@ -110,7 +112,9 @@ public class PFPlanning {
 		{
 			res=new Vector(0,0);
 		}
-		System.out.println("Result Vector: " + res.toString());
+		if (Runner.DEBUG) {
+			System.out.println("Result Vector: " + res.toString());
+		}
 		if (orig)
 			return (VelocityVec) res;
 		else
@@ -201,8 +205,9 @@ public class PFPlanning {
 			return new VelocityVec(0, 0);
 		double alpha = inputVel.normalAngle();
 		double dist_alpha = alpha - current.getAngle();
-		if(Runner.DEBUG)
+		if(Runner.DEBUG) {
 			System.out.println("Current T: "+current.getAngle()+", dist_alpha="+dist_alpha);
+		}
 		double Vlin = Math.cos(dist_alpha) * size;
 		double angSize=1/size;
 		if(angSize>10)
@@ -214,8 +219,9 @@ public class PFPlanning {
 		if(Vang<-1*threshold)
 			Vang=-1*threshold;
 		
-		if(Runner.DEBUG)
+		if(Runner.DEBUG) {
 			System.out.println(Vlin + " " + Vang);
+		}
 		return CvtVelocity(Vlin, Vang, config.getr());
 	}
 

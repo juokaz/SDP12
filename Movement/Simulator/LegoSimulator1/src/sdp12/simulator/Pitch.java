@@ -208,31 +208,19 @@ public class Pitch extends JComponent implements ActionListener, KeyListener {
 		}
 		
 		public void mouseDragged(MouseEvent e) {
-			
 			int x = e.getX();
 			int y = e.getY();
 			
-			// TODO implement this
-			//if (e.getButton() == MouseEvent.BUTTON1) {
-				ball.setXPos(x);
-				ball.setYPos(y);
-			//} else {
-			//	robot1.setXPos(x);
-			//	robot1.setYPos(y);
-			//}
+			ball.setXPos(x);
+			ball.setYPos(y);
 		}
-		
 	}
 	
 	@Override
 	public void keyPressed(KeyEvent keyEvent) {
-
 		if(keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
-			
 			robot1.toggleCommandReceiving();
-			
 		}
-		
 	}
 
 	@Override
