@@ -1,0 +1,65 @@
+\documentclass[conference,12pt]{IEEEtran}
+
+\usepackage[tight,footnotesize]{subfigure}
+
+\ifCLASSINFOpdf
+  \usepackage[pdftex]{graphicx}
+  \graphicspath{{./images/}}
+\else
+\fi
+
+\usepackage[cmex10]{amsmath}
+%\geometry{top=0.0in, bottom=0.7in, left=0.7in, right=0.7in}
+
+
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+	
+\title{Individual Report 4}
+
+\author{Calum Jackson (s0812597) - 
+SDP Group 12}
+
+\maketitle
+
+%\numberwithin{equation}{section}
+%\IEEEpeerreviewmaketitle
+
+\pagebreak
+
+\section{Introduction}
+This report, the fourth in the series, will document robot changes since Milestone 3, changes to the strategy code, and the robots performance in the friendly match and Milestone 4. The team had two main objectives:
+\begin{itemize}
+\item Ensure the robot was capable of competing in the upcoming friendly matches.
+\item Implement a intercepting strategy for milestone 4.
+\end{itemize}
+
+\section{Strategy}
+Focusing on the friendly match, the strategy code was improved in numerous areas, including:
+\begin{itemize}
+\item Methods were created to overcome situations such as if a destination point was of the pitch, if the opponent has possession of the ball, or if the touch sensors were activated.
+\item Strategy classes were integrated together using a MainStrategy class, which uses a state system to decide what strategy needs to be called to deal with the current on-pitch situation
+\item Code was cleaned to improve usefulness of methods and remove useless code (such as using is
+\item The method calculating the obstacle avoidance point were improved to implement a dynamic point instead of a static point. This was done by calculating the --
+\end{itemize}
+
+\section{Robot Changes}
+Touch sensors were added at the front of the robot, and implemented in the code, preventing the robot continually crashing into an obstacle. During the friendly matches it was apparent the plate holder was impeding access to the NXT brick, wasting game time when the robots were being reset. Instant access to the NXT brick was gained by putting the plate holder on a hinge.
+
+%This was corrected by putting the plate holder on a hinge, giving instant access.  
+
+\section{Testing}
+Testing became a large part of the project, making sure our methods and strategies were working properly, noting scenario's our robot struggled with (such as if ball was close to the wall, which lead to a getBallFromWall strategy), and ensuring thresholds used in the simulator were appropriate on the pitch. This was time consuming, but useful in finding flaws and possibilities for improvements.
+
+\section{Friendly Tournament}
+The friendly tournament went well for our team, reaching the semi finals and losing only due to not scoring the first goal in a score draw. The simple strategies worked well in most situations, 
+
+\section{Milestone 4}
+We were unsuccessful in milestone 4, even though the robot was working well previous to the milestone. Last minute tweaks and ideas have cast us in this situation, and hopefully we will learn from this. 
+
+\section{Future Improvements}
+To maximise our performance in the final games, I feel we should focus on maximising the performance of the strategies currently being used, and integrating the PFS movement technique more effectively into the strategies. 
+
+
+\end{document}
