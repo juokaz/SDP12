@@ -42,6 +42,7 @@ public abstract class AbstractStrategy implements Strategy {
 	private int gap = 30;
 	// TODO: calculate width of the opponent taking into account its angle (?)
 	private int opponentWidth = 75;
+	protected double lineLength = 2;	
 
 	/**
 	 * Executor which is going to execute these commands
@@ -53,6 +54,9 @@ public abstract class AbstractStrategy implements Strategy {
 	 */
 	protected ArrayList<Drawable> drawables;
 	protected CircularBuffer ballBuffer = new CircularBuffer(6);
+	protected CircularBuffer optimumBuffer = new CircularBuffer(6);
+	protected CircularBuffer avoidBuffer = new CircularBuffer(6);
+	protected CircularBuffer behindBuffer = new CircularBuffer(6);
 	
 	/**
 	 * Listener accepting drawables

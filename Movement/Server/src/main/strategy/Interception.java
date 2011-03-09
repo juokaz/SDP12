@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import main.Strategy;
 import main.data.Ball;
+import main.data.CircularBuffer;
 import main.data.Goal;
 import main.data.Location;
 import main.data.Point;
@@ -14,9 +15,9 @@ public class Interception extends AbstractStrategy implements Strategy {
 	
 	private int ballCount = 0;
 	private int countNeeded = 6;					//require 20 readings of ball position
-	private boolean predictionPointSet = false;
-	private double lineLength = 200;					//length of prediction line
+	private boolean predictionPointSet = false;				
 	private Point intercept = new Point(0,0);
+	private double lineLength = 200;	
 	
 	@Override
 	public void updateLocation(Location data) {
@@ -39,7 +40,7 @@ public class Interception extends AbstractStrategy implements Strategy {
 			ballCount += 1;
 			if (ballCount > countNeeded) {
 				lineLength = 4 * distanceOfMovingBall(ball);
-				intercept = getPredictionPoint(ball, lineLength);
+				intercept = getPredictionPoint(ball, lineLength, ballBuffer);
 				predictionPointSet = true;
 			}
 			//setIAmDoing("Getting ball positions");
@@ -84,7 +85,7 @@ public class Interception extends AbstractStrategy implements Strategy {
 	 * @param length
 	 * @return
 	 */
-	protected Point getPredictionPoint(Ball ball, double length) {
+	protected Point getPredictionPoint(Ball ball, double length, CircularBuffer ballBuffer) {
 
 		Predictor predictor = new Predictor();
 		for(int i = 0; i < ballBuffer.getBufferLength(); i++)

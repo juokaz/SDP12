@@ -1,11 +1,15 @@
 package main.strategy;
 
+import java.awt.Color;
+
 import main.Strategy;
 import main.data.Ball;
+import main.data.CircularBuffer;
 import main.data.Goal;
 import main.data.Location;
 import main.data.Robot;
 import main.data.Point;
+import main.gui.Drawable;
 
 
 /**
@@ -21,8 +25,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	int optimalGap = getOptimalGap();
 	int gap = getGap();
 	int opponentWidth = getOppenentWidth();
-	PFStrategy pfs = new PFStrategy(15.2, 8.27);
-	
+	PFStrategy pfs = new PFStrategy(15.2, 8.27);	
 	
 	@Override
 	public void updateLocation(Location data) {
@@ -31,7 +34,10 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		Robot opponent = /*new Robot(-1,-1,-1);*/data.getOpponentRobot();
 		Goal goal = data.getGoal();
 		Point optimum = getOptimumPoint(ball, goal);
+		Point behind = getPointToFaceBallFromCorrectSide(robot, ball, optimum, goal);
 		ballBuffer.addPoint(ball);
+		//optimumBuffer.addPoint(optimum);
+		behindBuffer.addPoint(behind);
 		pfs.setExecutor(executor);
 
 		// statistics
@@ -54,15 +60,17 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		else if (isBallBehindRobot(robot, ball, optimum, goal))
 		{
 			setIAmDoing("Ball behind robot - going to Behind");
-			Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum, goal);
+			//Point point = getPointToFaceBallFromCorrectSide(robot, ball, optimum, goal);
 			// Checks to see if there is an obstacle in the way of the new point,
 			// if there is, set new point to avoid obstacle.
-			if (robot.isObstacleInFront(opponent, point, opponentWidth)) {
-				point = getPointToAvoidObstacle(robot, opponent, point);
+			if (robot.isObstacleInFront(opponent, behind, opponentWidth)) {
+				behind = getPointToAvoidObstacle(robot, opponent, behind);
 			}
-			drawPoint(point, "Behind");
+			drawPoint(behind, "Behind");
+			
+			Point predictedBehind = getPredictionPoint(behind, lineLength, behindBuffer);
 			//moveToPoint(robot, point);
-			pfsMoveToPoint(robot, opponent, point);
+			pfsMoveToPoint(robot, opponent, predictedBehind);
 
 		}
 
@@ -71,6 +79,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		{
 			setIAmDoing("Not in optimum - going to Optimum");
 			//moveToPoint(robot, optimum);
+			//Point predictedOptimum = getPredictionPoint(optimum, lineLength, optimumBuffer);
 			pfsMoveToPoint(robot, opponent, optimum);
 
 		}
@@ -207,7 +216,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */	
 	protected Point getPointToFaceBallFromCorrectSide(Robot robot, Ball ball, Point optimum, Goal goal) {		
-		int behindGap = 50;
+		int behindGap = 70;
 		// Check if robot is below the ball and which side of the ball it is on
 		boolean belowBall = true;
 		if (goal.getX() != 0) {
@@ -307,5 +316,72 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		int threshold = 100;
 		
 		return robot.getDistanceBetweenPoints(goal) < threshold;
+	}
+	
+	/**
+	 * Gets a point that is LENGTH away from the ball based on it's previous positions
+	 * 
+	 * @param ball
+	 * @param length
+	 * @return
+	 */
+	protected Point getPredictionPoint(Point point, double length, CircularBuffer ballBuffer) {
+
+		Predictor predictor = new Predictor();
+		for(int i = 0; i < ballBuffer.getBufferLength(); i++)
+			drawPoint(ballBuffer.getPointAt(i), "");
+		double[] parameters = new double[4];
+		predictor.fitLine(parameters, ballBuffer.getXBuffer(), ballBuffer.getYBuffer(),
+							null, null, ballBuffer.getBufferLength());
+		
+		//get the x offset value such that distance of will always equal 100
+		double lineLength = length*distanceOfMovingPoints(point, ballBuffer);
+		int xOffset = (int) (lineLength / Math.sqrt(1 + parameters[1]*parameters[1]));
+		
+		//changed the offset if the ball is travelling right
+		if(Math.abs(ballBuffer.getXPosAt(ballBuffer.getCurrentPosition())) -
+				Math.abs(ballBuffer.getXPosAt(ballBuffer.getLastPosition())) > 0)
+			xOffset = xOffset * -1;
+
+		//define coordinates of the line to draw
+		int x1 = (int) point.getX();
+		int y1 = (int) (parameters[1]*point.getX() + parameters[0]);
+		int x2 = (int) point.getX()+xOffset;
+		int y2 = (int) (parameters[1]*(point.getX()+xOffset) + parameters[0]);
+		
+		//draw the line between (x1,y1) and (x2,y2)
+		drawables.add(new Drawable(Drawable.LINE, x1, y1, x2, y2, Color.CYAN, true));
+		
+		
+		Point predictPoint = new Point(x2,y2);
+		
+		//check if the line is going out of the pitch
+		while (predictPoint.isPointOutOfPitch()) {
+			double x = predictPoint.getX();
+			double y = predictPoint.getY();
+			//use symmetry to get point in pitch
+			if (x > PITCH_X_MAX) {
+				predictPoint.setX(PITCH_X_MAX - Math.abs(x - PITCH_X_MAX));
+			}
+			else if (x < PITCH_X_MIN) {
+				predictPoint.setX(PITCH_X_MIN + Math.abs(x - PITCH_X_MIN));
+			}
+			if (y > PITCH_Y_MAX) {
+				predictPoint.setY(PITCH_Y_MAX - Math.abs(y - PITCH_Y_MAX));
+			}
+			else if (y < PITCH_Y_MIN) {
+				predictPoint.setY(PITCH_Y_MIN + Math.abs(y - PITCH_Y_MIN));
+			}	
+				
+		}
+		
+		return predictPoint;
+	}
+	
+	private double distanceOfMovingPoints(Point point, CircularBuffer pointBuffer){
+		Point oldPoint = new Point (pointBuffer.getXPosAt(pointBuffer.getLastPosition()),pointBuffer.getYPosAt(pointBuffer.getLastPosition()));
+		
+		return oldPoint.getDistanceBetweenPoints(point);
+		
 	}
 }
