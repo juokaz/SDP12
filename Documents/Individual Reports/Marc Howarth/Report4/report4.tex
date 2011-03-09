@@ -1,0 +1,57 @@
+\documentclass[conference,12pt]{IEEEtran}
+
+\usepackage[tight,footnotesize]{subfigure}
+
+\usepackage{algorithmic}
+\usepackage[boxed]{algorithm}
+
+\usepackage{mathtools}
+
+\usepackage[pdftex]{graphicx}
+\graphicspath{{./images/}}
+
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+	
+\title{\vspace{-0.05\textheight}System Design Project - Report 4}
+
+\author{\vspace{-0.05\textheight}\IEEEauthorblockN{Marc Howarth}
+\IEEEauthorblockA{Group 12 - Robot Unicorn Defenders}}
+	
+\maketitle
+
+\IEEEpeerreviewmaketitle
+
+\section{Introduction}
+Since the last milestone, a lot of time has been spent making our code more readable and tweaking thresholds in preparation for the first tournament. Integration has been key, as we have begun merging all the strategies together including the Potential Fields algorithm.
+	
+\section{First Friendly}
+Our robot managed to reach the semi-finals of the first friendly. This was the first opportunity to see how dynamic and robust our robot was. We drew the following conclusions from the matches that we played:
+\begin{itemize}
+\item Our lightweight, small design paid dividends as we were able to move quicker than the other robots.
+\item Need a battery rotation system ready for the next tournament as we struggled to charge the battery fully between matches.
+\item Our code is stable - no crashes from Bluetooth, vision, strategy or GUI.
+\item Need to implement an extra option on the GUI to pause strategies so that we can move our hands away before restarting play.
+\end{itemize}
+
+\section{Ball Prediction}
+Part of being able to intercept ball is the ability to predict where the ball will be in the future. In implementing ball prediction I used a \textit{circular buffer} that stored the position of the ball for each update of vision. Using an implementation of a least squares fit to a straight line \footnote{http://www.particle.kth.se/~lindsey/JavaCourse/Book/Part1/Physics/Chapter08/lsqFits.html} it was possible to draw a line in which the ball was expected to follow. The distance between the points in the buffer made the length of the line proportional to the speed at which the ball was travelling.
+
+Initially, when testing on the simulator, the buffer size was 10 however, when testing on the pitch where the ball doesn't travel in a perfectly straight line, we reduced the buffer size to 6. This allowed a good estimation for the straight line but would also respond quicker to any change of direction of the ball.
+
+Accounting for rebounds off multiple walls, our robot was successfully intercepting the ball. It now came to implementing the prediction within our current strategies; the \textit{circular buffer} data structure and methods were already implemented, and the \textit{predictor} class could work for any given point - not just the ball. This made is possible to predict our destination point in any given scenario.
+
+\section{Ball Near Wall}
+During our first friendly, we noticed that when the ball was near the wall our \textit{destination} point was outside the range of the pitch and so our robot was sometimes found stuck against a wall. To avoid this, a strategy was implemented to kick the ball towards in the wall such that the ball would rebound from the wall and towards our opponent's goal. The formula to work out the rebound point is:
+\[y = \left\{ 
+\begin{array}{l l}
+  0 & \quad \mbox{ballY $<$ 155}\\
+  310 & \quad \mbox{otherwise}\\ \end{array} \right. \]
+\[x = \frac{ballX(goalY-y) + goalX(ballY-y)}{ballY + goalY - 2y} \]
+The robot won't often score using the rebound strategy because, near the wall, the kicker is often impeded and the angle at which the ball rebounds from the wall depends on how fast the ball is travelling. The strategy does clear the ball from the wall and will also send the ball towards the opponent's goal thus giving us an advantage.
+
+\section{Penalty}
+Our team were awarded a penalty in the semi final of the first friendly, which we were able to score. The penalties are always taken from the same spot it possible to know exactly how far to rotate before shooting. With these values calculated through various tests prior to the match we were able to rotate and kick before the other team had any time to react.
+
+\end{document}
