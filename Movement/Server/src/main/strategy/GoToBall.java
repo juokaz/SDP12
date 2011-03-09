@@ -48,7 +48,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			setIAmDoing("Obstacle in front - going to Avoid");
 			Point point = getPointToAvoidObstacle(robot, opponent, optimum);
 			drawPoint(point, "Avoid");
-			moveToPoint(robot, point);
+			//moveToPoint(robot, point);
+			pfsMoveToPoint(robot, opponent, point);
 		}
 		else if (isBallBehindRobot(robot, ball, optimum, goal))
 		{
@@ -60,7 +61,9 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 				point = getPointToAvoidObstacle(robot, opponent, point);
 			}
 			drawPoint(point, "Behind");
-			moveToPoint(robot, point);
+			//moveToPoint(robot, point);
+			pfsMoveToPoint(robot, opponent, point);
+
 		}
 
 		else if (!isRobotInOptimumPosition(robot, optimum) && !haveBall(robot, optimum, ball))
@@ -90,8 +93,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		}
 		else {
 			setIAmDoing("Reaching ball");
-			moveToPoint(robot, ball);
-		//	pfsMoveToPoint(robot, opponent, ball);
+		//	moveToPoint(robot, ball);
+			pfsMoveToPoint(robot, opponent, ball);
 		}
 		
 		

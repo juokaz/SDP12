@@ -52,7 +52,7 @@ public abstract class AbstractStrategy implements Strategy {
 	 * Drawables to display on GUI
 	 */
 	protected ArrayList<Drawable> drawables;
-	protected CircularBuffer ballBuffer = new CircularBuffer(3);
+	protected CircularBuffer ballBuffer = new CircularBuffer(6);
 	
 	/**
 	 * Listener accepting drawables
@@ -184,7 +184,7 @@ public abstract class AbstractStrategy implements Strategy {
 		
 		PFPlanning planner;
 		RobotConf conf = new RobotConf(15.2, 8.27);
-		planner = new PFPlanning(conf, 0, 180, 0.03, 250000.0);
+		planner = new PFPlanning(conf, 0, 180, 0.045, 250000.0);
 		
 		Pos current = new Pos(new main.strategy.pFStrategy.Point(robot.getX(), robot.getY()),robot.getT());
 		

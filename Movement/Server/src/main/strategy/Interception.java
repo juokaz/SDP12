@@ -13,7 +13,7 @@ import main.gui.Drawable;
 public class Interception extends AbstractStrategy implements Strategy {
 	
 	private int ballCount = 0;
-	private int countNeeded = 2;					//require 20 readings of ball position
+	private int countNeeded = 6;					//require 20 readings of ball position
 	private boolean predictionPointSet = false;
 	private double lineLength = 200;					//length of prediction line
 	private Point intercept = new Point(0,0);
@@ -38,7 +38,7 @@ public class Interception extends AbstractStrategy implements Strategy {
 			//read a certain number of values
 			ballCount += 1;
 			if (ballCount > countNeeded) {
-				lineLength = 5 * distanceOfMovingBall(ball);
+				lineLength = 4 * distanceOfMovingBall(ball);
 				intercept = getPredictionPoint(ball, lineLength);
 				predictionPointSet = true;
 			}
@@ -50,7 +50,7 @@ public class Interception extends AbstractStrategy implements Strategy {
 			executor.stop();
 			setIAmDoing("Predict point reached - stopping");*/
 		} if (predictionPointSet) {
-			moveToPoint(robot, intercept);
+			pfsMoveToPoint(robot, opponent, intercept);
 			setIAmDoing("Going to point - predict");
 		}
 		

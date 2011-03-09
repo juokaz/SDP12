@@ -73,8 +73,8 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 			    		}
 			    	}
 			    	
-			    	if (i++ % 4 != 0)
-			    		continue;
+			    	//if (i++ % 4 != 0)
+			    	//	continue;
 			    	
 			    	String[] lines = line.split(SEPARATOR);
 			    	int robotAX = (int) Float.parseFloat(lines[0]);
