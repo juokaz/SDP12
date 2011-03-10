@@ -54,19 +54,43 @@ We considered building a protective frame around the body of the robot, as many 
 Since the last milestone, a lot of time has been spent making our code more readable and tweaking thresholds in preparation for the first tournament. Integration has been key, as we  began merging all the strategies together including the Potential Fields algorithm. 
 We greatly improved our strategy in the following ways:
 \begin{itemize}
-\item Integrating the Potential Field planning algorithm into low level robot movement. This made robot movement much faster, however, since it is a reactive algorithm, it is vulnerable to possible noises in Vision stack. Also since robot cannot turn as fast as required sometimes it falls into a balance between two possible vectors and therefore does not follow the optimal plan. This can be improved by finding better ways of applying the resultant velocity vector on the robot.
+\item Integrating the Potential Field planning algorithm into low level robot movement. This made robot movement much faster, however, since it is a reactive algorithm, it is vulnerable to possible noises in Vision stack.
 \item Creating methods to overcome situations such as if a destination point was outside of the pitch, if the opponent has possession of the ball, or if the touch sensors were activated.
-\item Creating an alternative attacking strategy for when the ball is close to the wall, which will try and kick the ball against the wall at such an angle that the ball will head towards the  opponent goal.
+\item Creating an alternative attacking strategy for when the ball is close to the wall, which will try and kick the ball against the wall at such an angle that the ball will head towards the  opponent goal, Figure \ref{fig:bounceWall}.
+\begin{figure}[htp]
+\begin{center}
+\leavevmode
+\includegraphics[width=0.2\textwidth] {getBallWall.png}
+\end{center}
+\caption{Position of Different objects near wall. Aim is to calculate $X$ given other positions}
+\label{fig:bounceWall}
+\end{figure}
 \item Altering the methods calculating the obstacle avoidance point to implement a dynamic point instead of a static point.
 \item Writing a strategy for predicting the position of a moving ball, using a circular buffer data structure, which stores the previous positions of the ball from vision updates.
 \item Integrating strategy classes together into a MainStrategy class, which uses a state system to decide what strategy needs to be called to deal with the current on-pitch situation.
 \item Some functions were moved to higher levels to increase their availability to all of the strategies, often specific functions were made more general to increase their usefulness, which led to the removal of many similar/duplicate functions.
 \end{itemize}
-While playing in the friendly matches we also realised we needed a way to stop the robot running, for example when repositioning it once a goal was scored, without having to then go through the time consuming process of reconnecting to the server via bluetooth. In light of this,         we extended the GUI for our program to have two buttons: “Start/Stop” and “Start/Stop execution”. The former was the similar to the previous “Start” button, the only difference being that now it doesn’t run the strategy once the Bluetooth connection and vision are set up – it will wait for “Start execution” to be clicked. This allows us to not only start moving immediately when we want to, but also lets us change strategy (from main to take-penalty for example) without reestablishing Bluetooth connection.
-Related to this, Juozas modified the program running on the robot itself to never quit the program once it’s started, which made it easier to test our code on the robot without needing to relaunch the client every time we click “Stop” on the program.
+While playing in the friendly matches we also realised we needed a way to stop the robot running, for example when repositioning it once a goal was scored, without having to then go through the time consuming process of reconnecting to the server via Bluetooth. In light of this, we extended the GUI for our program to have two buttons: Start/Stop and Start/Stop execution. The former was the similar to the previous Start button, the only difference being that now it doesn't run the strategy once the Bluetooth connection and vision are set up it will wait for Start execution to be clicked. This allows us to not only start moving immediately when we want to, but also lets us change strategy (from main to take-penalty for example) without re-establishing Bluetooth connection.
+Related to this, Juozas modified the program running on the robot itself to never quit the program once it's started, which made it easier to test our code on the robot without needing to relaunch the client every time we click Stop on the program.
 
+The Major barrier in using Potential Field algorithm was how we apply the resultant velocity on the robot. This is a challenge since PF algorithm itself does not take into account robot constraints which in turn makes the control problem specific to a nonholonomic robot\cite{book:holonomicity}. Our proposed method transforms calculated vector to $V_{linear}$ and $V_{angular}$ velocities for such a differential drive robot, Figure \ref{fig:robot}.
+\begin{figure}[htp]
+\begin{center}
+\leavevmode
+\includegraphics[width=0.2\textwidth] {robot.png}
+\end{center}
+\caption{Simple model of nonholonomic differential drive robot}
+\label{fig:robot}
+\end{figure}
+Following equations demonstrates how we apply the velocity vector to the robot:
+\begin{align}
+\label{equ:PFVelocity}
+V_{linear} = \begin{Vmatrix}v\end{Vmatrix} cos(\theta) ,
+V_{angular} = {1 \over \begin{Vmatrix}v\end{Vmatrix}} \theta
+\end{align}
+The proposed method has prevents robot from making sharp turns while it is not close to the destination point and therefore starts to make sharper turns as it gets closer to destination. Also, angular velocities are controlled with a minimum and maximum velocities so robot never tries to turn faster than some specific threshold.
 \section{Vision}
-Since last milestone most of the work on the Vision stack was focused on cleaning up the code and documenting what has been done. A complete documentation of API and different functionalities of the robot is created using DoxyGen\cite tool.
+Since last milestone most of the work on the Vision stack was focused on cleaning up the code and documenting what has been done. A complete documentation of API and different functionalities of the robot is created using DoxyGen\cite{web:DoxyGen} tool.
 The code base was split into three sub-modules:
 \begin{itemize}
 \item Utilities: helper functions to load parameters from input, loading images etc.
@@ -77,12 +101,13 @@ The goal was to make this code available for public use.
  
 \section{Simulator}
 The major improvements to the simulator were restructuring of the code base, implementing a generalized collision detection algorithm, and providing the strategy module with additional drawing capabilities.
-Having had troubles managing all collisions by passing objects around to all other objects, a central collision detection mechanism was designed. Objects that need support for collisions are registered with a collision detector and all relevant parties are notified in the case of collision. The collision detector requests each object to send their shape on every update cycle. For every corner of that shape a test is made to establish whether it falls within any of the other registered objects’ shape. If this is the case, a collision packet, which includes the type of collision and the side of the shape that is closest to the other shape's corner, is constructed and sent to each object participating in the collision. 
+Having had troubles managing all collisions by passing objects around to all other objects, a central collision detection mechanism was designed. Objects that need support for collisions are registered with a collision detector and all relevant parties are notified in the case of collision. The collision detector requests each object to send their shape on every update cycle. For every corner of that shape a test is made to establish whether it falls within any of the other registered objects' shape. If this is the case, a collision packet, which includes the type of collision and the side of the shape that is closest to the other shape's corner, is constructed and sent to each object participating in the collision. 
 As the strategy was becoming more and more complex, efficient debugging methods needed to be employed, especially in the case of finding logical errors in the code, which were usually harder to detect. Since any strategy involves fine tuning and certain thresholds are inevitable, a simple but useful transparent oval is drawn whenever there was a need to visualize, for example, the area around a point to which the robot needs to move. This ensures calculations were always correct and the strategy was proceeding as it should.
 
 
 \section{Conclusion}
 The improvements that we decided on at the start of this phase were successfully implemented, and any new problems were dealt with with a good degree of efficiency. Our progress to the semi-final stage of the first friendly tournament, and thus a seeded position for the second tournament, is encouraging. We hope to continue the good work up until the final stages of the System Design Project, and improve on our semi-final result in the upcoming games.
-\pagebreak
 
+\bibliographystyle{IEEEtran}
+\bibliography{bibliography}
 \end{document}
