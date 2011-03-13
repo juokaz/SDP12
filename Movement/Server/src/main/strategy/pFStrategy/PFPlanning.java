@@ -208,16 +208,18 @@ public class PFPlanning {
 		if(Runner.DEBUG) {
 			System.out.println("Current T: "+current.getAngle()+", dist_alpha="+dist_alpha);
 		}
+		if(dist_alpha>Math.PI)
+			dist_alpha=2*Math.PI-dist_alpha;
 		double Vlin = Math.cos(dist_alpha) * size;
 		double angSize=1/size;
-		if(angSize>10)
-			angSize=10;
-		double Vang = dist_alpha*angSize;
-		double threshold=0.1;
-		if(Vang>threshold)
-			Vang=threshold;
-		if(Vang<-1*threshold)
-			Vang=-1*threshold;
+		//if(*angSizeangSize>10)
+		//	angSize=10;
+		double Vang = 0.4*dist_alpha/Math.PI;
+		//double threshold=0.1;
+		//if(Vang>threshold)
+		//	Vang=threshold;
+		//if(Vang<-1*threshold)
+		//	Vang=-1*threshold;
 		
 		if(Runner.DEBUG) {
 			System.out.println(Vlin + " " + Vang);

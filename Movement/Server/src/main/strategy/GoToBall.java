@@ -30,9 +30,9 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		Goal goal = data.getGoal();
 		Point optimum = getOptimumPoint(ball, goal);
 		Point behind = getPointToFaceBallFromCorrectSide(robot, ball, optimum, goal);
-		ballBuffer.addPoint(ball);
-		//optimumBuffer.addPoint(optimum);
-		behindBuffer.addPoint(behind);
+	//	ballBuffer.addPoint(ball);
+	//	optimumBuffer.addPoint(optimum);
+		//behindBuffer.addPoint(behind);
 
 		// statistics
 		addDrawables(robot, opponent, ball, optimum, goal);
@@ -64,13 +64,14 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			
 			Point predictedBehind = getPredictionPoint(behind, lineLength, behindBuffer);
 			//moveToPoint(robot, point);
-			pfsMoveToPoint(robot, opponent, predictedBehind);
+			pfsMoveToPoint(robot, opponent, behind);
 
 		}
 
 		else if (!isRobotInOptimumPosition(robot, optimum) && !haveBall(robot, optimum, ball))
 
 		{
+			
 			setIAmDoing("Not in optimum - going to Optimum");
 			//moveToPoint(robot, optimum);
 			//Point predictedOptimum = getPredictionPoint(optimum, lineLength, optimumBuffer);
@@ -96,8 +97,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		}
 		else {
 			setIAmDoing("Reaching ball");
-		//	moveToPoint(robot, ball);
-			pfsMoveToPoint(robot, opponent, ball);
+			moveToPoint(robot, ball);
+			//pfsMoveToPoint(robot, opponent, ball);
 		}
 		
 		
@@ -252,7 +253,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isRobotInOptimumPosition(Robot robot, Point optimum) {
-		return robot.isInPoint(optimum, 30);
+		return robot.isInPoint(optimum, 50);
 	}
 	
 	/**
