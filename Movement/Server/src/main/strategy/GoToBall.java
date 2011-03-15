@@ -67,9 +67,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			pfsMoveToPoint(robot, opponent, behind);
 
 		}
-
-		else if (!isRobotInOptimumPosition(robot, optimum) && !haveBall(robot, optimum, ball))
-
+		// TODO: Check threshold on obstacleWidth - currently 30
+		else if (!isRobotInOptimumPosition(robot, optimum) && !(optimum.isObstacleInFront(robot, ball, 30)))
 		{
 			
 			setIAmDoing("Not in optimum - going to Optimum");
@@ -89,12 +88,12 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		else if (isBallReached(robot, ball)) {
 			executor.kick();
 		}
-		// Possibly utilise this later on, method needs more work though
-		else if (isBallKickable(robot, ball, goal))
+		else if (isBallKickable(robot, ball, goal) && isRobotInPossession(robot, ball, goal))
 		{
 			setIAmDoing("Kick");
 			executor.kick();
 		}
+		// Possibly utilise this later on, method needs more work though
 		else {
 			setIAmDoing("Reaching ball");
 			moveToPoint(robot, ball);

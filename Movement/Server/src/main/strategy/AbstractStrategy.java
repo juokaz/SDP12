@@ -116,7 +116,6 @@ public abstract class AbstractStrategy implements Strategy {
 		double distance = Math.sqrt(dx*dx + dy*dy);
 		
 		dirAngle = Math.toDegrees(robot.angleBetweenPoints(point));
-
 		
 		double angleDifference = currentAngle - dirAngle;
 		
@@ -370,7 +369,8 @@ public abstract class AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isBallReached(Robot robot, Ball ball) {
-		return robot.isInPoint(ball);
+		// TODO: Check thresholds
+		return robot.isInPoint(ball, 40);
 	}
 	
 	/**

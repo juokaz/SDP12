@@ -80,7 +80,7 @@ public class GetBallFromWall extends GoToBall implements Strategy {
 	 */
 	protected boolean isBallKickable(Robot robot, Ball ball, Goal goal) {
 		Point rebound = getReboundPoint(ball, goal);
-		if  (isBallReached(robot, ball) && atShootingAngle(robot, rebound)) {
+		if  (isBallReached(robot, ball) && atShootingAngle(robot, ball, rebound)) {
 			return true;
 		} else {
 			return false;
