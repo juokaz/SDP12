@@ -314,7 +314,7 @@ public abstract class AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isBallKickable(Robot robot, Ball ball, Goal goal) {
-		if (isBallReached(robot, ball) && atShootingAngle(robot, goal)) {
+		if (isBallReached(robot, ball) && atShootingAngle(robot, ball, goal)) {
 			return true;
 		} else {
 			return false;
@@ -328,12 +328,37 @@ public abstract class AbstractStrategy implements Strategy {
 	 * @param goal
 	 * @return
 	 */
-	protected boolean atShootingAngle(Robot robot, Point goal) {
-		if (robot.getT() <= robot.angleBetweenPoints(goal) + Math.toRadians(20) 
-				&& robot.getT() >= robot.angleBetweenPoints(goal) - Math.toRadians(20)) {
-			return true;
+	protected boolean atShootingAngle(Robot robot, Ball ball, Point goal) {
+		// TODO: Check Y values for each post.
+		Point topPost = new Point(goal.getX(), goal.getY() - 75);
+		Point bottomPost = new Point(goal.getX(), goal.getY() + 75);
+		
+		boolean leftpost = true;
+		
+		if (goal.getX() != 0) {
+			leftpost = false;
+		}
+		
+		double angleT = ball.angleBetweenPoints(topPost);
+		double angleB = ball.angleBetweenPoints(bottomPost);
+		double angleR = robot.getT();
+		
+		if (leftpost) {
+			if (angleT >=0) {
+				return (angleR <= angleT && angleR >= angleB);
+			} else if (angleB <= 0) {
+				return (angleR <=  angleT && angleR >= angleB);
+			} else {
+				return (angleR <= angleT || angleR >= angleB);
+			}
 		} else {
-			return false;
+			if (angleB <=0) {
+				return (angleR >= angleT && angleR <= angleB);
+			} else if (angleT >= 0) {
+				return (angleR >=  angleT && angleR <= angleB);
+			} else {
+				return (angleR >= angleT || angleR <= angleB);
+			}
 		}
 	}
 	
