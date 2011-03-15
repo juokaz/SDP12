@@ -370,7 +370,8 @@ public abstract class AbstractStrategy implements Strategy {
 	 */
 	protected boolean isBallReached(Robot robot, Goal goal, Ball ball) {
 		// TODO: Check thresholds
-		return robot.isAtBall(ball, goal, 40);
+		//return robot.isAtBall(ball, goal, 30);
+		return robot.isInPoint(ball, 30);
 	}
 	
 	/**

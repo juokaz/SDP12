@@ -68,7 +68,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 
 		}
 		// TODO: Check threshold on obstacleWidth - currently 30
-		else if (!isRobotInOptimumPosition(robot, optimum) && !(optimum.isObstacleInFront(robot, ball, 30)))
+		else if (!isRobotInOptimumPosition(robot, optimum) && !(ball.isObstacleInFront(robot, optimum, 30)))
 		{
 			
 			setIAmDoing("Not in optimum - going to Optimum");
@@ -85,15 +85,18 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			moveToPoint(robot, goal);
 		}
 		*/
+	/**
 		else if (isBallKickable(robot, ball, goal))// && isRobotInPossession(robot, ball, goal))
 		{	
 			setIAmDoing("Kick");
 			executor.kick();
 		}
+		*/
 		else if (isBallReached(robot, goal, ball)) {
 			setIAmDoing("Kick");
 			executor.kick();
 		}
+		
 		// Possibly utilise this later on, method needs more work though
 		else {
 			setIAmDoing("Reaching ball");
