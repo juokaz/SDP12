@@ -313,7 +313,7 @@ public abstract class AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isBallKickable(Robot robot, Ball ball, Goal goal) {
-		if (isBallReached(robot, ball) && atShootingAngle(robot, ball, goal)) {
+		if (isBallReached(robot, goal, ball) && atShootingAngle(robot, ball, goal)) {
 			return true;
 		} else {
 			return false;
@@ -368,9 +368,9 @@ public abstract class AbstractStrategy implements Strategy {
 	 * @param ball
 	 * @return
 	 */
-	protected boolean isBallReached(Robot robot, Ball ball) {
+	protected boolean isBallReached(Robot robot, Goal goal, Ball ball) {
 		// TODO: Check thresholds
-		return robot.isInPoint(ball, 40);
+		return robot.isAtBall(ball, goal, 40);
 	}
 	
 	/**

@@ -69,21 +69,4 @@ public class GetBallFromWall extends GoToBall implements Strategy {
 	protected boolean isRobotCloseToGoal(Robot robot, Goal goal) {
 		return true;	
 	}
-	
-	/**
-	 * Returns true if the robot is in a position where it can kick the ball at the goal.
-	 * 
-	 * @param robot
-	 * @param ball
-	 * @param goal
-	 * @return
-	 */
-	protected boolean isBallKickable(Robot robot, Ball ball, Goal goal) {
-		Point rebound = getReboundPoint(ball, goal);
-		if  (isBallReached(robot, ball) && atShootingAngle(robot, ball, rebound)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 }

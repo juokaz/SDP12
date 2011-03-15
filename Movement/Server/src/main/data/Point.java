@@ -88,7 +88,7 @@ public class Point {
 		return x <= p_x + threshold && x >= p_x - threshold && 
 			   y <= p_y + threshold && y >= p_y - threshold;
 	}
-
+	
 	public double getX() {
 		return X;
 	}
