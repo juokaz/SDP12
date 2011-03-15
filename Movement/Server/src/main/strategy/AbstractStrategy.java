@@ -263,8 +263,8 @@ public abstract class AbstractStrategy implements Strategy {
 	protected boolean isWallClose(Point point){
 		double x = point.getX();
 		double y = point.getY();
-		return (PITCH_X_MIN + wallThreshold >= x || PITCH_Y_MIN + wallThreshold >= y ||
-				PITCH_Y_MAX - wallThreshold <= y || PITCH_X_MAX - wallThreshold <= x);
+		//We should not do this when close to our goal or opponent :  PITCH_X_MIN + wallThreshold >= x ||  PITCH_X_MAX - wallThreshold <= x
+		return (PITCH_Y_MIN + wallThreshold >= y || PITCH_Y_MAX - wallThreshold <= y);
 	}
 	
 	/**

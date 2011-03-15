@@ -85,19 +85,19 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			moveToPoint(robot, goal);
 		}
 		*/
-		else if (isBallReached(robot, ball)) {
-			executor.kick();
-		}
-		else if (isBallKickable(robot, ball, goal) && isRobotInPossession(robot, ball, goal))
+		else if (isBallKickable(robot, ball, goal))// && isRobotInPossession(robot, ball, goal))
 		{
 			setIAmDoing("Kick");
+			executor.kick();
+		}
+		else if (isBallReached(robot, ball)) {
 			executor.kick();
 		}
 		// Possibly utilise this later on, method needs more work though
 		else {
 			setIAmDoing("Reaching ball");
-			moveToPoint(robot, ball);
-			//pfsMoveToPoint(robot, opponent, ball);
+			//moveToPoint(robot, ball);
+			pfsMoveToPoint(robot, opponent, ball);
 		}
 		
 		
@@ -252,7 +252,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isRobotInOptimumPosition(Robot robot, Point optimum) {
-		return robot.isInPoint(optimum, 50);
+		return robot.isInPoint(optimum, 30);
 	}
 	
 	/**

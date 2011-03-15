@@ -10,7 +10,7 @@ public class Point {
 	protected double X;
 	protected double Y;
 	
-	protected int pointThreshold = 30;
+	protected int pointThreshold = 40;
 	
 	public Point(double X, double Y) {
 		this.X = X;
