@@ -92,7 +92,8 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			executor.kick();
 		}
 		*/
-		else if (isBallReached(robot, goal, ball)) {
+		else if (isBallReached(robot, goal, ball) && isFacingGoal(robot, goal)) {
+			
 			setIAmDoing("Kick");
 			executor.kick();
 		}
@@ -110,6 +111,17 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		setDrawables(drawables);
 	}
 	
+	private boolean isFacingGoal(Robot robot, Goal goal) {
+		double angle = robot.angleBetweenPoints(goal);
+		if (goal.getX() == 0) {
+			return (robot.getT() < Math.toRadians(-90) || robot.getT() > Math.toRadians(90));
+		} else {
+			return (robot.getT() > Math.toRadians(-90) || robot.getT() < Math.toRadians(90));
+		}
+	//	return (robot.getT() <= angle + Math.toRadians(90) && robot.getT() >= angle + Math.toRadians(90));
+		//return false;
+	}
+
 	/**
 	 * Do we have a ball
 	 * 
@@ -256,7 +268,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected boolean isRobotInOptimumPosition(Robot robot, Point optimum) {
-		return robot.isInPoint(optimum, 30);
+		return robot.isInPoint(optimum, 40);
 	}
 	
 	/**
@@ -306,6 +318,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		
 		return robot.getDistanceBetweenPoints(goal) < threshold;
 	}
+	
 	
 	/**
 	 * Gets a point that is LENGTH away from the ball based on it's previous positions

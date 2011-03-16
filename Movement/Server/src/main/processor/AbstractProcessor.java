@@ -85,12 +85,12 @@ public abstract class AbstractProcessor implements Processor {
 		for (Listener listener : listeners) {
 			listener.updateLocation(location, isOurRobotFirst());
 		}
-		writeToFile(location);
+	//	writeToFile(location);
 	}
 	
 	public void writeToFile(Location location) {
 		try {
-			FileWriter fstream = new FileWriter("data\\output.txt", true);
+			FileWriter fstream = new FileWriter("data/output.txt", true);
 			BufferedWriter out = new BufferedWriter(fstream);
 
 	    	String line = "";
