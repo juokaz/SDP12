@@ -1,5 +1,7 @@
 package main.processor;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +85,31 @@ public abstract class AbstractProcessor implements Processor {
 		for (Listener listener : listeners) {
 			listener.updateLocation(location, isOurRobotFirst());
 		}
+		writeToFile(location);
+	}
+	
+	public void writeToFile(Location location) {
+		try {
+			FileWriter fstream = new FileWriter("data\\output.txt", true);
+			BufferedWriter out = new BufferedWriter(fstream);
+
+	    	String line = "";
+	    	line = line.concat("" + location.getOurRobot().getX());
+	    	line = line.concat(" " + location.getOurRobot().getY());
+	    	line = line.concat(" " + location.getOurRobot().getT());
+	    	
+	    	line = line.concat(" " + location.getOpponentRobot().getX());
+	    	line = line.concat(" " + location.getOpponentRobot().getY());
+	    	line = line.concat(" " + location.getOpponentRobot().getT());
+	    	
+	    	line = line.concat(" " + location.getBall().getX());
+	    	line = line.concat(" " + location.getBall().getY());
+
+	    	out.write(line + System.getProperty("line.separator"));
+	    	out.close();
+	    } catch (Exception e) {
+	      System.err.println("Error: " + e.getMessage());
+	    }
 	}
 	
 	/**
