@@ -34,7 +34,7 @@ void launch(config conf)
         startTick= cv::getTickCount();
 
         objDetection::utilities::setupBackgroundImage(conf);
-        std::cout<<"starting"<<std::endl;
+
         if(!objDetection::utilities::getNextFrame(conf))
         {
             std::cout<<"frame not loaded"<<std::endl;
@@ -80,7 +80,7 @@ void launch(config conf)
         CvContour* cnt_TY=NULL;
         CvContour* cnt_B=NULL;
 
-        std::cout<<"In the middle"<<std::endl;
+
 
         cnt_B= objDetection::rankedArea(current_frame_pro_B,conf.storage);
 
@@ -105,7 +105,7 @@ void launch(config conf)
 
 
 
-        std::cout<<"at the end"<<std::endl;
+
         objDetection::utilities::show(conf);
         objDetection::utilities::output(conf,writer);
         endTick= cv::getTickCount();
