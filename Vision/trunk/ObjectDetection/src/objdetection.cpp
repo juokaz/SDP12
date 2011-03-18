@@ -61,7 +61,7 @@ IplImage* objDetection::preprocess_to_single_channel(IplImage* frame,IplImage* f
 
 	cvReleaseImage(&sub_frame);
 	
-	//cvSmooth(edged_frame, edged_frame, CV_GAUSSIAN, 5, 5);
+	//cvSmooth(thresholded, thresholded, CV_GAUSSIAN, 5, 5);
 	//cvShowImage("Ranges",thresholded);
 	return thresholded;
 }
@@ -179,10 +179,8 @@ CvBox2D objDetection::orientation_secondOrderMoment(CvContour* cntr)
 	float mu20=moments.m20/moments.m00 - x*x;
 	float mu02=moments.m02/moments.m00 - y*y;
 	float mu11=moments.m11/moments.m00 - x*y;
-	//float angle=atan(2*mu11/(mu20-mu02))/2;
 	float angle = atan2(2*mu11,mu20-mu02)/2;	
-	//float angle= atan2(mu11, mu02);
-	//float angle= atan2(mu20, mu11);	
+
 	if (res1.angle > PI/2 || res1.angle < -PI/2)
 	{
 		angle = angle + PI;
@@ -282,7 +280,7 @@ CvBox2D objDetection::orientation_centerMoment(CvContour* cntr)
 	//std::cout<<"Moment"<<cenMoment.x<<","<<cenMoment.y<<"- circle"<<center.x<<","<<center.y<<std::endl;
 	//cvDrawLine(img,cvPoint(x,y),cvPointFrom32f(result.center),cvScalar(200,0,255),10);
 	result.center=center;
-	result.angle = atan2(cenMoment.y-result.center.y, cenMoment.x-result.center.x);
+	result.angle = atan2(result.center.y-cenMoment.y, result.center.x-cenMoment.x);
 	
 
 	return result;
