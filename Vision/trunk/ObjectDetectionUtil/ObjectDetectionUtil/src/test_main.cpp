@@ -29,8 +29,8 @@ int ty_max_2	= 255;
 int ty_max_3	= 255;
 
 
-CvScalar hsv_min_TY = cvScalar(ty_min_1, ty_min_2, ty_min_3);
-CvScalar hsv_max_TY = cvScalar(ty_max_1, ty_max_2, ty_max_3);
+CvScalar o_hsv_min_TY = cvScalar(ty_min_1, ty_min_2, ty_min_3);
+CvScalar o_hsv_max_TY = cvScalar(ty_max_1, ty_max_2, ty_max_3);
 
 
 void launch(config conf)
@@ -129,7 +129,7 @@ void launch(config conf)
 	}
 	
 	//std::cout<<"Show: "<<<<conf.show<<std::endl;
-	current_frame_pro_TY= objDetection::preprocess_to_single_channel(current_frame,back_img,hsv_min_TY,hsv_max_TY);
+	current_frame_pro_TY= objDetection::preprocess_to_single_channel(current_frame,back_img,o_hsv_min_TY,o_hsv_max_TY);
 	
 	cvShowImage("Thresholds",current_frame_pro_TY);
 	//objDetection::utilities::colorPicker(current_frame_pro_TY);
@@ -175,8 +175,8 @@ config get_Config(int argc, char* argv[])
 	res.outputToText=false;
 	res.closeObjects=false;
 	
-	res.hsv_max_TY=hsv_max_TY;
-	res.hsv_min_TY=hsv_min_TY;
+	res.hsv_max_TY=o_hsv_max_TY;
+	res.hsv_min_TY=o_hsv_min_TY;
 	
 	
 
@@ -271,22 +271,22 @@ config get_Config(int argc, char* argv[])
 }
 // Yellow robot trackbar setting
 void change_ty_min_1(int position){
-	hsv_min_TY.val[0] = (double) position;
+	o_hsv_min_TY.val[0] = (double) position;
 }
 void change_ty_max_1(int position){
-	hsv_max_TY.val[0] = (double) position;
+	o_hsv_max_TY.val[0] = (double) position;
 }
 void change_ty_min_2(int position){
-	hsv_min_TY.val[1] = (double) position;
+	o_hsv_min_TY.val[1] = (double) position;
 }
 void change_ty_max_2(int position){
-	hsv_max_TY.val[1] = (double) position;
+	o_hsv_max_TY.val[1] = (double) position;
 }
 void change_ty_min_3(int position){
-	hsv_min_TY.val[2] = (double) position;
+	o_hsv_min_TY.val[2] = (double) position;
 }
 void change_ty_max_3(int position){
-	hsv_max_TY.val[2] = (double) position;
+	o_hsv_max_TY.val[2] = (double) position;
 }
 
 int main(int argc, char* argv[])
