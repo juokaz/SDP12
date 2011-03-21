@@ -209,7 +209,12 @@ public class PFPlanning {
 			System.out.println("Current T: "+current.getAngle()+", dist_alpha="+dist_alpha);
 		}
 		if(dist_alpha>Math.PI)
-			dist_alpha=2*Math.PI-dist_alpha;
+			dist_alpha=-1*(2*Math.PI-dist_alpha);
+		else if(dist_alpha<-1*Math.PI)
+			dist_alpha=2*Math.PI+dist_alpha;
+		if(Runner.DEBUG) {
+			System.out.println("Final dist_alpha="+dist_alpha);
+		}
 		double Vlin = Math.cos(dist_alpha) * size;
 		double angSize=1/size;
 		//if(*angSizeangSize>10)
