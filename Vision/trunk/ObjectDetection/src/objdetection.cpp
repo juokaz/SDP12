@@ -172,21 +172,19 @@ CvBox2D objDetection::orientation_secondOrderMoment(CvContour* cntr)
 	float x= (moments.m10/moments.m00);
 	float y= (moments.m01/moments.m00);
 	CvPoint2D32f cenMoment;
-
+        CvBox2D res1=orientation_centerMoment(cntr);
 	result.center.x=x;
 	result.center.y=y;
-        CvBox2D res1= orientation_contourPoints(cntr,x,y);
 	float mu20=moments.m20/moments.m00 - x*x;
 	float mu02=moments.m02/moments.m00 - y*y;
 	float mu11=moments.m11/moments.m00 - x*y;
 	float angle = atan2(2*mu11,mu20-mu02)/2;	
-
-	if (res1.angle > PI/2 || res1.angle < -PI/2)
+        if (res1.angle > PI/2 || res1.angle < -PI/2)
 	{
-		angle = angle + PI;
+                  angle = angle + PI;
 	}
 
-	result.angle=angle;
+        result.angle=angle;
 
 	//uncomment for debugging...
 
@@ -220,16 +218,18 @@ CvBox2D objDetection::orientation_contourPoints(CvContour* cntr,float cenX,float
         {
             float temp_dist=sqrt((point.x-cenX)*(point.x-cenX)+(point.y-cenY)*(point.y-cenY));
             if(temp_dist>dist)
+            {
                 dist=temp_dist;
+                Mpoint=point;
+            }
 
         }
     }
     result.center=cvPoint2D32f(cenX,cenY);
-    result.angle = -1*atan2(Mpoint.y-cenY, Mpoint.x-cenX);
+    result.angle = atan2(Mpoint.y-cenY, Mpoint.x-cenX);
     return result;
 
 }
-
 std::vector<CvContour*> objDetection::getContours(IplImage* frame,CvMemStorage* storage)
 {
 	std::vector<CvContour*> selectedContours;

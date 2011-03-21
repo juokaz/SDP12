@@ -163,6 +163,7 @@ CvBox2D orientation_contourPoints(CvContour* cntr,float cenX,float cenY);
  \param cntr pointer to a contour to calculate its position and orientation.
  \return instance CvBox2D that include position and orientation of object.
 */
+CvBox2D orientation_contourPoints(CvContour* cntr,float cenX,float cenY);
 CvBox2D orientation_centerMoment(CvContour* cntr);
 //! \brief Calculates orientation and position of a contour using center of mass of the contour and seconf order of centeral moments.
 //!	uses orientation_minRect_Circle as a helper function to disambiguate orientation
