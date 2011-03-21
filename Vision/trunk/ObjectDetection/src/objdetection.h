@@ -150,6 +150,14 @@ CvBox2D orientation_minRect(CvContour* cntr);
  \return instance CvBox2D that include position and orientation of object.
 */
 CvBox2D orientation_minRect_Circle(CvContour* cntr);
+//! \brief Calculates orientation and position of a contour using center of mass provided as input and furthest point in the contour from center of mass.
+/*!
+ \param cntr pointer to a contour to calculate its position and orientation.
+ \param cenX X value of center of Mass of the contour
+ \param cenY Y value of center of Mass of the contour
+ \return instance CvBox2D that include position and orientation of object.
+*/
+CvBox2D orientation_contourPoints(CvContour* cntr,float cenX,float cenY);
 //! \brief Calculates orientation and position of a contour using center of mass of the contour and enclosing center..
 /*!
  \param cntr pointer to a contour to calculate its position and orientation.

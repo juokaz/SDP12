@@ -164,7 +164,7 @@ CvBox2D objDetection::orientation_secondOrderMoment(CvContour* cntr)
 	float r=0;
 	CvBox2D result;
 	
-	CvBox2D res1= orientation_centerMoment(cntr);
+
 	
 	//Next we calculate Center of mass. 
 	CvMoments moments;
@@ -175,7 +175,7 @@ CvBox2D objDetection::orientation_secondOrderMoment(CvContour* cntr)
 
 	result.center.x=x;
 	result.center.y=y;
-
+        CvBox2D res1= orientation_contourPoints(cntr,x,y);
 	float mu20=moments.m20/moments.m00 - x*x;
 	float mu02=moments.m02/moments.m00 - y*y;
 	float mu11=moments.m11/moments.m00 - x*y;
@@ -199,6 +199,37 @@ CvBox2D objDetection::orientation_secondOrderMoment(CvContour* cntr)
 
 	return result;
 }
+CvBox2D objDetection::orientation_contourPoints(CvContour* cntr,float cenX,float cenY)
+{
+    CvBox2D result;
+    CvSeqReader reader;
+    cvStartReadSeq((CvSeq*)cntr, &reader);
+    CvPoint point;
+    CvPoint Mpoint;
+    bool init=false;
+    float dist=0;
+    for(int i=0;i<cntr->total;i++)
+    {
+        CV_READ_SEQ_ELEM(point,reader);
+        if(!init)
+        {
+            Mpoint=point;
+            dist=sqrt((Mpoint.x-cenX)*(Mpoint.x-cenX)+(Mpoint.y-cenY)*(Mpoint.y-cenY));
+        }
+        else
+        {
+            float temp_dist=sqrt((point.x-cenX)*(point.x-cenX)+(point.y-cenY)*(point.y-cenY));
+            if(temp_dist>dist)
+                dist=temp_dist;
+
+        }
+    }
+    result.center=cvPoint2D32f(cenX,cenY);
+    result.angle = -1*atan2(Mpoint.y-cenY, Mpoint.x-cenX);
+    return result;
+
+}
+
 std::vector<CvContour*> objDetection::getContours(IplImage* frame,CvMemStorage* storage)
 {
 	std::vector<CvContour*> selectedContours;
