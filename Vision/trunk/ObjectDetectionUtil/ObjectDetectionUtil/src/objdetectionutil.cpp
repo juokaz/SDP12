@@ -219,10 +219,10 @@ void objDetection::utilities::output(config& conf,ofstream* file)
 }
 void objDetection::utilities::show(config& conf)
 {
-    std::cout<<"showing"<<std::endl;
+
 	if(conf.show)
 	{
-                std::cout<<"really showing"<<std::endl;
+
 		try
 		{
 
