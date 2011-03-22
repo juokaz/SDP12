@@ -54,7 +54,7 @@ public class Runner {
 	/**
 	 * Available processors
 	 */
-	public final String[] processors = { "File", "Local process", "Simulator" };
+	public final String[] processors = { "Main Pitch", "Second Pitch", "Simulator", "File" };
 	
 	/**
 	 * Available strategies
@@ -64,7 +64,7 @@ public class Runner {
 	/**
 	 * Available executors
 	 */
-	public final String[] executors = { "Simulator", "Bluetooth", "Dull" };
+	public final String[] executors = { "Bluetooth", "Simulator", "Dull" };
 
 	/**
 	 * Robot blue
@@ -196,10 +196,13 @@ public class Runner {
 	 * @throws IOException 
 	 */
 	private void setProcessor(String type) throws IOException {
-
+		String mainThresholds = "TB_min 31 6 0 TB_max 78 255 255 TY_min 0 8 69 TY_max 8 242 157";
+		String secondThresholds = "TB_min 31 6 0 TB_max 78 255 255 TY_min 0 8 69 TY_max 8 242 157";
 		// TODO refactor this
-		if (type.equals("Local process")) {
-			processor = new main.processor.LocalVision("../../Vision/trunk/ObjectDetection/src/build/vision c RankedArea outputToConsole show");
+		if (type.equals("Main Pitch")) {
+			processor = new main.processor.LocalVision("../../Vision/trunk/ObjectDetection/src/build/vision c RankedArea outputToConsole show " + mainThresholds);
+		} else if (type.equals("Second Pitch")) {
+			processor = new main.processor.LocalVision("../../Vision/trunk/ObjectDetection/src/build/vision c RankedArea outputToConsole show " + secondThresholds);
 		} else if (type.equals("Simulator")) {
 			processor = new main.executor.Simulator(window.getPitch());
 		} else {

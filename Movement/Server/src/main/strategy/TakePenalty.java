@@ -13,6 +13,7 @@ public class TakePenalty extends AbstractStrategy implements Strategy {
 		if ( hasTaken == false )
 			takePenalty();
 		
+		
 	}
 	
 	protected void takePenalty() {

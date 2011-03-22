@@ -16,6 +16,7 @@ public class MainStrategy extends AbstractStrategy implements Strategy {
 	private GoToBall stratGTB;
 	private GetBallFromWall stratGBFW;
 	private DefensiveStrategy stratDef;
+	private boolean initial = true;
 	
 	public MainStrategy() {
 		// instantiate sub-strategies
@@ -33,8 +34,17 @@ public class MainStrategy extends AbstractStrategy implements Strategy {
 		Ball ball = data.getBall();
 		Robot opponent = data.getOpponentRobot();
 		Goal goal = data.getGoal();
-	
-		if (isRobotInPossession(opponent, ball, goal)) {
+		Robot robot = data.getOurRobot();
+		/*
+		if (initial) {
+			if (!isBallReached(robot,goal,ball))
+				executor.rotateWheels(460, 500);
+			else {
+				executor.kick();
+				executor.rotateWheels(0, 0);
+				initial = false;
+			} 
+		} else */if (isRobotInPossession(opponent, ball, goal)) {
 			setIAmDoingSecond("[Master] Opponent in possesion");
 			stratDef.updateLocation(data);
 		}

@@ -89,12 +89,12 @@ void launch(config conf)
         cnt_TY= objDetection::rankedArea(current_frame_pro_TY,conf.storage);
         if(cnt_TB!=NULL)
         {
-            cvDrawContours(conf.current_frame,(CvSeq*)cnt_TB,cvScalar(150,150,150),cvScalar(150,150,150),0,3);
+            cvDrawContours(conf.current_frame,(CvSeq*)cnt_TB,cvScalar(0,0,255),cvScalar(0,0,255),0,3);
             conf.sel_TB=objDetection::orientation_secondOrderMoment(cnt_TB);
         }
         if(cnt_TY!=NULL)
         {
-            cvDrawContours(conf.current_frame,(CvSeq*)cnt_TY,cvScalar(150,150,150),cvScalar(150,150,150),0,3);
+            cvDrawContours(conf.current_frame,(CvSeq*)cnt_TY,cvScalar(0,0,255),cvScalar(0,0,255),0,3);
             conf.sel_TY=objDetection::orientation_secondOrderMoment(cnt_TY);
 
         }

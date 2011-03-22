@@ -37,7 +37,7 @@ public abstract class AbstractStrategy implements Strategy {
 	protected final static int ballWidth = 10;
 	protected final static int possesionDistance = 50;
 	protected int wallThreshold = 30;
-	protected int optimalGap = 80;
+	protected int optimalGap = 120;
 	protected int gap = 30;
 	// TODO: calculate width of the opponent taking into account its angle (?)
 	protected int opponentWidth = 75;
