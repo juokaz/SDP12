@@ -41,6 +41,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		drawPoint(goal, "Goal");
 		drawPoint(optimum, "Optimum");	
 		drawPoint(ball, "Ball");
+
 		
 		// This state machine covers the basic stages robot can be in 
 		if (robot.isObstacleInFront(opponent, optimum, opponentWidth))
@@ -152,10 +153,6 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	 * @return
 	 */
 	protected Point getPointToAvoidObstacle(Robot robot, Robot opponent, Point optimum) {
-		boolean belowOpponent = false;
-		if (robot.getY() > opponent.getY()) {
-			belowOpponent = true;
-		}
 		
 		// Get the two possible points available.
 		Point pointAbove = calculateAvoidancePoint(robot, opponent, 100, false);
@@ -225,13 +222,13 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		int behindGap = 70;
 		// Check if robot is below the ball and which side of the ball it is on
 		boolean belowBall = true;
+		if (robot.getY() > optimum.getY()) {
+			belowBall = false;
+		}
 		if (goal.getX() != 0) {
 			belowBall = false;
 			if (robot.getY() > optimum.getY()) 
 				belowBall = true;
-		}
-		if (robot.getY() > optimum.getY()) {
-			belowBall = false;
 		}
 		// Calculate the avoid point, if point is out of pitch, change to other point.
 		// TODO check the need for this, as robot is unlikely to reach the avoid point.
@@ -319,6 +316,36 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 		return robot.getDistanceBetweenPoints(goal) < threshold;
 	}
 	
+	/**
+	 * Detects if a robot is in a point inbetween two points
+	 * @param pointA
+	 * @param pointB
+	 * @return
+	 */
+	protected boolean isBetweenPoint(Robot robot, Point optimum, Point ball) {
+		if (robot.isInPoint(getInBetweenPoint(optimum, ball), 30)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Gets the point inbetween two points
+	 * @param optimum
+	 * @param ball
+	 * @return
+	 */
+	protected Point getInBetweenPoint(Point optimum, Point ball) {
+		
+		double hyp = optimum.getDistanceBetweenPoints(ball)/2;
+		double xOffset = hyp*Math.cos(optimum.angleBetweenPoints(ball));
+		double yOffset = hyp*Math.sin(optimum.angleBetweenPoints(ball));
+		
+		Point point = new Point(optimum.getX() + xOffset, optimum.getY() + yOffset);
+		
+		return point;
+	}
 	
 	/**
 	 * Gets a point that is LENGTH away from the ball based on it's previous positions
