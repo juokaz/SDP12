@@ -62,7 +62,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 			}
 			drawPoint(behind, "Behind");
 			
-			Point predictedBehind = getPredictionPoint(behind, lineLength, behindBuffer);
+			//Point predictedBehind = getPredictionPoint(behind, lineLength, behindBuffer);
 			//moveToPoint(robot, point);
 			pfsMoveToPoint(robot, opponent, behind);
 

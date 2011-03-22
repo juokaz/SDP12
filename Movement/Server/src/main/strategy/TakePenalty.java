@@ -9,7 +9,7 @@ public class TakePenalty extends AbstractStrategy implements Strategy {
 	
 	@Override
 	public void updateLocation(Location data) {
-		
+
 		if ( hasTaken == false )
 			takePenalty();
 		

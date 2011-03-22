@@ -15,7 +15,7 @@ public class DefPenalty extends AbstractStrategy implements Strategy {
 	@Override
 	public void updateLocation(Location data) {
 		
-		Robot opponent = /*new Robot(-1,-1,-1);*/data.getOpponentRobot();
+		Robot opponent = data.getOpponentRobot();
 		Goal goal = data.getGoal();
 		
 		double opponentAngle = opponent.getT();

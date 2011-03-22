@@ -5,25 +5,17 @@ import main.data.Ball;
 import main.data.Goal;
 import main.data.Location;
 import main.data.Point;
-import main.data.Robot;
 
 /** 
  * This is the strategy to be run when the opponent is in possession. 
  *
  */
-public class DefensiveStrategy extends AbstractStrategy implements Strategy {
+public class DefensiveStrategy extends GoToBall implements Strategy {
 
 	@Override
 	public void updateLocation(Location data) {
+		super.updateLocation(data);
 		
-		Ball ball = data.getBall();
-		Robot robot = data.getOurRobot();
-		Robot opponent = data.getOpponentRobot();
-		Goal goal = data.getGoal();
-
-		Point defencePoint = getDefencePoint(opponent, goal);
-		
-		moveToPoint(robot, defencePoint);
 	}
 
 	/**
@@ -32,10 +24,33 @@ public class DefensiveStrategy extends AbstractStrategy implements Strategy {
 	 * @param goal
 	 * @return
 	 */
-	private Point getDefencePoint(Robot opponent, Goal goal) {
-		double distance = 100;
+	private Point getDefencePoint(Ball ball, Goal goal) {
+		Point defencePoint = new Point(0,0);
 		Goal opponentGoal = new Goal((550 - goal.getX()), goal.getY());
-		double angle = opponent.angleBetweenPoints(opponentGoal);
-		return null;
+		//divide by 2 in order to find mid point
+		double distance = opponentGoal.getDistanceBetweenPoints(ball);
+		double angle = opponentGoal.angleBetweenPoints(ball);
+		
+		//find a point that is the midpoint between the goal and the opponent
+		defencePoint.setX(opponentGoal.getX() + (distance/2)*Math.cos(angle));
+		defencePoint.setY(opponentGoal.getY() + (distance/2)*Math.sin(angle));
+		
+		//currently return goal to avoid null pointer exceptions
+		return defencePoint;
+	}
+	
+	/**
+	 * Get an optimum point for defensive strategy
+	 * Place the optimum point directly inbetween the opponent and their goal
+	 * 
+	 * @param ball
+	 * @param goal
+	 * @return
+	 */
+	protected Point getOptimumPoint(Ball ball, Goal goal) {
+		
+		Point defPoint = getDefencePoint(ball, goal);
+					
+		return defPoint;
 	}
 }
