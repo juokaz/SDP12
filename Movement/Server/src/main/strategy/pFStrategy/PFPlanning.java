@@ -81,7 +81,7 @@ public class PFPlanning {
 			System.out.println("Result Vector: " + res.toString());
 		}
 		if (orig)
-			return (VelocityVec) res;
+			return new VelocityVec(res.getX(),res.getY());
 		else
 			return getVelocity(res, robot);
 
