@@ -197,7 +197,7 @@ public class Runner {
 	 */
 	private void setProcessor(String type) throws IOException {
 		String mainThresholds = "TB_min 31 6 0 TB_max 78 255 255 TY_min 0 8 69 TY_max 8 242 157";
-		String secondThresholds = "TB_min 31 6 0 TB_max 78 255 255 TY_min 0 8 69 TY_max 8 242 157";
+		String secondThresholds = "TB_min 31 0 0 TB_max 78 255 255 TY_min 0 0 72 TY_max 5 255 255";
 		// TODO refactor this
 		if (type.equals("Main Pitch")) {
 			processor = new main.processor.LocalVision("../../Vision/trunk/ObjectDetection/src/build/vision c RankedArea outputToConsole show " + mainThresholds);
@@ -292,6 +292,11 @@ public class Runner {
 			window.setButtonExecution("Start execution", true);
 			
 			System.out.println("Runner initialized");
+			if (worker == null) 
+			{
+				worker = new ProcessingWorker();
+				worker.execute();
+			}
 		}
 		catch (Exception e)
 		{
@@ -313,7 +318,7 @@ public class Runner {
 	 * 
 	 * @param strategy_name
 	 * @param our_robot
-	 * @param left_goal
+	 * @param left_goaltrue
 	 */
 	public void toggleExecution(String strategy_name, String our_robot, String left_goal)
 	{
@@ -321,6 +326,7 @@ public class Runner {
 			System.out.println("Runner is not initialised");
 			return;
 		}
+		// create runner if doesn't exist
 		
 		if (!running) {
 			if (Runner.DEBUG) {
@@ -357,12 +363,7 @@ public class Runner {
 	
 			System.out.println(strategy.getClass().toString());
 			
-			// create runner if doesn't exist
-			if (worker == null) 
-			{
-				worker = new ProcessingWorker();
-				worker.execute();
-			}
+			
 		} else {
 			if (Runner.DEBUG) {
 				System.out.println("Pausing runner");
