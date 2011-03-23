@@ -148,9 +148,9 @@ public class roboto {
 						Tune.Tune();
 						break;
 					case PENALTY:
-						Motor.A.setSpeed(180);
-						Motor.C.setSpeed(180);
-						int rotateAmount = 180;
+						Motor.A.setSpeed(500);
+						Motor.C.setSpeed(500);
+						int rotateAmount = 100;
 						
 						if (Math.random() < 0.5) {
 							try {  

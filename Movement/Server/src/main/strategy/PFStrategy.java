@@ -23,14 +23,16 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 	private PFPlanning planner;
 	VelocityVec current;
 	BufferedWriter fstream;
+	Calendar cal;
+	SimpleDateFormat sdf;
 	public PFStrategy(double b, double r) {
 		RobotConf conf = new RobotConf(b, r);
 		//opponent power: 10000000
 		planner = new PFPlanning(conf, 0, 180, 0.04, 250000.0);
 		current = new VelocityVec(0, 0);
-		Calendar cal= Calendar.getInstance();
+		cal= Calendar.getInstance();
 		String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+		sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
 		File outputFile=new File("./logs/pfs/"+sdf.format(cal.getTime())+".log");
 		
 		try {
@@ -79,7 +81,7 @@ public class PFStrategy extends AbstractStrategy implements Strategy {
 			fstream.write(current.getLocation().getX()+","+current.getLocation().getY()+","+current.getAngle()+
 					","+ball.getX()+","+ball.getY()+","+
 					opponent.getLocation().getX()+","+opponent.getLocation().getY()+","+opponent.getAngle()+","+
-					orig_vector.getX()+","+orig_vector.getY()+"\n");
+					orig_vector.getX()+","+orig_vector.getY()+","+cal.getTimeInMillis()+"\n");
 			fstream.flush();
 		} catch (IOException e) {
 			

@@ -49,7 +49,6 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 		String line = null;
 		
 	    while (true) {
-	    	
 	    	// stop this from running
 	    	if (stopped || Thread.currentThread().isInterrupted()) {
 	    		System.out.println("Stopping processor");

@@ -4,9 +4,9 @@ public class Penalty {
 
 	 public static void main(String [] args) {
  		
-		Motor.A.setSpeed(360);
-		Motor.C.setSpeed(360);
-		int rotateAmount = 200;
+		Motor.A.setSpeed(500);
+		Motor.C.setSpeed(500);
+		int rotateAmount = 100;
 		
 		if (Math.random() < 0.5) {
 			try {  
