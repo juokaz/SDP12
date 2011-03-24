@@ -42,6 +42,7 @@ public abstract class AbstractStrategy implements Strategy {
 	// TODO: calculate width of the opponent taking into account its angle (?)
 	protected int opponentWidth = 75;
 	protected double lineLength = 2;	
+	protected double pfsPower = 0.045;
 
 	/**
 	 * Executor which is going to execute these commands
@@ -184,7 +185,7 @@ public abstract class AbstractStrategy implements Strategy {
 	protected void pfsMoveToPoint(Robot robot, Robot opponent,  Point point) {
 		PFPlanning planner;
 		RobotConf conf = new RobotConf(15.2, 8.27);
-		planner = new PFPlanning(conf, 0, 180, 0.04, 250000.0);
+		planner = new PFPlanning(conf, 0, 180, pfsPower, 250000.0);
 		
 		Pos current = new Pos(new main.strategy.pFStrategy.Point(robot.getX(), robot.getY()),robot.getT());
 		

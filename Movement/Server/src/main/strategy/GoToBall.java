@@ -44,6 +44,11 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 
 		
 		// This state machine covers the basic stages robot can be in 
+		if (isPointOutOfPitch(optimum)) {
+			optimalGap = 40;
+		} else {
+			optimalGap = 120;
+		}
 		if (robot.isObstacleInFront(opponent, optimum, opponentWidth))
 		{			
 			setIAmDoing("Obstacle in front - going to Avoid");
@@ -244,7 +249,7 @@ public class GoToBall extends AbstractStrategy implements Strategy {
 	}
 	
 	/**
-	 * Get point outside of ball far enough to have enough space to turn
+	 * Get point outside of ball far optimalGapenough to have enough space to turn
 	 * 
 	 * @param ball
 	 * @param goal

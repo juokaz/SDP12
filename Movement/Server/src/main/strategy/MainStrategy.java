@@ -35,16 +35,18 @@ public class MainStrategy extends AbstractStrategy implements Strategy {
 		Robot opponent = data.getOpponentRobot();
 		Goal goal = data.getGoal();
 		Robot robot = data.getOurRobot();
-		/*
+		
 		if (initial) {
-			if (!isBallReached(robot,goal,ball))
-				executor.rotateWheels(460, 500);
+			if (!robot.isInPoint(ball, 50)){
+				stratGTB.optimalGap = 30;
+			}	
 			else {
-				executor.kick();
-				executor.rotateWheels(0, 0);
+				stratGTB.optimalGap = 120;
 				initial = false;
+				executor.kick();
 			} 
-		} else */if (isRobotInPossession(opponent, ball, goal)) {
+			
+		} if (isRobotInPossession(opponent, ball, goal)) {
 			setIAmDoingSecond("[Master] Opponent in possesion");
 			stratDef.updateLocation(data);
 		}
