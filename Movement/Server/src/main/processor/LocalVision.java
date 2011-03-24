@@ -58,10 +58,12 @@ public class LocalVision extends VisionStreamProcessor implements Processor {
 				process(in);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("Processor error: " + e.getMessage()+" Restarting:");
 			
 			// reinitialize program
 			try {
+				process.destroy();
 				initialize();
 				
 				// TODO what if it fails not because of crashing?

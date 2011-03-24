@@ -200,7 +200,7 @@ public class Bluetooth implements Executor {
 		 */
 		public void sendCommand(String orders) {
 			try {
-				System.out.println("Sending: " + orders);
+				//System.out.println("Sending: " + orders);
 				
 				// split string to array of ints as this is a communication protocol
 				for (int i = 0; i<orders.split(SPACE).length;i++) {

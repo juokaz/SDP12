@@ -78,7 +78,7 @@ public class PFPlanning {
 		complList.add(obj);
 		Vector res = GoTo(complList, this.ball, robot.getLocation());
 		if (Runner.DEBUG) {
-			System.out.println("Result Vector: " + res.toString());
+			//System.out.println("Result Vector: " + res.toString());
 		}
 		if (orig)
 			return new VelocityVec(res.getX(),res.getY());
@@ -113,7 +113,7 @@ public class PFPlanning {
 			res=new Vector(0,0);
 		}
 		if (Runner.DEBUG) {
-			System.out.println("Result Vector: " + res.toString());
+			//System.out.println("Result Vector: " + res.toString());
 		}
 		if (orig)
 			return (VelocityVec) res;
@@ -175,7 +175,7 @@ public class PFPlanning {
 		}
 		// Compute attractive vector.
 		if (Runner.DEBUG){
-			System.out.println("PFPlanning::PointObject::attractive Force, Clac. attractive forc");
+			//System.out.println("PFPlanning::PointObject::attractive Force, Clac. attractive forc");
 		}
 		Vector att = dest_obj.getVector(start_point, false);
 		
@@ -206,14 +206,14 @@ public class PFPlanning {
 		double alpha = inputVel.normalAngle();
 		double dist_alpha = alpha - current.getAngle();
 		if(Runner.DEBUG) {
-			System.out.println("Current T: "+current.getAngle()+", dist_alpha="+dist_alpha);
+			//System.out.println("Current T: "+current.getAngle()+", dist_alpha="+dist_alpha);
 		}
 		if(dist_alpha>Math.PI)
 			dist_alpha=-1*(2*Math.PI-dist_alpha);
 		else if(dist_alpha<-1*Math.PI)
 			dist_alpha=2*Math.PI+dist_alpha;
 		if(Runner.DEBUG) {
-			System.out.println("Final dist_alpha="+dist_alpha);
+			//System.out.println("Final dist_alpha="+dist_alpha);
 		}
 		double Vlin = Math.cos(dist_alpha) * size;
 		double angSize=1/size;
@@ -227,7 +227,7 @@ public class PFPlanning {
 		//	Vang=-1*threshold;
 		
 		if(Runner.DEBUG) {
-			System.out.println(Vlin + " " + Vang);
+			//System.out.println(Vlin + " " + Vang);
 		}
 		return CvtVelocity(Vlin, Vang, config.getr());
 	}

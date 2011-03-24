@@ -104,7 +104,10 @@ public abstract class VisionStreamProcessor extends AbstractProcessor {
 			    	}
 			    	
 			    	propogateLocation(loc);
+	    		} catch(NumberFormatException e){
+	    			continue;
 	    		} catch(Exception e){
+	    			e.printStackTrace();
 	    			System.out.println("Exception in vision processing: " + e.getMessage());
 	    			continue;
 	    		}

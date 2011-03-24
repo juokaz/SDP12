@@ -205,7 +205,7 @@ public abstract class AbstractStrategy implements Strategy {
 		}
 		
 		if (Runner.DEBUG){
-			System.out.println("Final Command:"+left+","+right);
+			//System.out.println("Final Command:"+left+","+right);
 		}
 		executor.rotateWheels(left,right);
 	}

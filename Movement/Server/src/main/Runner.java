@@ -376,6 +376,7 @@ public class Runner {
 			
 			// set to dull strategy so it doesn't do anything
 			strategy = new main.strategy.Dull();
+			strategy.setExecutor(executor);
 
 			// connect processor with strategy, sends new locations to strategy
 			processor.addListener(new ProcessorListener(strategy));
