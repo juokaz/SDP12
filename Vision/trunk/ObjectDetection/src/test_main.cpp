@@ -139,7 +139,12 @@ int main(int argc, char* argv[])
     cvNamedWindow( "Camera", CV_WINDOW_AUTOSIZE );
 
     config conf=objDetection::utilities::get_Config(argc,argv);
-    launch(conf);
+	if(conf.good)
+		launch(conf);
+	else
+	{
+		std::cout<<"insufficient parameter or invalid parameter"<<std::endl;
+	}
     cvWaitKey(0);
     return 0;
 }

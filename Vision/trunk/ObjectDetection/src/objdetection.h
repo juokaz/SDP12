@@ -65,6 +65,7 @@ typedef struct circular_buffer
 */
 struct config
 {
+	bool good;							/**< indicates if program state is good*/
 	bool image_file;					/**< indicates if images are loaded from file*/
 	CvMemStorage* storage;				/**< storage for keeping contours durring run*/
 	image_base i_base;					/**< struct that holds values for file based images*/
