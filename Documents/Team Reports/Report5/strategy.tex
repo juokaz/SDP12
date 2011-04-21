@@ -30,11 +30,11 @@ This function was later abstracted to a higher level, modifying the function to 
 
 The next target was to be able to navigate around objects. Points were used again, utilised in a function which would calculate an avoidance point at a $90^{\circ}$ angle and a defined distance from the object to avoid. The function would return the avoidance point, and the robot would move to it. \\
 This function was dynamic, and the point would move as the robot moved, allowing the robot to navigate the object more smoothly.\\
-The function calculated the avoid point using trigonometry, as shown in Algorithm 2 and the following diagram:\\
+The function calculated the avoid point using trigonometry, as shown in Algorithm 2 and the following diagram:
 \begin{center}
-\begin{figure}
+\begin{figure}[htp]
 \leavevmode
-\includegraphics[scale=0.6]{images/AvoidPoints.png}\\
+\includegraphics[scale=0.6]{images/AvoidPoints.png}
 \label{AvoidPointDiagram}
 \end{figure}
 \end{center}
@@ -57,6 +57,16 @@ The function calculated the avoid point using trigonometry, as shown in Algorith
 \end{algorithm}
 
 Again, this function was abstracted to a higher level to calculate the avoidance point for any object, as the robot may need to avoid a ball or a robot, which was useful for the function created to avoid the ball when moving the robot to get to the correct side of the ball (so the ball would be between the robot and the goal we were attacking). \linebreak
+
+Getting the ball away from the wall proved to be problem in our friendly matches as our robot could not reach the optimum point due to it being off the pitch. To counteract this, a strategy was developed to kick the ball towards the wall in the direction of the opponent's goal. Figure \ref{fig:rebound} shows the required rebound point, the equations below give x,y coordinates of rebound point.
+\[y = \left\{ 
+\begin{array}{l l}
+  0 & \quad \mbox{ballY $<$ 155}\\
+  310 & \quad \mbox{otherwise}\\ \end{array} \right. \]
+\[x = \frac{ballX(goalY-y) + goalX(ballY-y)}{ballY + goalY - 2y} \]
+In solving these equations the angle of entry and exit of the ball are assumed to be equal. This assumption worked perfectly when testing the strategy on the simulator however, through tests on the pitch, if the ball had lost speed before hitting the wall the rebound angle was dramatically reduced and the ball remained close to the wall. 
+
+To ensure the ball the ball approached the wall with enough speed, the GetBallFromWall strategy was only ever activated when the ball was 30 pixels\footnote{All distances were measured as pixels based on images captured from the video feed} away from the wall. Adjusting the equations to be more precise is very hard as it would require taking into consideration the spin of the ball, frictional coefficients of both objects and the coefficient of restitution. The simple model proved effective at getting the ball back into open play and occasionally scored a goal.\linebreak
 
 Alongside these additions, functions were implemented which decided if the ball was in more difficult positions, such as being close to the walls or in the corners, for use in the state system, so different strategies could be brought in to deal with these situations. The strategies were further adapted to readjust to a change in the goal we were attacking. 
 
