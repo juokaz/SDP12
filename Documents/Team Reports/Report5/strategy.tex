@@ -4,8 +4,7 @@ The main focus was to create an attacking strategy which would utilise the speed
 
 \subsection{High Level Strategy}
 Initially we created a simple state system strategy, which checked the current on-pitch situation (using the data sent from the camera) and decided the appropriate strategy to run. The state system approach was used because new states could be added easily, allowing for multiple strategies.
-Our strategy was based on defining a point to move towards. A point class was created, holding the x,y co-ordinates of points on the pitch. This class was extended to create instances of the robot, ball, goal, and any other necessary points for use in the strategy.
-
+Our strategy was based on defining a point to move towards. A point class was created, holding the x,y co-ordinates of points on the pitch. This class was extended to create instances of the robot, ball, goal, and any other necessary points for use in the strategy.\linebreak
 
 An optimum point was implemented (Algorithm 1), which would be a defined distance behind the ball at the same angle as the ball to goal angle, such that the robot would move to this point, and then to the ball, to ensure the robot was facing the goal when it reached the ball. This worked well in practice, working everytime when the robot was behind the ball, and 9/10 times when the robot was inbetween the goal and the ball (i.e. had to navigate around the ball).
 
@@ -76,8 +75,6 @@ Getting the ball away from the wall proved to be problem in our friendly matches
   310 & \quad \mbox{otherwise}\\ \end{array} \right. \]
 \[x = \frac{ballX(goalY-y) + goalX(ballY-y)}{ballY + goalY - 2y} \]
 
-
-
 In solving these equations the angle of entry and exit of the ball are assumed to be equal. This assumption worked perfectly when testing the strategy on the simulator however, through tests on the pitch, if the ball had lost speed before hitting the wall the rebound angle was dramatically reduced and the ball remained close to the wall. 
 
 To ensure the ball the ball approached the wall with enough speed, the GetBallFromWall strategy was only ever activated when the ball was 30 pixels\footnote{All distances were measured as pixels based on images captured from the video feed} away from the wall. Adjusting the equations to be more precise is very hard as it would require taking into consideration the spin of the ball, frictional coefficients of both objects and the coefficient of restitution. The simple model proved effective at getting the ball back into open play and occasionally scored a goal.\linebreak
@@ -113,8 +110,6 @@ Potential fields will decrease in speed as it approaches it's destination, there
 \end{algorithmic}
 \end{algorithm}
 
-Alongside these additions, functions were implemented which decided if the ball was in more difficult positions, such in the corners, for use in the state system, so different strategies could be brought in to deal with these situations. The strategies were further adapted to readjust to a change in the goal we were attacking. 
-
 \begin{figure}[htp]
 \begin{center}
 \leavevmode
@@ -123,6 +118,14 @@ Alongside these additions, functions were implemented which decided if the ball 
 \caption{Initial Postions with Attack}
 \label{fig:initial2}
 \end{figure}
+
+As a smaller robot, we often were award multiple penalties in the matches. To utilise this, a method for taking penalties was hard-coded onto the robot. The ball position and robot position remained constant for every penalty, therefore it was possible to calculate the exact angle of rotation to ensure the ball was aimed towards the corner of the opponent goal $>$90\% of the time. Problems with hard-coding methods into the robot arose when the construction team changed the robot design. \linebreak
+
+Most the construction changes towards the end of the project were minimal however, late on, it was decided to replace the robot's caster wheel with a ball bearing. In doing so, gave the robot more weight, stability and balance allowing testing of potential fields at higher speeds. The inclusion of the ball bearing meant that the accuracy of a hard-coded penalty was dramatically decreased. When repeating penalties from the same spot, the ball would only travel towards the corner of the goal 20\% of the time.\linebreak
+
+The advantages of the ball bearing outweighed the lack of penalty accuracy. For the final match, the main strategy was initiated immediately after taking the penalty and so if the penalty was not scored, the robot could quickly take advantage of the fact that the ball was close to the opponent's goal.\linebreak
+
+Alongside these additions, functions were implemented which decided if the ball was in more difficult positions, such in the corners, for use in the state system, so different strategies could be brought in to deal with these situations. The strategies were further adapted to readjust to a change in the goal we were attacking. \linebreak
 
 A more precise shooting system (i.e. being able to shoot directly into the corners of the goal) and a defensive strategy would have improved our performance in the final competition, as a number of shots were saved in the centre of the goal, and we had no real strategy to deal with the opponent having possession, and whilst usually the attacking strategy would cover most defensive situations, we were found out once or twice in the final game. Other than these faults, the strategies worked successfully, and made good use of the robots speed.
 
