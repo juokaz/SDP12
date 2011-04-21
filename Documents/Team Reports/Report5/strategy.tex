@@ -35,7 +35,8 @@ The function calculated the avoid point using trigonometry, as shown in Algorith
 \begin{figure}[htp]
 \leavevmode
 \includegraphics[scale=0.6]{images/AvoidPoints.png}
-\label{AvoidPointDiagram}
+\label{fig:AvoidPointDiagram}
+\caption{Avoid Point in relation to robot and object}
 \end{figure}
 \end{center}
 
@@ -58,26 +59,70 @@ The function calculated the avoid point using trigonometry, as shown in Algorith
 
 Again, this function was abstracted to a higher level to calculate the avoidance point for any object, as the robot may need to avoid a ball or a robot, which was useful for the function created to avoid the ball when moving the robot to get to the correct side of the ball (so the ball would be between the robot and the goal we were attacking). \linebreak
 
-Getting the ball away from the wall proved to be problem in our friendly matches as our robot could not reach the optimum point due to it being off the pitch. To counteract this, a strategy was developed to kick the ball towards the wall in the direction of the opponent's goal. Figure \ref{rebound} shows the required rebound point, the equations below give x,y coordinates of rebound point.
+Getting the ball away from the wall proved to be problem in our friendly matches as our robot could not reach the optimum point due to it being off the pitch. To counteract this, a strategy was developed to kick the ball towards the wall in the direction of the opponent's goal. Figure \ref{fig:rebound} shows the required rebound point, the equations below give x,y coordinates of rebound point.
+
 \begin{figure}[htp]
 \begin{center}
-%\leavevmode
-\includegraphics[scale=0.6]{getBallWall.png}
-\caption{Calculating rebound position to get ball away from wall}
-\label{rebound}
+\leavevmode
+\includegraphics[width=0.4\textwidth] {images/rebound.jpg}
 \end{center}
+\caption{Rebound Point}
+\label{fig:rebound}
 \end{figure}
+
 \[y = \left\{ 
 \begin{array}{l l}
   0 & \quad \mbox{ballY $<$ 155}\\
   310 & \quad \mbox{otherwise}\\ \end{array} \right. \]
 \[x = \frac{ballX(goalY-y) + goalX(ballY-y)}{ballY + goalY - 2y} \]
 
+
+
 In solving these equations the angle of entry and exit of the ball are assumed to be equal. This assumption worked perfectly when testing the strategy on the simulator however, through tests on the pitch, if the ball had lost speed before hitting the wall the rebound angle was dramatically reduced and the ball remained close to the wall. 
 
 To ensure the ball the ball approached the wall with enough speed, the GetBallFromWall strategy was only ever activated when the ball was 30 pixels\footnote{All distances were measured as pixels based on images captured from the video feed} away from the wall. Adjusting the equations to be more precise is very hard as it would require taking into consideration the spin of the ball, frictional coefficients of both objects and the coefficient of restitution. The simple model proved effective at getting the ball back into open play and occasionally scored a goal.\linebreak
 
-Alongside these additions, functions were implemented which decided if the ball was in more difficult positions, such as being close to the walls or in the corners, for use in the state system, so different strategies could be brought in to deal with these situations. The strategies were further adapted to readjust to a change in the goal we were attacking. 
+To fully exploit our speed, an initial attack was set up to ensure that the robot was always first to the ball from the starting positions. Figure \ref{fig:initial1} shows the points drawn by the strategy at the start of a match. The optimal point is placed behind the ball at a distance, \textit{optimalGap}, to allow room for rotation before approaching the ball.
+
+\begin{figure}[htp]
+\begin{center}
+\leavevmode
+\includegraphics[width=0.45\textwidth] {initial1.jpg}
+\end{center}
+\caption{Initial Positions}
+\label{fig:initial1}
+\end{figure}
+
+Potential fields will decrease in speed as it approaches it's destination, therefore having an intermediary point, \textit{optimum}, meant the robot would slow down when reaching optimum then pick up speed to reach the ball. This is clearly an inefficient method of attacking the ball. A variable, \textit{initial}, was introduced and set to \textit{true} whenever a strategy was reset. Implementing Algorithm 3 allowed a rapid, smooth approach to the ball; Figure \ref{fig:initial2} demonstrates updated positions when using the initial attack. \linebreak
+
+\begin{algorithm}
+\caption{Initial Attack}
+\begin{algorithmic}[1]
+\STATE $initial\gets true$
+\WHILE {UpdateVision()}
+	\IF{$initial$}
+		\IF{isRobotNearBall()}
+			\STATE $optimalGap\gets 30$
+		\ELSE
+			\STATE $optimalGap\gets 120$
+			\STATE $inital\gets false$
+			\STATE kick()
+		\ENDIF
+	\ENDIF
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+Alongside these additions, functions were implemented which decided if the ball was in more difficult positions, such in the corners, for use in the state system, so different strategies could be brought in to deal with these situations. The strategies were further adapted to readjust to a change in the goal we were attacking. 
+
+\begin{figure}[htp]
+\begin{center}
+\leavevmode
+\includegraphics[width=0.45\textwidth] {initial2.jpg}
+\end{center}
+\caption{Initial Postions with Attack}
+\label{fig:initial2}
+\end{figure}
 
 A more precise shooting system (i.e. being able to shoot directly into the corners of the goal) and a defensive strategy would have improved our performance in the final competition, as a number of shots were saved in the centre of the goal, and we had no real strategy to deal with the opponent having possession, and whilst usually the attacking strategy would cover most defensive situations, we were found out once or twice in the final game. Other than these faults, the strategies worked successfully, and made good use of the robots speed.
 
@@ -91,7 +136,7 @@ To achieve the goal stated above we started with implementing Potential Fields\c
 During implementation of this method, we had several challenges. We started testing this algorithm for milestone two but failed. The initial intuition for most members was that the failure was due to complexity of this algorithm while the failure was in fact due to unreliable input produced by vision stack. Later, new set of tests showed a very good performance once the vision stack become robust and reliable. Successful implementation of this algorithm was a key to our success in third and fourth friendly matches.\linebreak
 
 \subsubsection{Kinematic Model and Implementation}
-In order to implement this algorithm successfully we needed to find a way to apply the calculated velocity vector from previous step on the robot. To do this, we used a kinematic model of a differential drive robot. In Figure \ref{fig:KinModel},the velocity vector is decomposed into linear and angular velocity and later they are fused to calculate velocity of left and right wheels.
+In order to implement this algorithm successfully we needed to find a way to apply the calculated velocity vector from previous step on the robot. To do this, we used a kinematic model of a differential drive robot. In Figure \ref{fig:KinModel}, the velocity vector is decomposed into linear and angular velocity and later they are fused to calculate velocity of left and right wheels.
 \begin{figure}[htp]
 \begin{center}
 \leavevmode
@@ -100,6 +145,7 @@ In order to implement this algorithm successfully we needed to find a way to app
 \caption{Kinematic Model of Non-holonomic Differential Drive Robot}
 \label{fig:KinModel}
 \end{figure}
+
 \begin{align}
 V & =k_{att}.(Pos_{current}-Pos_{destination})\\
 V_{linear} &= \begin{Vmatrix}v\end{Vmatrix} cos(\theta) ,
@@ -111,15 +157,15 @@ V_{right}&=V_{Linear}+rsin(V_{Angular})
 Integrating all this we were able to implement a successful motion planning algorithm which distinguished our team from other teams.\linebreak
 
 \subsubsection{Results}
-A sample result of running this algorithm on the pitch is demonstrated in figure \ref{fig:seq}, Overall, this algorithm could deal with almost all scenarios successfully and when integrated with a high level decision making layer, we had a reliable game play scenario. 
+A sample result of running this algorithm on the pitch is demonstrated in Figure \ref{fig:seq}, Overall, this algorithm could deal with almost all scenarios successfully and when integrated with a high level decision making layer, we had a reliable game play scenario. 
 The solution also can also deal effectively with obstacles using Extended Potential Field algorithm\cite{paper:OKhatib} but this feature was not used because obstacle avoidance was dealt with by higher levels of decision making. Therefore, the algorithm at this level is a conventional P controller.  
 
 \begin{figure}[!bp]
 \begin{center}
-\subfigure[]{\includegraphics[width=0.2\textwidth] {step1.jpg}}
-\subfigure[]{\includegraphics[width=0.2\textwidth] {step2.jpg}}
-\subfigure[]{\includegraphics[width=0.2\textwidth] {step3.jpg}}
-\subfigure[]{\includegraphics[width=0.2\textwidth] {Final.jpg}}
+\subfigure[]{\includegraphics[width=0.15\textwidth] {step1.jpg}}
+\subfigure[]{\includegraphics[width=0.15\textwidth] {step2.jpg}}
+\subfigure[]{\includegraphics[width=0.15\textwidth] {step3.jpg}}
+\subfigure[]{\includegraphics[width=0.15\textwidth] {Final.jpg}}
 \caption{A sequence of robot movements from start position to destination.}
 \label{fig:seq}
 \end{center}
