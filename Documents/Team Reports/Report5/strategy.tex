@@ -1,6 +1,7 @@
 \section{Strategy}
 
-The main focus was to create an attacking strategy which would utilise the speed of the robot. The strategy was split into two sections, the high level areas (where the robot will move to, when to kick, dribble etc), and the lower level areas (coding the movement of the robot). 
+The main focus was to create an attacking strategy which would utilise the speed of the robot. The strategy was split into two sections, the high level areas (where the robot will move to, when to kick, dribble etc), and the lower level areas (coding the movement of the robot).
+
 \subsection{High Level Strategy}
 Initially we created a simple state system strategy, which checked the current on-pitch situation (using the data sent from the camera) and decided the appropriate strategy to run. The state system approach was used because new states could be added easily, allowing for multiple strategies.
 Our strategy was based on defining a point to move towards. A point class was created, holding the x,y co-ordinates of points on the pitch. This class was extended to create instances of the robot, ball, goal, and any other necessary points for use in the strategy.
@@ -24,10 +25,11 @@ An optimum point was implemented (Algorithm 1), which would be a defined distanc
 \end{algorithmic}
 \end{algorithm}
 
-This function was later abstracted to a higher level, modifying the function to take any two points and return the angle between them, to increase its range and decrease repetition of similar code. \\
+This function was later abstracted to a higher level, modifying the function to take any two points and return the angle between them, to increase its range and decrease repetition of similar code. \linebreak
+
 The next target was to be able to navigate around objects. Points were used again, utilised in a function which would calculate an avoidance point at a $90^{\circ}$ angle and a defined distance from the object to avoid. The function would return the avoidance point, and the robot would move to it. \\
 This function was dynamic, and the point would move as the robot moved, allowing the robot to navigate the object more smoothly.\\
-The function calculated the avoid point using trigonometry, as shown in the following diagram and pseudo-code:\\
+The function calculated the avoid point using trigonometry, as shown in Algorithm 2 and the following diagram:\\
 \begin{center}
 \includegraphics[scale=0.6]{images/AvoidPoints.png}\\
 \end{center}
@@ -48,24 +50,30 @@ The function calculated the avoid point using trigonometry, as shown in the foll
 \end{algorithmic}
 \end{algorithm}
 
-Again, this function was abstracted to a higher level to calculate the avoidance for any points, as the robot may need to avoid a ball or a robot, which was useful for the function created to avoid the ball when moving the robot to get to the correct side of the ball (so the ball would be between the robot and the goal we were attacking). \linebreak
+Again, this function was abstracted to a higher level to calculate the avoidance point for any object, as the robot may need to avoid a ball or a robot, which was useful for the function created to avoid the ball when moving the robot to get to the correct side of the ball (so the ball would be between the robot and the goal we were attacking). \linebreak
+
 Alongside these additions, functions were implemented which decided if the ball was in more difficult positions, such as being close to the walls or in the corners, for use in the state system, so different strategies could be brought in to deal with these situations. The strategies were further adapted to readjust to a change in the goal we were attacking. 
 
 A more precise shooting system (i.e. being able to shoot directly into the corners of the goal) and a defensive strategy would have improved our performance in the final competition, as a number of shots were saved in the centre of the goal, and we had no real strategy to deal with the opponent having possession, and whilst usually the attacking strategy would cover most defensive situations, we were found out once or twice in the final game. Other than these faults, the strategies worked successfully, and made good use of the robots speed.
 
 \subsection{Low Level Strategy}
-In low level motion planning layer of the agent architecture we needed a robust algorithm capable of compensating possible noise incurred by output of vision stack.  The simple goal for this part is to make robot capable of following a path to reach a destination position determined by higher levels of path planning algorithm.
-A. Potential Field
-To achieve the goal stated above we started with implementing Potential Fields[2] algorithm. This algorithm is a well-known method for robot path planning. It has several properties which makes it suitable for our application. The behaviour of the algorithm is completely reactive and therefore if it is fed with noisy input in one cycle it will be able to recover in next cycles, therefore performance of the algorithm degrades as amount of noise increases never failing completely.
-C. Challenges
-During implementation of this method, we had several challenges. We started testing this algorithm for milestone two but failed. The initial intuition for most members was that the failure was due to complexity of this algorithm while the failure was in fact due to unreliable output produced by vision stack. Later, new set of tests showed a very good performance once the vision stack was robust enough to provide reliable input for the algorithm. Successful implementation of this algorithm become a key to our success in third and fourth friendly matches.
-D. Kinematic Model and Implementation
+In low level motion planning layer of the agent architecture we needed a robust algorithm capable of compensating possible noise incurred by output of vision stack.  The simple goal for this part is to make robot capable of following a path to reach a destination position determined by higher levels of path planning algorithm.\linebreak
+
+\subsubsection{Potential Fields}
+To achieve the goal stated above we started with implementing Potential Fields[2] algorithm. This algorithm is a well-known method for robot path planning. It has several properties which makes it suitable for our application. The behaviour of the algorithm is completely reactive and therefore if it is fed with noisy input in one cycle it will be able to recover in next cycles, therefore performance of the algorithm degrades as amount of noise increases never failing completely.\linebreak
+
+\subsubsection{Challenges}
+During implementation of this method, we had several challenges. We started testing this algorithm for milestone two but failed. The initial intuition for most members was that the failure was due to complexity of this algorithm while the failure was in fact due to unreliable output produced by vision stack. Later, new set of tests showed a very good performance once the vision stack was robust enough to provide reliable input for the algorithm. Successful implementation of this algorithm become a key to our success in third and fourth friendly matches.\linebreak
+
+\subsubsection{Kinematic Model and Implementation}
 In order to implement this algorithm successfully we needed to find a way to apply the calculated velocity vector on the robot. To do this, we used a kinematic model of a differential drive robot. In figure FIGURES   ,the velocity vector is decomposed into linear and angular velocity and later they are fused to calculate velocity of left and right wheels.
-Integrating all this we were able to implement a successful motion planning algorithm which distinguished our team from other teams.
-E. Results
+Integrating all this we were able to implement a successful motion planning algorithm which distinguished our team from other teams.\linebreak
+
+\subsubsection{Results}
 A sample result of running this algorithm on the pitch is demonstrated in figure FIGURES, Overall, this algorithm could deal with almost all scenarios successfully and when integrated with a high level decision making layer, we had a reliable game play scenario. 
-The solution also can deal with obstacles effectively but this feature was not used because obstacle avoidance was dealt with by higher levels of decision making. Therefore, the algorithm at this level is a conventional P controller.  
-F. Lessons Learned
+The solution also can deal with obstacles effectively but this feature was not used because obstacle avoidance was dealt with by higher levels of decision making. Therefore, the algorithm at this level is a conventional P controller.\linebreak
+
+\subsubsection{Lessons Learned}
 It is possible to implement reliable applications based on ideas developed in research labs. 
 Failure of an algorithm at higher levels sometimes may be due to invalid inputs from lower layers.
 Simulation at abstract level is very useful for making sure that an algorithm is developed according to specification but successful implementation based on such simulation environments does does not guarantee optimal performance in real environments.
