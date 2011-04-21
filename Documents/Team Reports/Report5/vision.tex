@@ -6,7 +6,7 @@ Finding locations of different objects proved to be easy using simple methods li
 \subsection{Machine Learning}
 Later a solution based on Machine-Learning methods was developed. We implemented solutions using SVM and Bayse algorithms available in the OpenCV library. A range of features such as hue moments, compactness and area were used for training a model for each object. We also used distance between two objects, by using this feature we were able to first find a principal object T and then using the distance feature find the correct dark spot close to this object.
 \subsection{Central Image Moments}
-Even though the Machine-Learning based solution produced reliable outputs but we realised that for a problem of this size, there should be simpler methods available. After studying the literature of computer vision, we implemented a method using second order of central image moments. This method is based on calculating main inertial axes, around which the object can be rotated with minimal or maximal inertia. For detailed description of this method reader is referred to\cite{Teague:80}. Using this method orientation of an object is computed as follows:
+Even though the Machine-Learning based solution produced reliable outputs but we realised that for a problem of this size, there should be simpler methods available. After studying the literature of computer vision, we implemented a method using second order of central image moments. This method is based on calculating main inertial axes, around which the object can be rotated with minimal or maximal inertia\ref{fig:SecondMethod}. For detailed description of this method reader is referred to\cite{Teague:80}. Using this method orientation of an object is computed as follows:
 \begin{align}
 \label{equ:centroid}
 \mu'_{20} = \mu_{20} / \mu_{00} = M_{20}/M_{00} - \bar{x}^2 \\
@@ -18,10 +18,10 @@ One can observe that equation 4 produces results from $-\pi/2$ - $\pi/2$. Our me
 \begin{figure}[htp]
 \begin{center}
 \leavevmode
-\includegraphics[width=0.2\textwidth] {CenOrien.png}
+\subfigure[]{\includegraphics[width=0.15\textwidth] {secondOrderOrien.png}\label{fig:SecondMethod}}
+\subfigure[]{\includegraphics[width=0.15\textwidth]{CenOrien.png}\label{fig:CircleMethod}}
 \end{center}
-\caption{Calculating orientation using center of mass of object and surrounding circle, used as a helper for second order of central moments}
-\label{fig:CircleMethod}
+\caption{Calculating orientation using second order of central moments(a) and center of mass of object and surrounding circle(b)}
 \end{figure} 
 Even though our method calculating robot orientation was not very robust against noise at the specified areas, it was very accurate in 85 to 90\% of the cases. 
 \subsection{Results}
