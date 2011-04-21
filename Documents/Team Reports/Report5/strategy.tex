@@ -7,7 +7,7 @@ Initially we created a simple state system strategy, which checked the current o
 Our strategy was based on defining a point to move towards. A point class was created, holding the x,y co-ordinates of points on the pitch. This class was extended to create instances of the robot, ball, goal, and any other necessary points for use in the strategy.\linebreak
 
 \subsubsection{Optimum Points}
-An optimum point was implemented (Algorithm 1), which would be a defined distance behind the ball at the same angle as the ball to goal angle, such that the robot would move to this point, and then to the ball, to ensure the robot was facing the goal when it reached the ball. This worked well in practice, working everytime when the robot was behind the ball, and 9/10 times when the robot was inbetween the goal and the ball (i.e. had to navigate around the ball).
+An optimum point was implemented (Algorithm 1), which would be a defined distance behind the ball at the same angle as the ball to goal angle, such that the robot would move to this point, and then to the ball, to ensure the robot was facing the goal when it reached the ball. This worked well in practice, working everytime when the robot was behind the ball, and 9/10 times when the robot was inbetween the goal and the ball (i.e. had to navigate around the ball).\linebreak
 
 \begin{algorithm}
 \caption{Caclulate Optimum Point}
@@ -25,8 +25,6 @@ An optimum point was implemented (Algorithm 1), which would be a defined distanc
 \RETURN $(x_{3}, y_{3})$
 \end{algorithmic}
 \end{algorithm}
-
-This function was later abstracted to a higher level, modifying the function to take any two points and return the angle between them, to increase its range and decrease repetition of similar code. \linebreak
 
 \subsubsection{Avoiding Obstacles}
 The next target was to be able to navigate around objects. Points were used again, utilised in a function which would calculate an avoidance point at a $90^{\circ}$ angle and a defined distance from the object to avoid. The function would return the avoidance point, and the robot would move to it. \\
@@ -139,13 +137,13 @@ A more precise shooting system (i.e. being able to shoot directly into the corne
 In low level motion planning layer of the agent architecture we needed a robust algorithm capable of compensating possible noise incurred by output of vision stack.  The simple goal for this part is to make robot capable of following a path to reach a destination position determined by higher levels of path planning algorithm.\linebreak
 
 \subsubsection{Potential Field}
-To achieve the goal stated above we started with implementing Potential Fields\cite{paper:PF} algorithm. This algorithm is a well-known method for robot path planning. It has several properties which makes it suitable for our application. The behaviour of the algorithm is completely reactive and therefore if it is fed with noisy input in one cycle it will be able to recover in next cycles, therefore performance of the algorithm degrades as amount of noise increases never failing completely.\linebreak
+To achieve the goal stated above we started with implementing the Potential Fields\cite{paper:PF} algorithm. This algorithm is a well-known method for robot path planning. It has several properties which makes it suitable for our application. The behaviour of the algorithm is completely reactive and therefore if it is fed with noisy input in one cycle it will be able to recover in next cycles, therefore performance of the algorithm degrades as amount of noise increases, never failing completely.\linebreak
 
 \subsubsection{Challenges}
-During implementation of this method, we had several challenges. We started testing this algorithm for milestone two but failed. The initial intuition for most members was that the failure was due to complexity of this algorithm while the failure was in fact due to unreliable input produced by vision stack. Later, new set of tests showed a very good performance once the vision stack become robust and reliable. Successful implementation of this algorithm was a key to our success in third and fourth friendly matches.\linebreak
+During implementation of this method, we had several challenges. We started testing this algorithm for milestone two but failed. The initial intuition for most members was that the failure was due to complexity of this algorithm while the failure was in fact due to unreliable input produced by vision stack. Later, a new set of tests showed a very good performance once the vision stack become robust and reliable. Successful implementation of this algorithm was a key to our success in third and fourth friendly matches.\linebreak
 
 \subsubsection{Kinematic Model and Implementation}
-In order to implement this algorithm successfully we needed to find a way to apply the calculated velocity vector\ref{fig:PFVectors} from previous step on the robot. To do this, we used a kinematic model of a differential drive robot. In Figure \ref{fig:KinModel}, the velocity vector is decomposed into linear and angular velocity and later they are fused to calculate velocity of left and right wheels.
+In order to implement this algorithm successfully we needed to find a way to apply the calculated velocity vector, Figure \ref{fig:PFVectors} from previous step on the robot. To do this, we used a kinematic model of a differential drive robot. In Figure \ref{fig:KinModel}, the velocity vector is decomposed into linear and angular velocity and later they are fused to calculate velocity of left and right wheels.
 \begin{figure}[htp]
 \begin{center}
 \leavevmode
@@ -172,11 +170,12 @@ V_{right}&=V_{Linear}+rsin(V_{Angular})
 \label{fig:PFVectors}
 \end{figure}
 
-Integrating all this we were able to implement a successful motion planning algorithm which distinguished our team from other teams.\linebreak
+Integrating all of this we were able to implement a successful motion planning algorithm which distinguished our team from other teams.\linebreak
 
 \subsubsection{Results}
 A sample result of running this algorithm on the pitch is demonstrated in Figure \ref{fig:seq}, Overall, this algorithm could deal with almost all scenarios successfully and when integrated with a high level decision making layer, we had a reliable game play scenario. 
-The solution also can also deal effectively with obstacles using Extended Potential Field algorithm\cite{paper:OKhatib} but this feature was not used because obstacle avoidance was dealt with by higher levels of decision making. Therefore, the algorithm at this level is a conventional P controller.  
+The solution also can also deal effectively with obstacles using the Extended Potential Field algorithm\cite{paper:OKhatib} but this feature was not used because obstacle avoidance was dealt with by higher levels of decision making. Therefore, the algorithm at this level is a conventional P controller. \linebreak
+
 
 \begin{figure}[!bp]
 \begin{center}
@@ -194,5 +193,5 @@ The solution also can also deal effectively with obstacles using Extended Potent
 \begin{itemize}
 \item It is possible to implement reliable applications based on ideas developed in research labs. 
 \item Failure of an algorithm at higher levels sometimes may be due to invalid inputs from lower layers.
-\item Simulation at abstract level is very useful for making sure that an algorithm is developed according to specification but successful implementation based on such simulation environments does does not guarantee optimal performance in real environments.
+\item Simulation at abstract level is very useful for making sure that an algorithm is developed according to specification, but successful implementation based on such simulation environments does does not guarantee optimal performance in real environments.
 \end{itemize}
