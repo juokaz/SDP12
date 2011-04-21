@@ -126,7 +126,7 @@ Potential fields will decrease in speed as it approaches it's destination, there
 \subsubsection{Penalties}
 As a smaller robot, we often were award multiple penalties in the matches. To utilise this, a method for taking penalties was hard-coded onto the robot. The ball position and robot position remained constant for every penalty, therefore it was possible to calculate the exact angle of rotation to ensure the ball was aimed towards the corner of the opponent goal $>$90\% of the time. Problems with hard-coding methods into the robot arose when the construction team changed the robot design. \linebreak
 
-Most the construction changes towards the end of the project were minimal however, late on, it was decided to replace the robot's caster wheel with a ball bearing. In doing so, gave the robot more weight, stability and balance allowing testing of potential fields at higher speeds. The inclusion of the ball bearing meant that the accuracy of a hard-coded penalty was dramatically decreased. When repeating penalties from the same spot, the ball would only travel towards the corner of the goal 20\% of the time.
+Most the construction changes towards the end of the project were minimal however, late on, it was decided to replace the robot's caster wheel with a ball bearing. In doing so, gave the robot more weight, stability and balance allowing testing of potential fields at higher speeds. The inclusion of the ball bearing meant that the accuracy of a hard-coded penalty was dramatically decreased. When repeating penalties from the same spot, the ball would only travel towards the corner of the goal 20\% of the time.\linebreak
 
 The advantages of the ball bearing outweighed the lack of penalty accuracy. For the final match, the main strategy was initiated immediately after taking the penalty and so if the penalty was not scored, the robot could quickly take advantage of the fact that the ball was close to the opponent's goal.\linebreak
 
@@ -145,7 +145,7 @@ To achieve the goal stated above we started with implementing Potential Fields\c
 During implementation of this method, we had several challenges. We started testing this algorithm for milestone two but failed. The initial intuition for most members was that the failure was due to complexity of this algorithm while the failure was in fact due to unreliable input produced by vision stack. Later, new set of tests showed a very good performance once the vision stack become robust and reliable. Successful implementation of this algorithm was a key to our success in third and fourth friendly matches.\linebreak
 
 \subsubsection{Kinematic Model and Implementation}
-In order to implement this algorithm successfully we needed to find a way to apply the calculated velocity vector from previous step on the robot. To do this, we used a kinematic model of a differential drive robot. In Figure \ref{fig:KinModel}, the velocity vector is decomposed into linear and angular velocity and later they are fused to calculate velocity of left and right wheels.
+In order to implement this algorithm successfully we needed to find a way to apply the calculated velocity vector\ref{fig:PFVectors} from previous step on the robot. To do this, we used a kinematic model of a differential drive robot. In Figure \ref{fig:KinModel}, the velocity vector is decomposed into linear and angular velocity and later they are fused to calculate velocity of left and right wheels.
 \begin{figure}[htp]
 \begin{center}
 \leavevmode
@@ -163,24 +163,34 @@ V_{left}&=V_{Linear}-rsin(V_{Angular})\\
 V_{right}&=V_{Linear}+rsin(V_{Angular})
 \end{align}
 
+\begin{figure}[htp]
+\begin{center}
+\leavevmode
+\includegraphics[width=0.4\textwidth] {PF-goal.png}
+\end{center}
+\caption{Potential Functions around goal position}
+\label{fig:PFVectors}
+\end{figure}
+
 Integrating all this we were able to implement a successful motion planning algorithm which distinguished our team from other teams.\linebreak
 
 \subsubsection{Results}
 A sample result of running this algorithm on the pitch is demonstrated in Figure \ref{fig:seq}, Overall, this algorithm could deal with almost all scenarios successfully and when integrated with a high level decision making layer, we had a reliable game play scenario. 
-The solution also can also deal effectively with obstacles using Extended Potential Field algorithm\cite{paper:OKhatib} but this feature was not used because obstacle avoidance was dealt with by higher levels of decision making. Therefore, the algorithm at this level is a conventional P controller.  \linebreak
+The solution also can also deal effectively with obstacles using Extended Potential Field algorithm\cite{paper:OKhatib} but this feature was not used because obstacle avoidance was dealt with by higher levels of decision making. Therefore, the algorithm at this level is a conventional P controller.  
 
 \begin{figure}[!bp]
 \begin{center}
-\subfigure[]{\includegraphics[width=0.15\textwidth] {step1.jpg}}
-\subfigure[]{\includegraphics[width=0.15\textwidth] {step2.jpg}}
-\subfigure[]{\includegraphics[width=0.15\textwidth] {step3.jpg}}
-\subfigure[]{\includegraphics[width=0.15\textwidth] {Final.jpg}}
+\subfigure[]{\includegraphics[width=0.3\textwidth] {step1.jpg}}
+\subfigure[]{\includegraphics[width=0.3\textwidth] {step2.jpg}}
+\subfigure[]{\includegraphics[width=0.3\textwidth] {step3.jpg}}
+\subfigure[]{\includegraphics[width=0.3\textwidth] {Final.jpg}}
 \caption{A sequence of robot movements from start position to destination.}
 \label{fig:seq}
 \end{center}
 \end{figure}
 
 \subsubsection{Lessons Learned}
+
 \begin{itemize}
 \item It is possible to implement reliable applications based on ideas developed in research labs. 
 \item Failure of an algorithm at higher levels sometimes may be due to invalid inputs from lower layers.
