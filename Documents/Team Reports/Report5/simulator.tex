@@ -6,7 +6,7 @@ The aim in designing the simulator was to imitate a pitch environment so that st
 \begin{align}
 \theta_{t} & = \frac{(V_{R}-V_{L})\Delta t}{b} + \theta_{0}\\
 x_{t} & =x_0+ \frac{b(V_{R}+V_{L})}{2(V_{R}-V_{L})}[sin(\theta_{t})-sin(\theta_{0})]\\
-y_{t} & =y_0- \frac{b(V_{R}+V_{L})}{2(V_{R}-V_{L})}[cos(\theta_{t})-cos(\theta_{0})]\\
+y_{t} & =y_0- \frac{b(V_{R}+V_{L})}{2(V_{R}-V_{L})}[cos(\theta_{t})-cos(\theta_{0})]
 \end{align}
 A problem that occurred using this model was that if the speed of the left and right wheels were equal, the denominator in the equation is zero. One approach is to use a different approximation formula for this special case. It was decided that this is unneeded complication. Therefore, in order to have perfectly straight movement if the wheel speeds were equal, a very small floating point number was subtracted from one of the wheel speeds.\linebreak
 
